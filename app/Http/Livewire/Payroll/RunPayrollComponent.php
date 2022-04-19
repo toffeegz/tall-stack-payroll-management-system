@@ -35,7 +35,8 @@ class RunPayrollComponent extends Component
 
     // SAVED PAYROLL
     public $timestamp_saved_payroll;
-    public $payroll_logs_id;
+    public $users_daily_rate = null;
+
 
     public function render()
     {
@@ -256,13 +257,13 @@ class RunPayrollComponent extends Component
 
         $data['deductions'] = [
             [
-                'name' => 'Late',
+                'name' => 'Late(hr)',
                 'acronym' => 'la',
                 'amount' => $late,
                 'visible' => Self::amountVisibleChecker($late),
             ],
             [
-                'name' => 'Undertime',
+                'name' => 'Undertime(hr)',
                 'acronym' => 'ut',
                 'amount' => $undertime,
                 'visible' => Self::amountVisibleChecker($undertime),
@@ -300,10 +301,23 @@ class RunPayrollComponent extends Component
 
     public function submit()
     {
-        $data = PayrollLog::where('period_start', $this->payroll_period_start)->where('period_end', $this->payroll_period_end)->first();
-        if($data) {
-            return redirect()->route('payroll.review', ['id'=>$data->id]);
+        foreach($this->payroll as $user)
+        {
+            if($user['daily_rate'] == 0 || $user['daily_rate'] == null)
+            {
+                $this->users_daily_rate = null;
+            } else {
+                $this->users_daily_rate = $user['daily_rate'];
+            }
+            $this->validate([
+                'users_daily_rate' => 'required',
+            ]);
         }
+        $this->saveForLater();
+
+        $data = PayrollLog::where('period_start', $this->payroll_period_start)->where('period_end', $this->payroll_period_end)->first();
+        return redirect()->route('payroll.review', ['id'=>$data->id]);
+        
     }
 
     // MODAL OPEN
