@@ -93,7 +93,11 @@ class AttendanceComponent extends Component
             ->where(function ($query) use ($search) {
                 return $query->where('users.last_name', 'like', '%' . $search . '%')
                 ->orWhere('users.first_name', 'like', '%' . $search . '%')
-                ->orWhere('users.code', 'like', '%' . $search . '%');
+                ->orWhere('users.code', 'like', '%' . $search . '%')
+                ->orWhere('attendances.date', 'like', '%' . $search . '%')
+                ->orWhere('attendances.time_in', 'like', '%' . $search . '%')
+                ->orWhere('attendances.time_out', 'like', '%' . $search . '%');
+                
             })
             ->latest('attendances.updated_at')
             ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path')
@@ -116,7 +120,10 @@ class AttendanceComponent extends Component
             ->where(function ($query) use ($search) {
                 return $query->where('users.last_name', 'like', '%' . $search . '%')
                 ->orWhere('users.first_name', 'like', '%' . $search . '%')
-                ->orWhere('users.code', 'like', '%' . $search . '%');
+                ->orWhere('users.code', 'like', '%' . $search . '%')
+                ->orWhere('attendances.date', 'like', '%' . $search . '%')
+                ->orWhere('attendances.time_in', 'like', '%' . $search . '%')
+                ->orWhere('attendances.time_out', 'like', '%' . $search . '%');
             })
             ->latest('attendances.updated_at')
             ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path')
@@ -381,9 +388,8 @@ class AttendanceComponent extends Component
         $update_attendance->time_out = $this->selected_details_time_out;
         $update_attendance->project_id = $this->selected_details_project_id;
 
-        dd($update_attendance->toArray());
-        // $update_attendance->save();
-        // $this->emit('closeAttendanceDetailsModal');
+        $update_attendance->save();
+        $this->emit('closeAttendanceDetailsModal');
     }
 
 
