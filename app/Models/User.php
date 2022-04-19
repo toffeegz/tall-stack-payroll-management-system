@@ -11,7 +11,7 @@ use Laratrust\Traits\LaratrustUserTrait;
 
 use App\Models\Attendance;
 use App\Models\Project;
-
+use App\Models\Designation;
 
 class User extends Authenticatable
 {
@@ -64,9 +64,25 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class);
     }
 
+    public function approveAttendancesBetweenDates($period_start, $period_end)
+    {
+        return $this->attendances->whereBetween('date', [$period_start, $period_end])
+        ->whereNotIn('status', [4,5]);
+    }
+
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_user');
+    }
+
+    public function designations()
+    {
+        return $this->belongsToMany(Designation::class, 'designation_user');
+    }
+
+    public function latestDesignation()
+    {
+        return $this->designations()->latest()->first();
     }
 
 
@@ -88,5 +104,5 @@ class User extends Authenticatable
     {
         return $query->orWhere($column, 'like', '%'.$value.'%');
     }
-  
+
 }
