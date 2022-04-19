@@ -31,6 +31,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 // Route::get('payroll/settings', Settings\PayrollSettingsComponent::class)->name('payroll.settings');
 
                 Route::get('payroll/run', RunPayrollComponent::class)->name('payroll.run');
+                Route::get('payroll/review', ReviewProcessedPayrollComponent::class)->name('payroll.review');
             });
         });
     });

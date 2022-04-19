@@ -34,6 +34,7 @@ class RunPayrollComponent extends Component
 
     // SAVED PAYROLL
     public $timestamp_saved_payroll;
+    public $payroll_logs_id;
 
     public function render()
     {
@@ -48,12 +49,20 @@ class RunPayrollComponent extends Component
     {
         $this->payroll_period_id  = $request->payroll_period;
         $this->payroll_period = PayrollPeriod::find($this->payroll_period_id);
-        $this->payroll_period_start = $this->payroll_period->period_start;
-        $this->payroll_period_end = $this->payroll_period->period_end;
 
-        $this->savedPayrollData();
-        // dd($this->payroll);
-        // dd($this->earning_types);
+        if($this->payroll_period)
+        {
+            $this->payroll_period_start = $this->payroll_period->period_start;
+            $this->payroll_period_end = $this->payroll_period->period_end;
+
+            $this->savedPayrollData();
+            // dd($this->payroll);
+            // dd($this->earning_types);
+
+        } else {
+            // if no payroll period found return 404 not found
+            return abort(404);
+        }
     }
 
     // FETCH FROM DB
@@ -149,6 +158,7 @@ class RunPayrollComponent extends Component
             }
         }
     }
+
     public function getAttendanceHoursAndDeductions($user)
     {
 
@@ -253,6 +263,14 @@ class RunPayrollComponent extends Component
             $data->updated_at = Carbon::now();
             $data->save();
             return redirect(request()->header('Referer'));
+        }
+    }
+
+    public function submit()
+    {
+        $data = PayrollLog::where('period_start', $this->payroll_period_start)->where('period_end', $this->payroll_period_end)->first();
+        if($data) {
+            return redirect()->route('payroll.review', ['id'=>$data->id]);
         }
     }
 
