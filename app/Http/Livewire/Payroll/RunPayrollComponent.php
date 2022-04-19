@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PayrollPeriod;
 use App\Models\PayrollLog;
 use App\Models\Earning;
+use App\Models\Deduction;
 use App\Models\User;
 use Helper;
 use Carbon\Carbon;
@@ -58,6 +59,7 @@ class RunPayrollComponent extends Component
             $this->savedPayrollData();
             // dd($this->payroll);
             // dd($this->earning_types);
+            // dd($this->deduction_types);
 
         } else {
             // if no payroll period found return 404 not found
@@ -78,6 +80,11 @@ class RunPayrollComponent extends Component
     public function getEarningTypesProperty()
     {
         return Earning::where('active', true)->get();
+    }
+
+    public function getDeductionTypesProperty()
+    {
+        return Deduction::where('active', true)->get();
     }
 
     // PAYROLL DATA
@@ -101,8 +108,44 @@ class RunPayrollComponent extends Component
     {
         
 
+        
         $total_hours = Self::getAttendanceHoursAndDeductions($user)['total_hours'];
-        $deductions = Self::getAttendanceHoursAndDeductions($user)['deductions'];
+        
+        // cash advance
+        $loan = Helper::getCashAdvanceAmountToPay($user->id);
+            
+
+        // deductions 
+            $deductions = [];
+            foreach($this->deduction_types as $deduction_type)
+            {
+                $deductions[$deduction_type->id] = [
+                    'name' => $deduction_type->name,
+                    'acronym' => $deduction_type->acronym,
+                    'amount' => null,
+                    'visible' => false,
+                ];
+            }
+            // 
+    
+            $deduction_hours = Self::getAttendanceHoursAndDeductions($user)['deductions'];
+        
+            foreach($deduction_hours as $val)
+            {
+                $deductions[] = $val;
+            }
+        
+            if($loan != 0){
+                $deductions[] = [
+                    'name' => 'Loan',
+                    'acronym' => 'lo',
+                    'amount' => $loan,
+                    'visible' => Self::amountVisibleChecker($loan),
+                ];
+            } 
+        // 
+        
+        
 
         // daily rate
             $latest_designation = $user->latestDesignation();
@@ -176,9 +219,6 @@ class RunPayrollComponent extends Component
             $late = $hours->sum('late');
             $undertime = $hours->sum('undertime');
 
-            // cash advance
-            $loan = Helper::getCashAdvanceAmountToPay($user->id);
-            
         // 
 
         $data['total_hours'] = [
@@ -213,29 +253,21 @@ class RunPayrollComponent extends Component
                 'visible' => Self::amountVisibleChecker($night_differential),
             ],
         ];
+
         $data['deductions'] = [
-            1 => [
-                'name' => 'Late(hr)',
+            [
+                'name' => 'Late',
                 'acronym' => 'la',
                 'amount' => $late,
                 'visible' => Self::amountVisibleChecker($late),
             ],
-            2 => [
-                'name' => 'Undertime(hr)',
+            [
+                'name' => 'Undertime',
                 'acronym' => 'ut',
                 'amount' => $undertime,
                 'visible' => Self::amountVisibleChecker($undertime),
             ],
         ];
-
-        if($loan != 0){
-            $data['deductions'][3] = [
-                'name' => 'Loan',
-                'acronym' => 'lo',
-                'amount' => $loan,
-                'visible' => Self::amountVisibleChecker($loan),
-            ];
-        } 
         return $data;
     }
 
