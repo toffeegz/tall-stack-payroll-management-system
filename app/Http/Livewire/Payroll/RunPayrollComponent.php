@@ -9,6 +9,7 @@ use App\Models\PayrollLog;
 use App\Models\Earning;
 use App\Models\User;
 use Helper;
+use Carbon\Carbon;
 
 class RunPayrollComponent extends Component
 {
@@ -23,10 +24,16 @@ class RunPayrollComponent extends Component
     // hours
     public $regular_hours;
 
-    // earning modal
+    // modal
     public $selected_user_id = null;
     public $selected_user_name;
-    public $selected_type;
+    public $selected_type = null;
+
+    // SEARCH
+    public $search_employee_payroll = "";
+
+    // SAVED PAYROLL
+    public $timestamp_saved_payroll;
 
     public function render()
     {
@@ -49,6 +56,7 @@ class RunPayrollComponent extends Component
         // dd($this->earning_types);
     }
 
+    // FETCH FROM DB
     public function getUsersProperty()
     {
         $search = $this->search;
@@ -63,11 +71,14 @@ class RunPayrollComponent extends Component
         return Earning::where('active', true)->get();
     }
 
+    // PAYROLL DATA
+
     public function savedPayrollData()
     {
         $data = PayrollLog::where('period_start', $this->payroll_period_start)->where('period_end', $this->payroll_period_end)->first();
         if($data) {
             $this->payroll = json_decode($data['data'], true);
+            $this->timestamp_saved_payroll = Carbon::parse($data->updated_at)->format('Y d M h:i:s a');
         } else {
             foreach($this->users as $user)
             {
@@ -118,6 +129,26 @@ class RunPayrollComponent extends Component
         ];
     }
 
+    public function searchPayroll()
+    {
+        $search = $this->search_employee_payroll;
+        $data = $this->payroll;
+
+        foreach ($data as $key => $val) {
+            if($search != "")
+            {
+                if(preg_match("/{$search}/i", $val['full_name'])) {
+                    $this->payroll[$key]['visible'] = true;
+                } else {
+                    $this->payroll[$key]['visible'] = false;
+                }
+            } 
+            else 
+            {
+                $this->payroll[$key]['visible'] = true;
+            }
+        }
+    }
     public function getAttendanceHoursAndDeductions($user)
     {
 
@@ -207,6 +238,24 @@ class RunPayrollComponent extends Component
         }
     }
 
+    // SUBMIT PAYROLL
+
+    public function saveForLater()
+    {
+        // dd($this->payroll);
+        if($this->payroll)
+        {
+            $data = PayrollLog::firstOrNew([
+                'period_start' => $this->payroll_period_start,
+                'period_end' => $this->payroll_period_end,
+            ]);
+            $data->data = json_encode($this->payroll);
+            $data->updated_at = Carbon::now();
+            $data->save();
+            return redirect(request()->header('Referer'));
+        }
+    }
+
     // MODAL OPEN
 
     public function openTotalHoursModal($user_id)
@@ -234,17 +283,23 @@ class RunPayrollComponent extends Component
 
     public function submitTotalHours()
     {
+        $this->validate(['selected_type' => 'required']);
         $this->payroll[$this->selected_user_id]['total_hours'][$this->selected_type]['visible'] = true;
+        $this->selected_type = null;
     }
 
     public function submitAdditionalEarnings()
     {
+        $this->validate(['selected_type' => 'required']);
         $this->payroll[$this->selected_user_id]['additional_earnings'][$this->selected_type]['visible'] = true;
+        $this->selected_type = null;
     }
 
     public function submitDeductions()
     {
+        $this->validate(['selected_type' => 'required']);
         $this->payroll[$this->selected_user_id]['deductions'][$this->selected_type]['visible'] = true;
+        $this->selected_type = null;
     }
 
     // REMOVE

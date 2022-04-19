@@ -52,7 +52,7 @@
                                                     <span class="hidden md:inline-flex">Daily Rate</span>
                                                     <span class="md:hidden">Rate</span>
                                                 </p>
-                                                <input type="number" wire:model="payroll.{{ $user['id'] }}.daily_rate" name="payroll[{{ $user['id'] }}][daily_rate]" class="text-xs text-stone-900 font-bold py-1 px-2 border w-16 rounded-sm border-stone-200">
+                                                <input type="number" wire:model="payroll.{{ $user['id'] }}.daily_rate" name="payroll[{{ $user['id'] }}][daily_rate]" class="text-xs text-stone-900 font-bold py-1 px-2 border w-20 rounded-sm border-stone-200">
                                             </div>
                                             @if($user['daily_rate'] == 0)
                                                 <div class="text-red-500 text-xs font-semibold text-center w-full">No Rate found</div> 
@@ -139,13 +139,18 @@
                 </table>
             </div>
             {{--  --}}
-            <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
-                <x-forms.button-rounded-md-secondary wire:click="saveForLater">
-                    Save for Later
-                </x-forms.button-rounded-md-secondary>
-                <x-forms.button-rounded-md-primary wire:click="submit">
-                    Proceed
-                </x-forms.button-rounded-md-primary>
+            <div class="w-full py-4 flex justify-between border-t border-stone-200">
+                <div class="text-stone-500 text-sm font-semibold"> 
+                    Last Saved: {{ $timestamp_saved_payroll }}
+                </div>
+                <div class="flex justify-end space-x-2 ">
+                    <x-forms.button-rounded-md-secondary wire:click="saveForLater">
+                        Save for Later
+                    </x-forms.button-rounded-md-secondary>
+                    <x-forms.button-rounded-md-primary wire:click="submit">
+                        Proceed
+                    </x-forms.button-rounded-md-primary>
+                </div>
             </div>
         </div>
     </div>

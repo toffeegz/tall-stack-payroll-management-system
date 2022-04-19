@@ -4,19 +4,22 @@
             <div class="space-y-4 my-4">
                 {{-- total hours --}}
                 @if($selected_user_id != null)
-                <div class="">
-                    <x-forms.label>
-                        Hour Type
-                    </x-forms.label>
-                    <x-forms.select wire:model="selected_type">
-                        <option value="">- Select hour type -</option>
-                        @foreach($payroll[$selected_user_id]['total_hours'] as $key => $value)
-                            @if($value['visible'] == false)
-                                <option value="{{ $key }}">{{ $value['name']}}</option>
-                            @endif
-                        @endforeach 
-                    </x-forms.select>
-                </div>
+                    <div class="">
+                        <x-forms.label>
+                            Hour Type
+                        </x-forms.label>
+                        <x-forms.select wire:model="selected_type">
+                            <option value="">- Select hour type -</option>
+                            @foreach($payroll[$selected_user_id]['total_hours'] as $key => $value)
+                                @if($value['visible'] == false)
+                                    <option value="{{ $key }}">{{ $value['name']}}</option>
+                                @endif
+                            @endforeach 
+                        </x-forms.select>
+                        @error($selected_type)
+                            <span class="text-xs text-red-500 italic">{{ $message }}</span>
+                        @enderror
+                    </div>
                 @endif
             </div>
         {{-- end modal body --}}
@@ -39,19 +42,22 @@
             <div class="space-y-4 my-4">
                 {{-- earning type --}}
                 @if($selected_user_id != null)
-                <div class="">
-                    <x-forms.label>
-                        Earning Type
-                    </x-forms.label>
-                    <x-forms.select wire:model="selected_type">
-                        <option value="">- Select earning type -</option>
-                        @foreach($payroll[$selected_user_id]['additional_earnings'] as $key => $value)
-                            @if($value['visible'] == false)
-                                <option value="{{ $key }}">{{ $value['name']}}</option>
-                            @endif
-                        @endforeach 
-                    </x-forms.select>
-                </div>
+                    <div class="">
+                        <x-forms.label>
+                            Earning Type
+                        </x-forms.label>
+                        <x-forms.select wire:model="selected_type">
+                            <option value="">- Select earning type -</option>
+                            @foreach($payroll[$selected_user_id]['additional_earnings'] as $key => $value)
+                                @if($value['visible'] == false)
+                                    <option value="{{ $key }}">{{ $value['name']}}</option>
+                                @endif
+                            @endforeach 
+                        </x-forms.select>
+                        @error($selected_type)
+                            <span class="text-xs text-red-500 italic">{{ $message }}</span>
+                        @enderror
+                    </div>
                 @endif
             </div>
         {{-- end modal body --}}
@@ -74,19 +80,22 @@
         <div class="space-y-4 my-4">
             {{-- deductions type --}}
             @if($selected_user_id != null)
-            <div class="">
-                <x-forms.label>
-                    Deduction Type
-                </x-forms.label>
-                <x-forms.select wire:model="selected_type">
-                    <option value="">- Select deduction type -</option>
-                    @foreach($payroll[$selected_user_id]['deductions'] as $key => $value)
-                        @if($value['visible'] == false)
-                            <option value="{{ $key }}">{{ $value['name']}}</option>
-                        @endif
-                    @endforeach 
-                </x-forms.select>
-            </div>
+                <div class="">
+                    <x-forms.label>
+                        Deduction Type
+                    </x-forms.label>
+                    <x-forms.select wire:model="selected_type">
+                        <option value="">- Select deduction type -</option>
+                        @foreach($payroll[$selected_user_id]['deductions'] as $key => $value)
+                            @if($value['visible'] == false)
+                                <option value="{{ $key }}">{{ $value['name']}}</option>
+                            @endif
+                        @endforeach 
+                    </x-forms.select>
+                    @error($selected_type)
+                        <span class="text-xs text-red-500 italic">{{ $message }}</span>
+                    @enderror
+                </div>
             @endif
         </div>
     {{-- end modal body --}}

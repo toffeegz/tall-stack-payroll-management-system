@@ -1589,6 +1589,10 @@ select {
   --tw-text-opacity: 1;
   color: rgb(194 65 12 / var(--tw-text-opacity));
 }
+.text-stone-400 {
+  --tw-text-opacity: 1;
+  color: rgb(168 162 158 / var(--tw-text-opacity));
+}
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
@@ -2173,6 +2177,14 @@ select {
 
   .md\:w-64 {
     width: 16rem;
+  }
+
+  .md\:w-1 {
+    width: 0.25rem;
+  }
+
+  .md\:w-16 {
+    width: 4rem;
   }
 
   .md\:grid-cols-2 {

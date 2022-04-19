@@ -30,4 +30,8 @@
     });
     // 
 
+    window.onbeforeunload = function () {
+        return 'Save important data before loading';
+    }
+
 </script>
