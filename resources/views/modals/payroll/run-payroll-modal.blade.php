@@ -11,7 +11,7 @@
                         <x-forms.select wire:model="selected_type">
                             <option value="">- Select hour type -</option>
                             @foreach($payroll[$selected_user_id]['total_hours'] as $key => $value)
-                                @if($value['visible'] == false)
+                                @if($value['visible'] == false && $value['acronym'] == 'nd')
                                     <option value="{{ $key }}">{{ $value['name']}}</option>
                                 @endif
                             @endforeach 

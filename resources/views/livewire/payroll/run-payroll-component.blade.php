@@ -80,18 +80,32 @@
                                         {{-- total hours --}}
                                         @foreach($user['total_hours'] as $key => $data)
                                             @if($data['visible'] == true)
-                                                <div class="flex space-x-1 justify-between w-28 md:w-40" wire:key="{{ $user['id'] }},total_hours,{{ $key }}">
-                                                    <div class="items-center flex justify-center space-x-2 md:w-20 " x-data="{ deleteBtn: false }" @click.away="deleteBtn = false">
-                                                        <a class="cursor-pointer text-xs font-semibold text-stone-500" x-on:click="deleteBtn = !deleteBtn">
+                                                @if($data['acronym'] == 'nd')
+                                                    <div class="flex space-x-1 justify-between w-28 md:w-40" wire:key="{{ $user['id'] }},total_hours,{{ $key }}">
+                                                        <div class="items-center flex justify-center space-x-2 md:w-20 " x-data="{ deleteBtn: false }" @click.away="deleteBtn = false">
+                                                            <a class="cursor-pointer text-xs font-semibold text-stone-500" x-on:click="deleteBtn = !deleteBtn">
+                                                                <span class="hidden md:inline-flex">{{ $data['name'] }}</span>
+                                                                <span class="md:hidden uppercase">{{ $data['acronym'] }}</span>
+                                                            </a>
+                                                            <button wire:click="removeTotalHours({{ $key }}, {{ $user['id'] }})" x-show="deleteBtn" class="ml-2 text-red-500 cursor-pointer" x-cloak>
+                                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                            </button>
+                                                            
+                                                        </div>
+                                                        <input type="number" wire:model="payroll.{{ $user['id'] }}.total_hours.{{ $key }}.amount" name="payroll[{{ $user['id'] }}][total_hours][{{ $key }}][amount]" class="text-xs text-stone-900 font-bold py-1 px-2 border w-16 rounded-sm border-stone-200">
+                                                    </div>
+                                                @else
+                                                    {{-- update no changing of hours --}}
+                                                    <div class="flex space-x-1 justify-between w-28 md:w-40" wire:key="{{ $user['id'] }},total_hours,{{ $key }}">
+                                                        <div class="cursor-pointer text-xs font-semibold text-stone-500">
                                                             <span class="hidden md:inline-flex">{{ $data['name'] }}</span>
                                                             <span class="md:hidden uppercase">{{ $data['acronym'] }}</span>
-                                                        </a>
-                                                        <button wire:click="removeTotalHours({{ $key }}, {{ $user['id'] }})" x-show="deleteBtn" class="ml-2 text-red-500 cursor-pointer" x-cloak>
-                                                            <i class="fa-solid fa-circle-xmark"></i>
-                                                        </button>
+                                                        </div>
+                                                        <div class="text-xs text-stone-900 font-bold py-1 px-2 border w-16 rounded-sm border-stone-200">
+                                                            {{ $data['amount'] }}
+                                                        </div>
                                                     </div>
-                                                    <input type="number" wire:model="payroll.{{ $user['id'] }}.total_hours.{{ $key }}.amount" name="payroll[{{ $user['id'] }}][total_hours][{{ $key }}][amount]" class="text-xs text-stone-900 font-bold py-1 px-2 border w-16 rounded-sm border-stone-200">
-                                                </div>
+                                                @endif
                                             @endif
                                         @endforeach
                                         {{-- add total hours --}}
