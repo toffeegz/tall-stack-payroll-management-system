@@ -88,28 +88,19 @@ class Helper
     // LOAN
     public static function getCashAdvanceAmountToPay($user_id)
     {
-        $loans = Self::loanAutoDeduct($user_id);
-
-        $balance_from_previous = 0;
-        $installment_amount = 0;
-        foreach($loans as $loan)
-        {
-            $loan_installments = LoanInstallment::where('loan_id', $loan->id)->get();
-            $balance_from_previous += $loan_installments->sum('balance');
-            $balance_from_previous += $loan->installment_amount;
-        }
-
-        $total_amount_to_pay = $installment_amount + $balance_from_previous;
-        return $total_amount_to_pay;
-    }
-
-    public static function loanAutoDeduct($user_id)
-    {
-        return Loan::where('user_id', $user_id)
+        $loans = Loan::where('user_id', $user_id)
         ->where('status', 2)
         ->where('auto_deduct', true)
         ->where('balance', '!=', 0)
         ->get();
+
+        $total_amount_to_pay = 0;
+        foreach($loans as $loan)
+        {
+            $total_amount_to_pay += $loan->pay_next;
+        }
+        return $total_amount_to_pay;
     }
+
     
 }
