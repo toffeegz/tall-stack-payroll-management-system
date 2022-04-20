@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('overtime')->comment('hour/s format')->default(0);
             $table->integer('restday')->comment('hour/s format')->default(0);
             $table->integer('restday_ot')->comment('hour/s format')->default(0);
-            $table->integer('night_differential')->default(0);
+            $table->integer('night_differential')->comment('hour/s format')->default(0);
             $table->integer('late')->comment('hour/s format')->default(0);
             $table->integer('undertime')->comment('hour/s format')->default(0);
 
