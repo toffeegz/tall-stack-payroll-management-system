@@ -33,6 +33,22 @@ class Helper
         return $dateRange->toArray();
     }
 
+    public static function getRangeBetweenDatesStr($period_start, $period_end)
+    {
+        $start_date = Carbon::createFromFormat('Y-m-d', $period_start);
+        $end_date = Carbon::createFromFormat('Y-m-d', $period_end);
+  
+        $dateRange = CarbonPeriod::create($start_date, $end_date);;
+
+        $dates = [];
+        // Iterate over the period
+        foreach ($dateRange as $date) {
+            $dates[] = $date->format('Y-m-d');
+        }
+
+        // Convert the period to an array of dates
+        return $dates;
+    }
     public static function isDateWorkingDay($date)
     {
         // return boolean
