@@ -256,7 +256,7 @@ class AttendanceComponent extends Component
             ]);
 
             $get_hours = Self::getHoursAttendance($this->date_add_attendance, $this->time_in_add_attendance, $this->time_out_add_attendance);
-            $get_status = Self::getAttendanceStatus($get_hours['late']);
+            $get_status = Self::getAttendanceStatus($this->date_add_attendance, $get_hours['late']);
 
             $data = [
                 'user_id' => Auth::user()->id,
@@ -307,7 +307,7 @@ class AttendanceComponent extends Component
             
 
             $get_hours = Self::getHoursAttendance($this->date_add_attendance, $this->time_in_add_attendance, $this->time_out_add_attendance);
-            $get_status = Self::getAttendanceStatus($get_hours['late']);
+            $get_status = Self::getAttendanceStatus($this->date_add_attendance, $get_hours['late']);
 
             foreach($this->selected_users_add_attendance as $user_id)
             {
@@ -349,10 +349,11 @@ class AttendanceComponent extends Component
             $status = $this->selected_status_approve_attendance;
 
             $update_attendance = Attendance::find($attendance_id);
+            $date = $update_attendance->date;
 
             if($this->selected_status_approve_attendance != 5)
             {
-                $status = Self::getAttendanceStatus($update_attendance->late);
+                $status = Self::getAttendanceStatus($date, $update_attendance->late);
             }
 
             $update_attendance->status = $status;
@@ -374,9 +375,10 @@ class AttendanceComponent extends Component
 
         $status = $this->selected_details_status;
         if(Auth::user()->hasRole('administrator')) {
-            if($this->selected_details_status == 1)
+            if($status == 1)
             {
-                $status = Self::getAttendanceStatus($updated_hours['late']);
+                $date = $this->selected_details_date;
+                $status = Self::getAttendanceStatus($date, $updated_hours['late']);
             }
         } else {
             $status = 4;
@@ -708,13 +710,14 @@ class AttendanceComponent extends Component
         ];
     }
 
-    public function getAttendanceStatus($late_hours)
+    public function getAttendanceStatus($date, $late_hours)
     {
-        $date = Carbon::parse($this->date_add_attendance);
+        $date = Carbon::parse($date);
         $is_date_working_day = Helper::isDateWorkingDay($date);
         $status = 0;
         if(Auth::user()->hasRole('administrator'))
         {
+            
             if($is_date_working_day == true)
             {
                 $status = 1; // PRESENT
