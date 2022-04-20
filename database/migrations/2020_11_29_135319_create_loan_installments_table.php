@@ -18,7 +18,6 @@ class CreateLoanInstallmentsTable extends Migration
             $table->string('loan_id');
             $table->string('user_id');
             $table->float('amount');
-            $table->float('balance')->default(0);
             $table->date('pay_date');
             $table->text('notes')->nullable();
             $table->timestamps();

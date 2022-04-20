@@ -21,6 +21,7 @@ class CreateLoansTable extends Migration
             $table->float('amount')->default(0);
             $table->float('total_amount_to_pay')->default(0);
             $table->float('balance')->default(0);
+            $table->float('pay_next')->default(0);
             $table->float('installment_amount')->default(0);
             $table->date('date_approved');
             $table->text('details')->nullable();
