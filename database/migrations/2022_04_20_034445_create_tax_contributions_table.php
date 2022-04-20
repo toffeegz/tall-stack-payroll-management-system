@@ -15,10 +15,10 @@ class CreateTaxContributionsTable extends Migration
     {
         Schema::create('tax_contributions', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->date('date');
-            $table->unsignedSmallInteger('payroll_period');
-            $table->unsignedSmallInteger('tax_type');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedTinyInteger('cutoff_order');
+            $table->unsignedBigInteger('payroll_period_id');
+            $table->unsignedTinyInteger('tax_type')->comment('1-sss,2-hdmf,3-phic');
             $table->double('employee_share');
             $table->double('employer_share');
             $table->timestamps();
