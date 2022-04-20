@@ -16,10 +16,8 @@ return new class extends Migration
         Schema::create('payslips', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->date('period_start');
-            $table->date('period_end');
-            $table->date('payout_date');
-            $table->unsignedInteger('payroll_period_id')->nullable();
+            $table->unsignedInteger('payroll_period_id');
+            $table->unsignedInteger('cutoff_order');
             $table->boolean('is_paid')->default(0);
 
             $table->decimal('daily_rate', $precision = 20, $scale = 3);
