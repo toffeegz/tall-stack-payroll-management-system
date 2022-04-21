@@ -238,7 +238,7 @@ class PayslipJob implements ShouldQueue
                     $designation = "";
                     if($user->latestDesignation() != null)
                     {
-                        $designation = $user->latestDesignation()->name;
+                        $designation = $user->latestDesignation()->designation_name;
                     }
                     
                     $label_additional_earnings = $raw_data['earnings_collection']['additional_earnings'];
