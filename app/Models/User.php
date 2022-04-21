@@ -12,6 +12,7 @@ use Laratrust\Traits\LaratrustUserTrait;
 use App\Models\Attendance;
 use App\Models\Project;
 use App\Models\Designation;
+use App\Models\Payslip;
 
 class User extends Authenticatable
 {
@@ -85,6 +86,10 @@ class User extends Authenticatable
         return $this->designations()->latest()->first();
     }
 
+    public function payslips()
+    {
+        return $this->hasMany(Payslip::class);
+    }
 
 
     // scope
