@@ -17,6 +17,13 @@
             modalObject.closeModal('modalTaxContribution'); 
         });
 
+        Livewire.on('openLoanModal', (el, component) => {
+            modalObject.openModal('modalLoan'); 
+        });
+        Livewire.on('closeLoanModal', (el, component) => {
+            modalObject.closeModal('modalLoan'); 
+        });
+
     });
     // 
 

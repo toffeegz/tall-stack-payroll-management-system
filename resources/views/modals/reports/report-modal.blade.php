@@ -1,4 +1,4 @@
-{{-- modal total hours --}}
+{{-- modal tax contribution --}}
 <x-modal-small id="modalTaxContribution" title="Tax Contribution Report" wire:ignore.self>
     {{-- modal body --}}
         <div class="space-y-4 my-4">
@@ -39,6 +39,48 @@
                 Cancel
             </x-forms.button-rounded-md-secondary>
             <x-forms.button-rounded-md-primary wire:click="generateTaxContributionReport" wire:loading.attr="disabled">
+                Generate Report
+            </x-forms.button-rounded-md-primary>
+        </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{--  --}}
+
+{{-- modal loan report --}}
+<x-modal-small id="modalLoan" title="Loan Report" wire:ignore.self>
+    {{-- modal body --}}
+        <div class="space-y-4 my-4">
+            <div class="grid grid-cols-2 gap-4">
+
+                {{-- start --}}
+                <div class="">
+                    <x-forms.label>
+                        Start Date
+                    </x-forms.label>
+                    <x-forms.input type="date" wire:model="start_date"></x-forms.input>
+                    @error('start_date')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+                {{-- start --}}
+                <div class="">
+                    <x-forms.label>
+                        End Date
+                    </x-forms.label>
+                    <x-forms.input type="date" wire:model="end_date"></x-forms.input>
+                    @error('end_date')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+        </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+        <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalLoan')">
+                Cancel
+            </x-forms.button-rounded-md-secondary>
+            <x-forms.button-rounded-md-primary wire:click="generateLoanReport" wire:loading.attr="disabled">
                 Generate Report
             </x-forms.button-rounded-md-primary>
         </div>

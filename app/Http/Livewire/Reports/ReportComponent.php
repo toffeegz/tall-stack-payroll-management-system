@@ -16,6 +16,7 @@ use App\Exports\Report\PayrollJournalExport;
 use App\Models\Payslip;
 use App\Models\PayrollPeriod;
 use App\Models\TaxContribution;
+use App\Models\Loan;
 
 use Carbon\Carbon;
 
@@ -25,6 +26,7 @@ class ReportComponent extends Component
     public $payroll_period = "";
     public $message;
 
+    public $start_date, $end_date;
 
     public function render()
     {
@@ -101,5 +103,45 @@ class ReportComponent extends Component
         }
 
         
+    }
+
+    public function generateLoanReport()
+    {
+        $this->validate([
+            'start_date'  =>  'date|nullable|before:tomorrow',
+            'end_date'    =>  'date|nullable|after_or_equal:start_date|before:tomorrow'
+        ]);
+        $start_date = $this->start_date;
+        $end_date = $this->end_date;
+        $raw_data = Loan::query()
+        ->where(function ($query) use ($start_date, $end_date){
+            if($start_date && $end_date) {
+                return $query->whereBetween('created_at',[$start_date, $end_date]);
+            } elseif($start_date) {
+                return $query->where('created_at', '>=', $start_date);
+            } elseif($end_date) {
+                return $query->where('created_at', '<=', $end_date);
+            }
+        })
+        ->get();
+
+        if($raw_data->count() != 0)
+        { 
+            $payroll_period = PayrollPeriod::find($this->payroll_period);
+            $data = [
+                'period_start' => $start_date,
+                'period_end' => $end_date,
+            ];
+            $filename = Carbon::now()->format('Ymd') . ' Loan Contribution.xlsx';
+            $this->emit('closeLoanModal');
+
+            return Excel::download(new LoanExport($data, $raw_data), $filename);
+        }
+        else
+        {
+            
+            $this->emit('closeTaxContributionModal');
+            $this->emit('openNotifModal');
+        }
     }
 }
