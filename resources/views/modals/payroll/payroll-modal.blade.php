@@ -38,7 +38,7 @@
                 <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalTotalHours')">
                     Cancel
                 </x-forms.button-rounded-md-secondary>
-                <x-forms.button-rounded-md-primary wire:click="submitPreviousPayroll">
+                <x-forms.button-rounded-md-primary wire:click="submitPreviousPayroll" wire:loading.attr="disabled">
                     Run Payroll
                 </x-forms.button-rounded-md-primary>
             </div>

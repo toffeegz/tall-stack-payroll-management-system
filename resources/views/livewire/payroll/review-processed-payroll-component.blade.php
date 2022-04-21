@@ -34,7 +34,7 @@
             </div>
             <div class="w-full  flex items-start">
                 <div class="flex justify-end space-x-4 ">
-                    <x-forms.button-rounded-md-primary wire:click="submitPayroll">
+                    <x-forms.button-rounded-md-primary wire:click="submitPayroll" wire:loading.attr="disabled">
                         Submit Payroll
                     </x-forms.button-rounded-md-primary>
                     {{-- <x-forms.button-rounded-md-secondary wire:click="saveForLater">

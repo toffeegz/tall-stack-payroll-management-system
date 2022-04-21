@@ -60,17 +60,8 @@ class PayslipJob implements ShouldQueue
 
         if($payroll_period && $user)
         {
-            $payslip = Payslip::where('user_id', $user->id)
-            ->where('payroll_period_id')
-            ->first();
             
-            // payslip exist
-            if($payslip)
-            {
-
-            }
-            else 
-            {
+            
                 // DEDUCTIONS
                     $deductions_collection = $raw_data['deductions_collection'];
                     
@@ -146,10 +137,8 @@ class PayslipJob implements ShouldQueue
                         // SSS
                             $sss_tax_contributions = $raw_data['deductions_collection']['tax_contribution']['sss_contribution'];
 
-                            $sss_new_contribution = new TaxContribution;
-                            $sss_new_contribution->user_id = $user->id;
+                            $sss_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id]);
                             $sss_new_contribution->cutoff_order = $cutoff_order;
-                            $sss_new_contribution->payroll_period_id = $payroll_period->id;
                             $sss_new_contribution->tax_type = 1;
                             $sss_new_contribution->employee_share = $sss_tax_contributions['ee'];
                             $sss_new_contribution->employer_share = $sss_tax_contributions['er'];
@@ -160,11 +149,9 @@ class PayslipJob implements ShouldQueue
                         // HDMF
                             $hdmf_tax_contributions = $raw_data['deductions_collection']['tax_contribution']['hdmf_contribution'];
 
-                            $hdmf_new_contribution = new TaxContribution;
-                            $hdmf_new_contribution->user_id = $user->id;
+                            $hdmf_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id]);
                             $hdmf_new_contribution->cutoff_order = $cutoff_order;
-                            $hdmf_new_contribution->payroll_period_id = $payroll_period->id;
-                            $hdmf_new_contribution->tax_type = 1;
+                            $hdmf_new_contribution->tax_type = 2;
                             $hdmf_new_contribution->employee_share = $hdmf_tax_contributions['total_ee'];
                             $hdmf_new_contribution->employer_share = $hdmf_tax_contributions['total_er'];
                             $hdmf_new_contribution->save();
@@ -175,11 +162,9 @@ class PayslipJob implements ShouldQueue
                         // PHIC
                             $phic_tax_contributions = $raw_data['deductions_collection']['tax_contribution']['phic_contribution'];
 
-                            $phic_new_contribution = new TaxContribution;
-                            $phic_new_contribution->user_id = $user->id;
+                            $phic_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id]);
                             $phic_new_contribution->cutoff_order = $cutoff_order;
-                            $phic_new_contribution->payroll_period_id = $payroll_period->id;
-                            $phic_new_contribution->tax_type = 1;
+                            $phic_new_contribution->tax_type = 3;
                             $phic_new_contribution->employee_share = $phic_tax_contributions['total_ee'];
                             $phic_new_contribution->employer_share = $phic_tax_contributions['total_er'];
                             $phic_new_contribution->save();
@@ -317,7 +302,7 @@ class PayslipJob implements ShouldQueue
 
 
                 // PAYSLIP
-                    $new_payslip = new Payslip;
+                    $new_payslip = Payslip::firstOrNew(['user_id'=>$user->id, 'payroll_period_id'=>$payroll_period->id]);
                     $new_payslip->user_id = $user->id;
                     $new_payslip->payroll_period_id = $payroll_period->id;
                     $new_payslip->cutoff_order = $cutoff_order;
@@ -352,7 +337,7 @@ class PayslipJob implements ShouldQueue
 
 
                 // 
-            }
+            
         }
 
         return 'success';

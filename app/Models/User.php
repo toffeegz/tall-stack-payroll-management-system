@@ -13,6 +13,7 @@ use App\Models\Attendance;
 use App\Models\Project;
 use App\Models\Designation;
 use App\Models\Payslip;
+use App\Models\TaxContribution;
 
 class User extends Authenticatable
 {
@@ -89,6 +90,11 @@ class User extends Authenticatable
     public function payslips()
     {
         return $this->hasMany(Payslip::class);
+    }
+
+    public function taxContributions()
+    {
+        return $this->hasMany(TaxContribution::class);
     }
 
 

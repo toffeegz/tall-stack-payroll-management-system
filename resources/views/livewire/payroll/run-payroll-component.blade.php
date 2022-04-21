@@ -173,10 +173,10 @@
                     Last Saved: {{ $timestamp_saved_payroll }}
                 </div>
                 <div class="flex justify-end space-x-2 ">
-                    <x-forms.button-rounded-md-secondary wire:click="saveForLater">
+                    <x-forms.button-rounded-md-secondary wire:click="saveForLater" wire:loading.attr="disabled">
                         Save for Later
                     </x-forms.button-rounded-md-secondary>
-                    <x-forms.button-rounded-md-primary wire:click="submit">
+                    <x-forms.button-rounded-md-primary wire:click="submit" wire:loading.attr="disabled">
                         Proceed
                     </x-forms.button-rounded-md-primary>
                 </div>

@@ -24,7 +24,7 @@
                                     <x-customs.label>
                                         Frequency
                                     </x-customs.label>
-                                    <x-customs.select wire:model="ps_frequency_id">
+                                    <x-customs.select wire:model="frequency_id">
                                         <option value="1">Semi-Monthly</option>
                                         <option value="2">Weekly</option>
                                     </x-customs.select>
@@ -33,7 +33,7 @@
                                     <x-customs.label>
                                         Payroll period
                                     </x-customs.label>
-                                    <x-customs.select wire:model="ps_payroll_period">
+                                    <x-customs.select wire:model="payroll_period">
                                         <option value="">- Select payroll period -</option>
                                         @foreach($payroll_periods as $payroll_period)
                                             <option value="{{ $payroll_period->id }}">
@@ -44,14 +44,14 @@
                                             </option>
                                         @endforeach
                                     </x-customs.select>
-                                    @error('ps_payroll_period')
+                                    @error('payroll_period')
                                         <p class="italic text-red-500 text-xs">payroll period is required</p>
                                     @enderror
                                 </div>
                                 
                             </div>
                             <div class="flex justify-end">
-                                <button wire:click="generatePayrollSummaryReport" class="px-4 py-1.5 text-xs font-semibold leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-full active:bg-blue-600 hover:bg-blue-600 focus:outline-none focus:shadow-outline-purple">
+                                <button wire:click="generatePayrollSummaryReport" wire:loading.attr="disabled" class="px-4 py-1.5 text-xs font-semibold leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-full active:bg-blue-600 hover:bg-blue-600 focus:outline-none focus:shadow-outline-purple">
                                     Generate Report 
                                     <i class="ml-2 fa-solid fa-arrow-right-long"></i>
                                 </button>
@@ -102,7 +102,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <a onclick="modalObject.openModal('modalPreviousPayroll')" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                                    <a onclick="modalObject.openModal('modalTaxContribution')" class="cursor-pointer text-blue-500 text-xs font-semibold">
                                         View <i class="fa-solid fa-angle-right ml-2 fa-xs"></i>
                                     </a>
                                 </div>
@@ -162,6 +162,6 @@
             {{--  --}}
         </div>
     </div>
-    {{-- @include('modals.payroll.payroll-modal')
-    @include('scripts.payroll.payroll-script') --}}
+    @include('modals.reports.report-modal')
+    @include('scripts.reports.report-script')
 </div>
