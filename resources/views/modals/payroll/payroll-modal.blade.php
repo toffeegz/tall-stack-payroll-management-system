@@ -2,6 +2,15 @@
     <x-modal-small id="modalPreviousPayroll" title="Payroll Period" wire:ignore.self>
         {{-- modal body --}}
             <div class="space-y-4 my-4">
+                <div class="">
+                    <x-forms.label>
+                        Frequency
+                    </x-forms.label>
+                    <x-forms.select wire:model="selected_frequency_id">
+                        <option value="1">Semi-Monthly</option>
+                        <option value="2">Weekly</option>
+                    </x-forms.select>
+                </div>
                 {{-- payroll period --}}
                 <div class="">
                     <x-forms.label>

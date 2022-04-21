@@ -133,13 +133,24 @@ class PayrollClass {
 
             // HOLIDAY
                 $holidays_collection = [];
+
+                
+                $holiday_regular_pay = 0;
+                $holiday_overtime_pay = 0;
+                $holiday_restday_pay = 0;
+                $holiday_restday_overtime_pay = 0;
+
+                $legal_holiday_pay = 0;
+                $legal_ot_holiday_pay = 0;
+                $special_holiday_pay = 0;
+                $special_ot_holiday_pay = 0;
+                $double_holiday_pay = 0;
+                $double_ot_holiday_pay = 0;
+
                 if($user->is_paid_holidays == true)
                 {
                     
-                    $holiday_regular_pay = 0;
-                    $holiday_overtime_pay = 0;
-                    $holiday_restday_pay = 0;
-                    $holiday_restday_overtime_pay = 0;
+
 
                     foreach($date_range as $date)
                     {
@@ -164,7 +175,7 @@ class PayrollClass {
                         
                         // get holidays
                         $holidays = Holiday::where('date', $date)->get();
-
+                        
                         if($holidays->count() == 1)
                         {
                             // legal 
@@ -175,6 +186,11 @@ class PayrollClass {
 
                                 $holiday_restday_pay += ($sot * $hourly_rate * 1.3);
                                 $holiday_restday_overtime_pay += ($sot_ot * $hourly_rate * 1.69);
+
+                                $legal_holiday_pay += ($rh * $hourly_rate);
+                                $legal_ot_holiday_pay += ($ot * $hourly_rate * 1.60);
+                                $legal_holiday_pay += ($sot * $hourly_rate * 1.3);
+                                $legal_ot_holiday_pay += ($sot_ot * $hourly_rate * 1.69);
                             }
                             else 
                             {
@@ -183,6 +199,11 @@ class PayrollClass {
                                 
                                 $holiday_restday_pay += ($sot * $hourly_rate * .2);
                                 $holiday_restday_overtime_pay += ($sot_ot * $hourly_rate * .26);
+
+                                $special_holiday_pay += ($rh * $hourly_rate * .3);
+                                $special_ot_holiday_pay += ($ot * $hourly_rate * .69);
+                                $special_holiday_pay += ($sot * $hourly_rate * .2);
+                                $special_ot_holiday_pay += ($sot_ot * $hourly_rate * .26);
                             }
                         }
                         elseif($holidays->count() > 1)
@@ -192,6 +213,11 @@ class PayrollClass {
                             $holiday_overtime_pay += ($ot * $hourly_rate * 2.90);
                             $holiday_restday_pay += ($sot * $hourly_rate * 2.6);
                             $holiday_restday_overtime_pay += ($sot_ot * $hourly_rate * 3.38);
+
+                            $double_holiday_pay += ($rh * $hourly_rate * 2);
+                            $double_ot_holiday_pay += ($ot * $hourly_rate * 2.90);
+                            $double_holiday_pay += ($sot * $hourly_rate * 2.6);
+                            $double_ot_holiday_pay += ($sot_ot * $hourly_rate * 3.38);
                         }
 
                     }
@@ -199,13 +225,21 @@ class PayrollClass {
                     
 
                     $holiday_pay = $holiday_regular_pay + $holiday_overtime_pay + $holiday_restday_pay + $holiday_restday_overtime_pay;
-                    $holidays_collection = [
-                        'regular'=> $holiday_regular_pay,
-                        'overtime'=> $holiday_overtime_pay,
-                        'restday'=> $holiday_restday_pay,
-                        'restday_overtime'=> $holiday_restday_overtime_pay,
-                    ];
+                    
                 }
+                
+                $holidays_collection = [
+                    'regular'=> $holiday_regular_pay,
+                    'overtime'=> $holiday_overtime_pay,
+                    'restday'=> $holiday_restday_pay,
+                    'restday_overtime'=> $holiday_restday_overtime_pay,
+                    'legal'=>$legal_holiday_pay,
+                    'legal_ot'=>$legal_ot_holiday_pay,
+                    'special'=>$special_holiday_pay,
+                    'special_ot'=>$special_ot_holiday_pay,
+                    'double' =>$double_holiday_pay,
+                    'double_ot' =>$double_ot_holiday_pay,
+                ];
             // 
 
             // ADDITIONAL EARNINGS, TAXABLE, NONTAXABLE

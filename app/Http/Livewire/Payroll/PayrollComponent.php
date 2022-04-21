@@ -16,6 +16,7 @@ class PayrollComponent extends Component
     
     public $perPage = 10;
     public $selected_payroll_period;
+    public $selected_frequency_id;
     public $search_payslip_using_paydate;
     public $search;
 
@@ -47,6 +48,7 @@ class PayrollComponent extends Component
     public function getPreviousPayrollsProperty()
     {
         return PayrollPeriod::latest('period_end')
+        ->where('frequency_id', $this->selected_frequency_id)
         ->get();
     }
 

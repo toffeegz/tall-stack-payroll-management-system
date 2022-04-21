@@ -190,36 +190,143 @@ class PayslipJob implements ShouldQueue
                     }
                 // 
 
+                // LABELS
+                    // daily_rate
+                    // designation
+                    // number_dependent
+
+                    // hours
+                        // regular
+                        // overtime
+                        // restday
+                        // restday_ot
+                        // night_diff
+                        // late
+                        // undertime
+
+                    // earnings
+                        // adjustment
+                        // holiday
+                            // legal
+                            // legal_ot
+                            // special
+                            // special_ot
+                            // double
+                            // double_ot
+                        // additional earnings
+                            // bonus
+                            // etc
+
+                    // deductions
+                        // absences
+                        // late
+                        // undertime
+                        // cash advance
+                        // sss_loan
+                        // hdmf_loan
+                        
+                        // tax_contributions
+                            // sss
+                            // hdmf
+                            // phic
+
+
+                // 
+
+                // LABEL COLLECTION
+                    
+                    $designation = "";
+                    if($user->latestDesignation() != null)
+                    {
+                        $designation = $user->latestDesignation()->name;
+                    }
+                    
+                    $label_additional_earnings = $raw_data['earnings_collection']['additional_earnings'];
+                    // 
+                        $adjustment = 0;
+                        if(array_key_exists('Adjustments', $label_additional_earnings))
+                        {
+                            $adjustment = $label_additional_earnings['Adjustments'];
+                        }
+                    // 
+                    // holidays
+                        $holidays_collection = $raw_data['holidays_collection'];
+                    // 
+
+                    // deductions collction
+                        $sss_to_pay = 0;
+                        $hdmf_to_pay = 0;
+                        $phic_to_pay = 0;
+                        $label_deductions_collection = $raw_data['deductions_collection'];
+                        if(array_key_exists('tax_contribution', $label_deductions_collection))
+                        {
+                            $label_tax_contributions = $label_deductions_collection['tax_contribution'];
+                            $sss_to_pay = $label_tax_contributions['sss_contribution']['ee'];
+                            $hdmf_to_pay = $label_tax_contributions['hdmf_contribution']['total_ee'];
+                            $phic_to_pay = $label_tax_contributions['phic_contribution']['total_ee'];
+                        }
+                        
+                    // 
+                    $label_collection = [
+                        'daily_rate' => $daily_rate,
+                        'designation' => $designation,
+                        'number_dependent' => $user->number_dependent,
+                        'Hours' => [
+                            'Regular' => $regular,
+                            'Overtime' => $overtime,
+                            'Restday' => $restday,
+                            'Restday OT' => $restday_ot,
+                            'Night Differential' => $night_differential,
+                            'Late' => $late,
+                            'Undertime' => $undertime,
+                        ],
+                        'Earnings' => [
+                            'Adjustment' => $adjustment,
+                            'Holiday' => [
+                                'Legal' => $holidays_collection['legal'],
+                                'Legal OT' => $holidays_collection['legal_ot'],
+                                'Special' => $holidays_collection['special'],
+                                'Special OT' => $holidays_collection['special_ot'],
+                                'Double' => $holidays_collection['double'],
+                                'Double OT' => $holidays_collection['double_ot'],
+                            ],
+                            'Others' => $label_additional_earnings,
+                        ],
+                        'Deductions' => [
+                            'Late' => $label_deductions_collection['late'],
+                            'Undertime' => $label_deductions_collection['undertime'],
+                            'Absences' => $label_deductions_collection['absences'],
+                            'Cash Advance' => $label_deductions_collection['loan'],
+                            'SSS Loan' => $label_deductions_collection['sss_loan'],
+                            'HDMF Loan' => $label_deductions_collection['hdmf_loan'],
+                            'Tax Contribution' => [
+                                'SSS' => $sss_to_pay,
+                                'PHIC' => $hdmf_to_pay,
+                                'HDMF' => $phic_to_pay,
+                            ]
+                        ]
+                    ];
+                // 
+
+
                 // PAYSLIP
                     $new_payslip = new Payslip;
                     $new_payslip->user_id = $user->id;
                     $new_payslip->payroll_period_id = $payroll_period->id;
                     $new_payslip->cutoff_order = $cutoff_order;
                     $new_payslip->is_paid = false;
-                    $new_payslip->daily_rate = $daily_rate;
-                    $new_payslip->regular = $regular;
-                    $new_payslip->overtime = $overtime;
-                    $new_payslip->restday = $restday;
-                    $new_payslip->restday_ot = $restday_ot;
-                    $new_payslip->night_differential = $night_differential;
-                    $new_payslip->late = $late;
-                    $new_payslip->undertime = $undertime;
-
                     
                     $new_payslip->basic_pay = $raw_data['basic_pay'];
                     $new_payslip->gross_pay = $raw_data['gross_pay'];
                     $new_payslip->net_pay = $raw_data['net_pay'];
                     
-                    $new_payslip->tardiness_amount = $raw_data['tardiness_amount'];
-                    $new_payslip->total_deductions = $raw_data['total_deductions'];
+                    $new_payslip->tardiness = $raw_data['tardiness_amount'];
+                    $new_payslip->deductions = $raw_data['total_deductions'];
+
                     $new_payslip->taxable = $raw_data['taxable'];
-                    
                     $new_payslip->non_taxable = $raw_data['non_taxable'];
                     
-                    $new_payslip->number_of_declared_dependents = $user->number_dependent;
-
-                    $new_payslip->earnings = json_encode($raw_data['earnings_collection']);
-                    $new_payslip->deductions = json_encode($raw_data['deductions_collection']);
+                    $new_payslip->labels = json_encode($label_collection);
                     $new_payslip->save();
 
 
@@ -236,7 +343,6 @@ class PayslipJob implements ShouldQueue
                     $new_payslip_deductions->loan = $loan; 
                     $new_payslip_deductions->save(); 
 
-                    // 
 
                 // 
             }
