@@ -78,6 +78,7 @@ class PayrollClass {
             // 
 
             // EARNINGS 
+                $holiday_pay = 0;
                 $regular_hours = 0;
                 $overtime_hours = 0;
                 $restday_hours = 0;
@@ -134,6 +135,7 @@ class PayrollClass {
                 $holidays_collection = [];
                 if($user->is_paid_holidays == true)
                 {
+                    
                     $holiday_regular_pay = 0;
                     $holiday_overtime_pay = 0;
                     $holiday_restday_pay = 0;
@@ -237,6 +239,7 @@ class PayrollClass {
 
             // DEDUCTIONS
                 $total_deductions = 0;
+                $loan_deductions = 0;
                 $deductions_collection = [];
 
                 $late_hours = 0;
@@ -336,14 +339,12 @@ class PayrollClass {
 
                     }
 
-                    $total_deductions += $loan_amount;
-                    $total_deductions += $sss_loan;
-                    $total_deductions += $hdmf_loan;
-
+                    $loan_deductions = $loan_amount + $sss_loan + $hdmf_loan;
             
                 // 
 
                 // TAX CONTRIBUTION
+                    $tax_contributions = 0;
                     if($user->is_tax_exempted == false)
                     {
                         $cutoff_order = 2;
@@ -353,57 +354,84 @@ class PayrollClass {
                             $limit[] = $i;
                         }
 
-                        // BMO
-                        if($user->frequency_id == 1)
-                        {
-                            $latest_payslip = Payslip::where('user_id', $user_id)
-                            ->latest('created_at')
-                            ->first();
-                            if($latest_payslip)
-                            {
-                                $last_cutoff_order = $latest_payslip->cutoff_order;
-                                if($last_cutoff_order == 1)
-                                {
-                                    $cutoff_order = 2;
-                                }
-                            }
-                        }
+                        // GET PREVIOUS PAYROLL PERIOD TO GET LATEST PAYSLIP 
 
-                        // WKL
-                        if($user->frequency_id == 2)
-                        {
-                            $latest_payslip = Payslip::where('user_id', $user_id)
-                            ->latest('created_at')
+                            $previous_payroll_period = PayrollPeriod::where('frequency_id', $payroll_period->frequency_id)
+                            ->whereDate('period_end', '<', $payroll_period->period_end)
+                            ->latest('period_end')
                             ->first();
-                            if($latest_payslip)
+
+                            $latest_payslip = null;
+
+                            if($previous_payroll_period)
                             {
-                                $last_cutoff_order = $latest_payslip->cutoff_order;
-                                if($last_cutoff_order == 1)
-                                {
-                                    $cutoff_order = 2;
-                                }
-                                if($last_cutoff_order == 2)
-                                {
-                                    $cutoff_order = 3;
-                                }
-                                if($last_cutoff_order == 3)
-                                {
-                                    $cutoff_order = 4;
-                                }
+                                // get payslip
+                                $latest_payslip = Payslip::where('user_id', $user->id)
+                                ->where('payroll_period_id', $previous_payroll_period->id)
+                                ->first();
+
                             }
 
-                        }
+                            // CUTOFF ORDER
+                                $cutoff_order = 1;
+
+                                // BMO
+                                if($user->frequency_id == 1)
+                                {
+
+                                    $cutoff_order = 2;
+                                    
+                                    if($latest_payslip)
+                                    {
+                                        $last_cutoff_order = $latest_payslip->cutoff_order;
+                                        if($latest_payslip->cutoff_order == 2)
+                                        {
+                                            $cutoff_order = 1;
+                                        }
+                                    }
+                                }
+
+                                // WKL
+                                if($user->frequency_id == 2)
+                                {
+                                    if($latest_payslip)
+                                    {
+                                        if($latest_payslip->cutoff_order == 4)
+                                        {
+                                            $cutoff_order = 1;
+                                        } else {
+                                            $cutoff_order = $latest_payslip->cutoff_order + 1;
+                                        }
+                                    }
+
+                                }
+                            // 
+                        // ///// 
 
                         if($cutoff_order == 1){
                             $salary = $taxable;
                         } else {
-                            $payslips = Payslip::where('user_id', $user_id)
-                            ->latest('created_at')
-                            ->whereIn('cutoff_order', [$limit])
-                            ->limit($limit)
-                            ->get();
+                            
+                            if($cutoff_order == 2)
+                            {   
+                                $payroll_period_ids[] = $previous_payroll_period->id;
+                            }
+                            elseif($cutoff_order == 3 || $cutoff_order == 4)
+                            {   
+                                $payroll_period_records = PayrollPeriod::where('frequency_id', $payroll_period->frequency_id)
+                                ->whereDate('period_end', '<', $payroll_period->period_end)
+                                ->latest('period_end')
+                                ->limit($cutoff_order - 1)
+                                ->pluck('id');
 
-                            $salary = $taxable + $payslips->sum('taxable');
+                                $payroll_period_ids[] = $payroll_period_records;
+
+                                $previous_payslips = Payslip::where('user_id', $user->id)
+                                ->whereIn('payroll_period_id', [$payroll_period_ids])
+                                ->get();
+
+                                $salary = $taxable + $payslips->sum('taxable');
+                            }
                         }
 
                         $tax_divide = 2;
@@ -417,15 +445,13 @@ class PayrollClass {
 
                             $sss_er_to_pay = $sss_monthly_tax_contribution['er'];
                             $sss_ee_to_pay = $sss_monthly_tax_contribution['ee'];
-                            $sss_ec_to_pay = $sss_monthly_tax_contribution['ec'] / 4;
+                            $sss_ec_to_pay = $sss_monthly_tax_contribution['ec'] / $tax_divide;
 
                             if($cutoff_order != 1)
                             {
                                 $paid_tax_sss = TaxContribution::where('user_id', $user_id)
                                 ->where('tax_type', 1)
-                                ->whereIn('cutoff_order', [$limit])
-                                ->latest('created_at')
-                                ->limit($limit)
+                                ->whereIn('payroll_period_id', [$payroll_period_ids])
                                 ->get();
                                 $sss_er_paid = $paid_tax_sss->sum('employer_share');
                                 $sss_ee_paid = $paid_tax_sss->sum('employee_share');
@@ -439,7 +465,8 @@ class PayrollClass {
                                 'ec' => $sss_ec_to_pay,
                             ];
 
-                            $total_deductions += $sss_ec_to_pay;
+                            $tax_contributions += $sss_ee_to_pay;
+
                         // 
 
                         // HDMF CONTRIBUTION (TYPE 2)
@@ -457,9 +484,7 @@ class PayrollClass {
                             {
                                 $paid_tax_hdmf = TaxContribution::where('user_id', $user_id)
                                 ->where('tax_type', 2)
-                                ->whereIn('cutoff_order', [$limit])
-                                ->latest('created_at')
-                                ->limit($limit)
+                                ->whereIn('payroll_period_id', [$payroll_period_ids])
                                 ->get();
 
                                 $hdmf_er_paid = $paid_tax_hdmf->sum('employer_share');
@@ -486,7 +511,8 @@ class PayrollClass {
                                 'month_ee' => $hdmf_monthly_ee_to_pay,
                                 'month_er' => $hdmf_monthly_er_to_pay,
                             ];
-                            $total_deductions += $hdmf_total_ee;
+                            $tax_contributions += $hdmf_total_ee;
+
 
                         // 
                     
@@ -505,9 +531,7 @@ class PayrollClass {
                             {
                                 $paid_tax_phic = TaxContribution::where('user_id', $user_id)
                                 ->where('tax_type', 3)
-                                ->whereIn('cutoff_order', [$limit])
-                                ->latest('created_at')
-                                ->limit($limit)
+                                ->whereIn('payroll_period_id', [$payroll_period_ids])
                                 ->get();
 
                                 $phic_er_paid = $paid_tax_hdmf->sum('employer_share');
@@ -534,34 +558,57 @@ class PayrollClass {
                                 'month_ee' => $phic_monthly_ee_to_pay,
                                 'month_er' => $phic_monthly_er_to_pay,
                             ];
-                            $total_deductions += $phic_total_ee;
+                            $tax_contributions += $phic_total_ee;
                             
                         // 
                     }
+                    
                 // 
+
+
+                // total
+                $total_deductions = $tardiness_amount + $loan_deductions + $tax_contributions;
             // 
 
             // NET PAY
-                $net_pay = $basic_pay + $holiday_pay + $overtime + $restday + $restday_ot + $night_diff + $additional_earnings - $total_deductions;
+                $gross_pay = $basic_pay + $holiday_pay + $overtime + $restday + $restday_ot + $night_diff + $additional_earnings;
+                $net_pay = $gross_pay - $total_deductions;
+                // $net_pay = $basic_pay + $holiday_pay + $overtime + $restday + $restday_ot + $night_diff + $additional_earnings - $total_deductions;
             // 
 
             // COLLECTION
             $collection[$user_id] = 
             [
                 'user_id' => $user_id,
+                'cutoff_order' => $cutoff_order,
+                'payroll_period_id' => $payroll_period->id,
+                'full_name' => $user->formal_name(),
                 'monthly_basic_pay' => $monthly_basic_pay,
                 'daily_rate' => $daily_rate,
+
+                'regular' => $regular_hours,
+                'overtime' => $overtime_hours,
+                'restday' => $restday_hours,
+                'restday_ot' => $restday_ot_hours,
+                'night_differential' => $night_diff_hours,
+                'late' => $late_hours,
+                'undertime' => $undertime_hours,
                 
                 'basic_pay' => $basic_pay,
+                'gross_pay' => $gross_pay,
                 'net_pay' => $net_pay,
 
+                'is_tax_exempted' => $user->is_tax_exempted,
+                'tax_contributions' => $tax_contributions,
+                'loan_deductions'=> $loan_deductions,
+                'tardiness_amount' => $tardiness_amount,
                 'total_deductions' => $total_deductions,
 
                 'taxable' => $taxable,
                 'non_taxable' => $non_taxable,
 
                 'loan_change' => $loan_change,
-                'tardiness_amount' => $tardiness_amount,
+                
                 'additional_earnings' => $additional_earnings,
                 'earnings_collection' => $earnings_collection,
                 'deductions_collection' => $deductions_collection,
