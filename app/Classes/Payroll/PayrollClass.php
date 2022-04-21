@@ -280,7 +280,6 @@ class PayrollClass {
                     $undertime_amount = $undertime_hours * $hourly_rate;
 
                     $absences_amount = Self::getTotalAbsencesTardinesss($between_dates, $data_for_absences_function);
-
                     $tardiness_amount = $late_amount + $undertime_amount + $absences_amount;
                     $deductions_collection['late'] = $late_amount;
                     $deductions_collection['undertime'] = $undertime_amount;
@@ -573,6 +572,16 @@ class PayrollClass {
             // NET PAY
                 $gross_pay = $basic_pay + $holiday_pay + $overtime + $restday + $restday_ot + $night_diff + $additional_earnings;
                 $net_pay = $gross_pay - $total_deductions;
+                if($net_pay < 0)
+                {
+                    $total_deductions -= $tax_contributions;
+                    $tax_contributions = 0;
+                    $deductions_collection['tax_contribution']['sss_contribution']['ee'] = 0;
+                    $deductions_collection['tax_contribution']['hdmf_contribution']['total_ee'] = 0;
+                    $deductions_collection['tax_contribution']['phic_contribution']['total_ee'] = 0;
+
+                    $net_pay = $gross_pay - $total_deductions;
+                }
                 // $net_pay = $basic_pay + $holiday_pay + $overtime + $restday + $restday_ot + $night_diff + $additional_earnings - $total_deductions;
             // 
 
@@ -914,11 +923,10 @@ class PayrollClass {
                     ->get();
                 }
 
-                if(!$leave)
+                if($leave->count() == 0)
                 {
                     $amount += $daily_rate;
                 }
-
             }
         }
 

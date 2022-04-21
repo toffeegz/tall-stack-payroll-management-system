@@ -97,6 +97,18 @@ class ReviewProcessedPayrollComponent extends Component
     {
         $data = $this->payrolls[$this->selected_user_id]['deductions_collection']['tax_contribution'];
 
+        if($this->sss_amount == "")
+        {
+            $this->sss_amount = 0;
+        }
+        if($this->hdmf_amount == "")
+        {
+            $this->hdmf_amount = 0;
+        }
+        if($this->phic_amount == "")
+        {
+            $this->phic_amount = 0;
+        }
         $total_tax_contributions = $this->sss_amount + $this->hdmf_amount + $this->phic_amount;
 
         $this->payrolls[$this->selected_user_id]['tax_contributions'] = $total_tax_contributions;
