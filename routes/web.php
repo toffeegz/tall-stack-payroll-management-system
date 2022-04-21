@@ -33,6 +33,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 Route::get('payroll/run', RunPayrollComponent::class)->name('payroll.run');
                 Route::get('payroll/review', ReviewProcessedPayrollComponent::class)->name('payroll.review');
             });
+
+
+            // REPORTS
+            Route::group(['namespace' => 'Reports'], function() {
+                Route::get('reports', ReportComponent::class)->name('reports');
+            });
+
         });
     });
     
