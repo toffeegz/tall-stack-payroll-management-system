@@ -45,7 +45,6 @@ return new class extends Migration
 
             $table->json('earnings')->nullable();
             $table->json('deductions')->nullable();
-            $table->unsignedBigInteger('deduction_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -18,7 +18,7 @@ class CreatePayslipDeductionsTable extends Migration
             $table->unsignedBigInteger('payslip_id');
             $table->float('tax_sss');
             $table->float('tax_hdmf');
-            $table->float('tax_philhealth');
+            $table->float('tax_phic');
             $table->float('hdmf_loan');
             $table->float('sss_loan');
             $table->float('withholding_tax');
