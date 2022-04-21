@@ -82,7 +82,7 @@ class PayslipJob implements ShouldQueue
 
 
                 // LOAN
-                    $loan_amount = $raw_data['deductions_collection']['loan'];
+                    $loan_amount = (int)$raw_data['deductions_collection']['loan'];
                     $loan_change = $loan_amount;
                     // dd($raw_data['deductions_collection']);
                     if($loan_amount != 0)
@@ -106,7 +106,7 @@ class PayslipJob implements ShouldQueue
                                 $loan_installment = new LoanInstallment;
                                 $loan_installment->loan_id = $loan->id;
                                 $loan_installment->user_id = $user->id;
-                                $loan_installment->pay_date = $date;
+                                $loan_installment->pay_date = $date->format('Y-m-d');
                                 $loan_installment->amount = $amount_to_pay;
                                 $loan_installment->save();
                                 
@@ -206,6 +206,10 @@ class PayslipJob implements ShouldQueue
 
                     // earnings
                         // adjustment
+                        // overtime_pay
+                        // restday_pay
+                        // restday_ot_pay
+                        // night_diff_pay
                         // holiday
                             // legal
                             // legal_ot
@@ -271,38 +275,41 @@ class PayslipJob implements ShouldQueue
                         'daily_rate' => $daily_rate,
                         'designation' => $designation,
                         'number_dependent' => $user->number_dependent,
-                        'Hours' => [
-                            'Regular' => $regular,
-                            'Overtime' => $overtime,
-                            'Restday' => $restday,
-                            'Restday OT' => $restday_ot,
-                            'Night Differential' => $night_differential,
-                            'Late' => $late,
-                            'Undertime' => $undertime,
+                        'hours' => [
+                            'regular' => $regular,
+                            'overtime' => $overtime,
+                            'restday' => $restday,
+                            'restday_ot' => $restday_ot,
+                            'night_differential' => $night_differential,
+                            'late' => $late,
+                            'undertime' => $undertime,
                         ],
-                        'Earnings' => [
-                            'Adjustment' => $adjustment,
-                            'Holiday' => [
-                                'Legal' => $holidays_collection['legal'],
-                                'Legal OT' => $holidays_collection['legal_ot'],
-                                'Special' => $holidays_collection['special'],
-                                'Special OT' => $holidays_collection['special_ot'],
-                                'Double' => $holidays_collection['double'],
-                                'Double OT' => $holidays_collection['double_ot'],
+                        'earnings' => [
+                            'overtime_pay' => $raw_data['earnings_collection']['overtime'],
+                            'restday_pay' => $raw_data['earnings_collection']['restday'],
+                            'restday_ot_pay' => $raw_data['earnings_collection']['restday_ot'],
+                            'night_diff_pay' => $raw_data['earnings_collection']['night_diff'],
+                            'holiday' => [
+                                'legal' => $holidays_collection['legal'],
+                                'legal_ot' => $holidays_collection['legal_ot'],
+                                'special' => $holidays_collection['special'],
+                                'special_ot' => $holidays_collection['special_ot'],
+                                'double' => $holidays_collection['double'],
+                                'double_ot' => $holidays_collection['double_ot'],
                             ],
-                            'Others' => $label_additional_earnings,
+                            'others' => $label_additional_earnings,
                         ],
-                        'Deductions' => [
-                            'Late' => $label_deductions_collection['late'],
-                            'Undertime' => $label_deductions_collection['undertime'],
-                            'Absences' => $label_deductions_collection['absences'],
-                            'Cash Advance' => $label_deductions_collection['loan'],
-                            'SSS Loan' => $label_deductions_collection['sss_loan'],
-                            'HDMF Loan' => $label_deductions_collection['hdmf_loan'],
-                            'Tax Contribution' => [
-                                'SSS' => $sss_to_pay,
-                                'PHIC' => $hdmf_to_pay,
-                                'HDMF' => $phic_to_pay,
+                        'deductions' => [
+                            'late' => $label_deductions_collection['late'],
+                            'undertime' => $label_deductions_collection['undertime'],
+                            'absences' => $label_deductions_collection['absences'],
+                            'cash_advance' => $loan_amount,
+                            'sss_loan' => $label_deductions_collection['sss_loan'],
+                            'hdmf_loan' => $label_deductions_collection['hdmf_loan'],
+                            'tax_contribution' => [
+                                'sss' => $sss_to_pay,
+                                'phic' => $hdmf_to_pay,
+                                'hdmf' => $phic_to_pay,
                             ]
                         ]
                     ];
@@ -340,7 +347,7 @@ class PayslipJob implements ShouldQueue
                     $new_payslip_deductions->hdmf_loan = $hdmf_loan; 
                     $new_payslip_deductions->sss_loan = $sss_loan; 
                     $new_payslip_deductions->withholding_tax = $withholding_tax; 
-                    $new_payslip_deductions->loan = $loan; 
+                    $new_payslip_deductions->loan = $loan_amount; 
                     $new_payslip_deductions->save(); 
 
 
