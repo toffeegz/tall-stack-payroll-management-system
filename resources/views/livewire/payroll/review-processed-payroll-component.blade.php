@@ -84,7 +84,7 @@
                                 </td>
                                 <td class="px-2 md:px-4 py-3 align-top">
                                     <p class=" text-xs text-right text-stone-600 font-bold">
-                                        ₱{{ number_format($payroll['deductions'], 2, '.', ',') }}
+                                        ₱{{ number_format($payroll['total_deductions'], 2, '.', ',') }}
                                     </p>
                                 </td>
                                 <td class="px-2 md:px-4 py-3 align-top">
