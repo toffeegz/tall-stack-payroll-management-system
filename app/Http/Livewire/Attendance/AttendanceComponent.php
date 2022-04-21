@@ -769,4 +769,12 @@ class AttendanceComponent extends Component
         $new_attendance->save();
     }
 
+    public function deleteAttendance()
+    {
+        $delete_attendance = Attendance::find($this->selected_details_id);
+        $delete_attendance->delete();
+        $this->selected_details_id = "";
+        $this->emit('closeAttendanceDetailsModal');
+    }
+
 }

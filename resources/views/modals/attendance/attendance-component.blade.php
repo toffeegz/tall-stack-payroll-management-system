@@ -390,8 +390,13 @@
     </div>
     {{-- end modal body --}}
     {{-- modal footer --}}
-    <div class="w-full py-4 flex justify-end border-t border-stone-200">
-        <div class="flex space-x-2">
+    <div class="w-full py-4 flex justify-between border-t border-stone-200">
+        @if(Auth::user()->hasRole('administrator') || ($selected_details_status == 4 || $selected_details_status == 5))
+            <x-forms.button-rounded-md-danger wire:click="deleteAttendance" wire:key >
+                Delete
+            </x-forms.button-rounded-md-danger>
+        @endif
+        <div class="flex justify-end  space-x-2">
             <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalAttendanceDetails')">
                 Close
             </x-forms.button-rounded-md-secondary>
