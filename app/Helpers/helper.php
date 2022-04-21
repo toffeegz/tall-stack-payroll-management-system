@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Models\CompanyInformation;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\Schedule;
@@ -49,6 +50,7 @@ class Helper
         // Convert the period to an array of dates
         return $dates;
     }
+
     public static function isDateWorkingDay($date)
     {
         // return boolean
@@ -63,6 +65,12 @@ class Helper
         return $bool_str;
     }
 
+    // COMPANY INFORMATION
+    
+    public function getCompanyInformation()
+    {
+        return CompanyInformation::find(1);
+    }
     
 
     // ///////////////////// ATTENDANCE
