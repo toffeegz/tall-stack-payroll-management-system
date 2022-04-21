@@ -444,7 +444,6 @@ class PayrollClass {
                         if($cutoff_order == 1){
                             $salary = $taxable;
                         } else {
-                            
                             if($cutoff_order == 2)
                             {   
                                 $payroll_period_ids[] = $previous_payroll_period->id;
@@ -458,13 +457,13 @@ class PayrollClass {
                                 ->pluck('id');
 
                                 $payroll_period_ids[] = $payroll_period_records;
-
-                                $previous_payslips = Payslip::where('user_id', $user->id)
-                                ->whereIn('payroll_period_id', [$payroll_period_ids])
-                                ->get();
-
-                                $salary = $taxable + $payslips->sum('taxable');
                             }
+                            
+                            $previous_payslips = Payslip::where('user_id', $user->id)
+                            ->whereIn('payroll_period_id', [$payroll_period_ids])
+                            ->get();
+
+                            $salary = $taxable + $previous_payslips->sum('taxable');
                         }
 
                         $tax_divide = 2;
