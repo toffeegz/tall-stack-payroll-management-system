@@ -159,7 +159,7 @@ class AttendanceComponent extends Component
         $data = collect([]);
         if(Auth::user()->hasRole('administrator'))
         {
-            $data = User::where('employee_status', 1)
+            $data = User::where('is_active', true)
             ->where(function ($query) use ($search) {
                 return $query->where('last_name', 'like', '%' . $search . '%')
                 ->orWhere('first_name', 'like', '%' . $search . '%')
@@ -175,7 +175,7 @@ class AttendanceComponent extends Component
             {
                 $user_ids = $project->users->pluck('id');
 
-                $data = User::where('employee_status', 1)
+                $data = User::where('is_active', true)
                 ->whereIn('id', [$user_ids])
                 ->where(function ($query) use ($search) {
                     return $query->where('last_name', 'like', '%' . $search . '%')
@@ -187,7 +187,7 @@ class AttendanceComponent extends Component
             else 
             {
                 // $this->hide = true;
-                $data = User::where('employee_status', 1)
+                $data = User::where('is_active', true)
                 ->where('id', Auth::user()->id)
                 ->where(function ($query) use ($search) {
                     return $query->where('last_name', 'like', '%' . $search . '%')
