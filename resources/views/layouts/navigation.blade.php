@@ -89,8 +89,8 @@
                                                 </span>
                                             </a>
                                         </li>
-                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'loan') text-stone-500 @endif @endisset" >
-                                            <a >
+                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'my-loan') text-stone-500 @endif @endisset" >
+                                            <a href="{{ route('loan') }}">
                                                 <span class="ml-3">
                                                     My Loans
                                                 </span>
