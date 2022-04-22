@@ -42,8 +42,8 @@
                         </li>
                         {{-- loans --}}
                         @if(Auth::user()->hasRole('administrator'))
-                            <li class="px-4" x-data="{ loan: @isset($menu) @if($menu == 'loan' || $menu == 'loan settings' || $menu == 'payslip') true @else false @endif @endisset }">
-                                <button class="px-6 py-3 flex justify-between items-center w-full transition-colors duration-150 font-semibold hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'payroll'  || $menu == 'payroll settings' || $menu == 'payslip') bg-stone-100 text-stone-500 @endif @endisset "
+                            <li class="px-4" x-data="{ loan: @isset($menu) @if($menu == 'loan' || $menu == 'grand-loan' || $menu == 'loan-installment') true @else false @endif @endisset }">
+                                <button class="px-6 py-3 flex justify-between items-center w-full transition-colors duration-150 font-semibold hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'loan'  || $menu == 'grand-loan' || $menu == 'loan-installment') bg-stone-100 text-stone-500 @endif @endisset "
                                     @click="loan = !loan"
                                     aria-haspopup="true" >
                                     <span class="inline-flex items-center">
@@ -85,7 +85,7 @@
                                         <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'loan-installment') text-stone-500 @endif @endisset" >
                                             <a href="{{ route('loan.installment') }}">
                                                 <span class="ml-3">
-                                                    Installments
+                                                     Installments
                                                 </span>
                                             </a>
                                         </li>

@@ -40,7 +40,7 @@ class ReportComponent extends Component
             'payroll_periods' => $this->payroll_periods,
             'projects' => $this->projects,
         ])
-        ->layout('layouts.app',  ['menu' => 'reports']);
+        ->layout('layouts.app',  ['menu' => 'report']);
     }
 
     public function getPayrollPeriodsProperty()
