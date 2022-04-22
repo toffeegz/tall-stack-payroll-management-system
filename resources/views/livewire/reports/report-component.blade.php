@@ -148,7 +148,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <a onclick="modalObject.openModal('modalPreviousPayroll')" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                                    <a onclick="modalObject.openModal('modalEmployeeList')" class="cursor-pointer text-blue-500 text-xs font-semibold">
                                         View <i class="fa-solid fa-angle-right ml-2 fa-xs"></i>
                                     </a>
                                 </div>

@@ -88,7 +88,58 @@
 </x-modal-small>
 {{--  --}}
 
-{{-- modal total hours --}}
+{{-- modal employee list report --}}
+<x-modal-small id="modalEmployeeList" title="Employee List Report" wire:ignore.self>
+    {{-- modal body --}}
+        <div class="space-y-4 my-4">
+            {{-- user type --}}
+            <div class="">
+                <x-forms.label>
+                    User Type
+                </x-forms.label>
+                <x-forms.select wire:model="user_type">
+                    <option value="">- All -</option>
+                    <option value="2">Project Employees</option>
+                    <option value="1">Non-Project Employees</option>
+                </x-forms.select>
+                @error('user_type')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+            @if($user_type == 2)
+                {{-- project --}}
+                <div class="">
+                    <x-forms.label>
+                        Project
+                    </x-forms.label>
+                    <x-forms.select wire:model="project">
+                        <option value="">- All -</option>
+                        @foreach($projects as $project)
+                            <option value="{{ $project->id }}">{{ $project->name }}</option>
+                        @endforeach 
+                    </x-forms.select>
+                    @error('project')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+            @endif
+        </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+        <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalEmployeeList')">
+                Cancel
+            </x-forms.button-rounded-md-secondary>
+            <x-forms.button-rounded-md-primary wire:click="generateEmployeeListReport" wire:loading.attr="disabled">
+                Generate Report
+            </x-forms.button-rounded-md-primary>
+        </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{--  --}}
+
+
+{{-- modal notif hours --}}
 <x-modal-small id="modalNotif" title="Sorry" wire:ignore.self>
     {{-- modal body --}}
         <div class="space-y-4 my-4 h-20 items-center flex justify-center">

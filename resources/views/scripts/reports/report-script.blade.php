@@ -24,6 +24,13 @@
             modalObject.closeModal('modalLoan'); 
         });
 
+        Livewire.on('openEmployeeListModal', (el, component) => {
+            modalObject.openModal('modalEmployeeList'); 
+        });
+        Livewire.on('closeEmployeeListModal', (el, component) => {
+            modalObject.closeModal('modalEmployeeList'); 
+        });
+
     });
     // 
 

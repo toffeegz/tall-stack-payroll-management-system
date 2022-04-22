@@ -13,10 +13,14 @@ use App\Exports\Report\LoanExport;
 use App\Exports\Report\EmployeeListExport;
 use App\Exports\Report\PayrollJournalExport;
 
-use App\Models\Payslip;
+
 use App\Models\PayrollPeriod;
+use App\Models\Project;
+
+use App\Models\Payslip;
 use App\Models\TaxContribution;
 use App\Models\Loan;
+use App\Models\User;
 
 use Carbon\Carbon;
 
@@ -27,11 +31,14 @@ class ReportComponent extends Component
     public $message;
 
     public $start_date, $end_date;
+    public $user_type = "";
+    public $project = "";
 
     public function render()
     {
         return view('livewire.reports.report-component',[
             'payroll_periods' => $this->payroll_periods,
+            'projects' => $this->projects,
         ])
         ->layout('layouts.app',  ['menu' => 'reports']);
     }
@@ -42,6 +49,15 @@ class ReportComponent extends Component
         ->where('frequency_id', $this->frequency_id)
         ->get();
     }
+
+    public function getProjectsProperty()
+    {
+        return Project::all();
+    }
+
+
+
+    // SUBMIT AND GENERATE
 
     public function generatePayrollSummaryReport()
     {
@@ -132,7 +148,7 @@ class ReportComponent extends Component
                 'period_start' => $start_date,
                 'period_end' => $end_date,
             ];
-            $filename = Carbon::now()->format('Ymd') . ' Loan Contribution.xlsx';
+            $filename = Carbon::now()->format('Ymd') . ' Loan Cash Advance.xlsx';
             $this->emit('closeLoanModal');
 
             return Excel::download(new LoanExport($data, $raw_data), $filename);
@@ -141,6 +157,38 @@ class ReportComponent extends Component
         {
             
             $this->emit('closeTaxContributionModal');
+            $this->emit('openNotifModal');
+        }
+    }
+
+    public function generateEmployeeListReport()
+    {
+        if($this->user_type == ""){
+            $raw_data = User::all();
+        } elseif($this->user_type == 1) {
+            $raw_data = User::doesntHave('projects')->get();
+        } elseif($this->user_type == 2) {
+            if($this->project == "") {
+                $raw_data = Project::all();
+            } else {
+                $raw_data = Project::find($this->project);
+            }
+        }
+        if($raw_data->count() != 0)
+        { 
+            $data = [
+                'user_type' => $this->user_type,
+                'project' => $this->project,
+            ];
+            $filename = Carbon::now()->format('Ymd') . ' Employee List.xlsx';
+            $this->emit('closeEmployeeListModal');
+
+            return Excel::download(new EmployeeListExport($data, $raw_data), $filename);
+        }
+        else
+        {
+            
+            $this->emit('closeEmployeeListModal');
             $this->emit('openNotifModal');
         }
     }
