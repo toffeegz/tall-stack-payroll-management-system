@@ -73,7 +73,7 @@ class RunPayrollComponent extends Component
     {
         $search = $this->search;
 
-        return User::where('employee_status', 1)
+        return User::where('is_active', true)
         ->where('frequency_id', $this->payroll_period->frequency_id)
         ->get();
     }

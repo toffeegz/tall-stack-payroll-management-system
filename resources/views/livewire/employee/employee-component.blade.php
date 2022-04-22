@@ -59,10 +59,10 @@
                                             {{ $user->email }}
                                         </td>
                                         <td class="px-4 py-3 text-xs">
-                                            {{ $user->mobile_number }}
+                                            {{ $user->phone_number }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-center">
-                                            @if($user->employee_status == 1)
+                                            @if($user->is_active == true)
                                                 <span class="px-2 py-1 font-semibold text-green-700 bg-green-100 leading-tight bg rounded-full ">
                                                     Active
                                                 </span>

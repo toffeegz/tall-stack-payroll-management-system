@@ -30,7 +30,6 @@ class CreateUsersTable extends Migration
 
             $table->string('code')->unique();
 
-            $table->string('mobile_number')->nullable();
             $table->string('phone_number')->nullable();
 
             $table->date('birth_date')->nullable();
@@ -43,13 +42,14 @@ class CreateUsersTable extends Migration
             $table->unsignedTinyInteger('marital_status');
             $table->char('nationality', 100)->nullable();
             $table->tinyInteger('number_dependent')->default(0);
+            $table->text('address')->nullable();
 
             $table->unsignedTinyInteger('employment_status');
-            $table->unsignedTinyInteger('employee_status');
+            $table->boolean('is_active')->default(true);
 
             $table->string('sss_number')->nullable();
             $table->string('phic_number')->nullable();
-            $table->string('pagibig_number')->nullable();
+            $table->string('hdmf_number')->nullable();
             $table->string('tin_number')->nullable();
 
             $table->date('hired_date')->nullable();
@@ -59,12 +59,8 @@ class CreateUsersTable extends Migration
             $table->date('endo_date')->nullable();
             $table->date('inactive_date')->nullable();
 
-            $table->boolean('is_exempt_employees')->default(false);
             $table->boolean('is_paid_holidays')->default(false);
-            $table->boolean('is_paid_restdays')->default(false);
             $table->boolean('is_tax_exempted')->default(false);
-            $table->boolean('is_confidential')->default(false);
-            $table->boolean('is_single')->default(true);
 
             $table->unsignedTinyInteger('frequency_id')->default(1);
             

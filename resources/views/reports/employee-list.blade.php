@@ -48,7 +48,7 @@
                 <td colspan="2">{{ $user->first_name }}</td>
                 <td colspan="1">{{ $user->middle_name ? $user->middle_name[0] : '' }}</td>
                 <td colspan="2">{{ $user->email }}</td>
-                <td colspan="2">{{ $user->mobile_number }}</td>
+                <td colspan="2">{{ $user->phone_number }}</td>
                 <td colspan="1">{{ config('company.gender.'.$user->gender) }}</td>
                 <td colspan="1">{{ config('company.marital_status.'.$user->marital_status) }}</td>
                 <td colspan="1">{{ $user->number_dependent }}</td>
@@ -71,7 +71,7 @@
                         <td colspan="2">{{ $user->first_name }}</td>
                         <td colspan="1">{{ $user->middle_name ? $user->middle_name[0] : '' }}</td>
                         <td colspan="2">{{ $user->email }}</td>
-                        <td colspan="2">{{ $user->mobile_number }}</td>
+                        <td colspan="2">{{ $user->phone_number }}</td>
                         <td colspan="1">{{ config('company.gender.'.$user->gender) }}</td>
                         <td colspan="1">{{ config('company.marital_status.'.$user->marital_status) }}</td>
                         <td colspan="1">{{ $user->number_dependent }}</td>
@@ -97,7 +97,7 @@
                             <td colspan="2">{{ $user->first_name }}</td>
                             <td colspan="1">{{ $user->middle_name ? $user->middle_name[0] : '' }}</td>
                             <td colspan="2">{{ $user->email }}</td>
-                            <td colspan="2">{{ $user->mobile_number }}</td>
+                            <td colspan="2">{{ $user->phone_number }}</td>
                             <td colspan="1">{{ config('company.gender.'.$user->gender) }}</td>
                             <td colspan="1">{{ config('company.marital_status.'.$user->marital_status) }}</td>
                             <td colspan="1">{{ $user->number_dependent }}</td>
