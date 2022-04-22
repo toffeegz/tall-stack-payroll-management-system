@@ -81,6 +81,69 @@
 {{-- end loan --}}
 
 
+{{-- modal loan details --}}
+<x-modal-small id="modalLoanDetails" title="Pay Loan" wire:ignore.self>
+    {{-- modal body --}}
+    <div class="space-y-4 my-4">
+        
+        {{-- date and amount --}}
+        <div class=" grid grid-cols-2 gap-4">
+
+            {{-- amount --}}
+            <div class="">
+                <x-forms.label>
+                    Amount
+                </x-forms.label>
+                <x-forms.input type="number" wire:model="amount"></x-forms.input>
+                @error('amount')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+            
+            {{-- date --}}
+            <div class="">
+                <x-forms.label>
+                    Date
+                </x-forms.label>
+                <x-forms.input type="date" wire:model="pay_date"></x-forms.input>
+                @error('pay_date')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+
+        </div>
+
+        <div>
+            <x-forms.label>
+                Notes
+            </x-forms.label>
+            <x-forms.textarea wire:model="notes" rows="2"></x-forms.textarea>
+            @error('notes')
+                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+            @enderror
+        </div>
+
+
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+    <div class="w-full py-4 flex justify-between border-t border-stone-200">
+        <x-forms.button-rounded-md-danger wire:click="deleteLoan">
+            Delete
+        </x-forms.button-rounded-md-danger>
+        <div class="flex justify-end space-x-2">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalLoanDetails')">
+                Close
+            </x-forms.button-rounded-md-secondary>
+            <x-forms.button-rounded-md-primary wire:click="updateLoanDetails" wire:key >
+                Update
+            </x-forms.button-rounded-md-primary>
+        </div>
+    </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{-- end loan --}}
+
 {{-- modal notif hours --}}
 <x-modal-small id="modalNotif" title="Success" wire:ignore.self>
     {{-- modal body --}}

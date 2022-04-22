@@ -132,4 +132,45 @@ class LoanInstallmentComponent extends Component
 
 
     }
+
+    public function openLoanDetails($value)
+    {
+        $this->selected_loan = $this->loanInstallments->find($value);
+        $this->amount = $this->selected_loan->amount;
+        $this->pay_date = $this->selected_loan->pay_date;
+        $this->notes = $this->selected_loan->notes;
+        $this->emit('openLoanDetailsModal');
+
+    }
+
+    public function updateLoanDetails()
+    {
+        $amount_paid = $this->selected_loan->amount;
+        $balance = $this->selected_loan->loan->balance + $amount_paid;
+        
+        $this->selected_loan->loan->balance = $balance;
+        $this->selected_loan->loan->save();
+
+        $this->selected_loan->amount = $this->amount;
+        $this->selected_loan->notes = $this->notes;
+        $this->selected_loan->pay_date = $this->pay_date;
+        $this->selected_loan->save();
+
+        $this->emit('openNotifModal');
+        $this->emit('closeLoanDetailsModal');
+
+    }
+    public function deleteLoan()
+    {
+        $amount_paid = $this->selected_loan->amount;
+        $balance = $this->selected_loan->loan->balance + $amount_paid;
+        
+        $this->selected_loan->loan->balance = $balance;
+        $this->selected_loan->loan->save();
+
+        $this->selected_loan->delete();
+
+        $this->emit('closeLoanDetailsModal');
+
+    }
 }

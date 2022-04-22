@@ -10,6 +10,13 @@
             modalObject.closeModal('modalPayLoan'); 
         });
 
+        Livewire.on('openLoanDetailsModal', (el, component) => {
+            modalObject.openModal('modalLoanDetails'); 
+        });
+        Livewire.on('closeLoanDetailsModal', (el, component) => {
+            modalObject.closeModal('modalLoanDetails'); 
+        });
+
         Livewire.on('openNotifModal', (el, component) => {
             modalObject.openModal('modalNotif'); 
         });
