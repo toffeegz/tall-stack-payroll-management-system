@@ -26,8 +26,14 @@
             <div class="col-span-3 md:col-span-2">
                 {{-- personal information --}}
                 <div class="py-4">
-                    <div class="text-lg font-bold mb-2 border-b border-stone-200">
-                        Personal Information
+                    <div class="flex justify-between mb-2 border-b border-stone-200">
+                        <p class="text-lg font-bold">
+                            Personal Information
+                        </p>
+                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalPersonalInformation')">
+                            <i class="fa-solid fa-xs fa-pen"></i>
+                            <span class="text-xs font-semibold">edit</span>
+                        </a>
                     </div>
                     <div class="space-y-2">
                         {{-- name --}}
@@ -148,8 +154,14 @@
 
                 {{-- Employment details --}}
                 <div class="py-4">
-                    <div class="text-lg font-bold mb-2  border-b border-stone-200">
-                        Employment Details
+                    <div class="flex justify-between mb-2 border-b border-stone-200">
+                        <p class="text-lg font-bold">
+                            Employment Details
+                        </p>
+                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalEmploymentDetails')">
+                            <i class="fa-solid fa-xs fa-pen"></i>
+                            <span class="text-xs font-semibold">edit</span>
+                        </a>
                     </div>
                     <div class="space-y-2">
                         {{-- employment status --}}
@@ -200,8 +212,14 @@
 
                 {{-- compensation --}}
                 <div class="py-4">
-                    <div class="text-lg font-bold mb-2  border-b border-stone-200">
-                        Compensation
+                    <div class="flex justify-between mb-2 border-b border-stone-200">
+                        <p class="text-lg font-bold">
+                            Compensation
+                        </p>
+                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalCompensation')">
+                            <i class="fa-solid fa-xs fa-pen"></i>
+                            <span class="text-xs font-semibold">edit</span>
+                        </a>
                     </div>
                     <div class="space-y-2">
                         {{-- department --}}
@@ -287,4 +305,8 @@
 
         </div>
     </div>
+
+    {{--  --}}
+    @include('scripts.employee.profile-script')
+    @include('modals.employee.profile-modal')
 </div>
