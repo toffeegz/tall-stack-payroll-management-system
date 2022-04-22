@@ -12,7 +12,7 @@
                         <x-forms.search-input placeholder="search employee" name="search"/>
                     </div>
                     <div class="space-x-2 flex">
-                        <x-forms.button-rounded-md-primary class="whitespace-nowrap" onclick="modalObject.openModal('modalAddAttendance')">
+                        <x-forms.button-rounded-md-primary class="whitespace-nowrap" wire:click="hireNewEmployee">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">Hire new employee</span>
                         </x-forms.button-rounded-md-primary>

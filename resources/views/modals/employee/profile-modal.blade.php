@@ -283,6 +283,10 @@
 
             </div>
 
+            <div class=" w-full">
+                <p class="text-stone-700 text-sm font-bold">Daily Rate: ₱{{ number_format($daily_rate, 2, '.', ',') }}</p>
+            </div>
+
             {{--  --}}
             <div class="grid grid-cols-2 gap-4">
                 <div class="ml-2">

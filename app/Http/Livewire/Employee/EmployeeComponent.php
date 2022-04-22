@@ -8,7 +8,7 @@ use App\Models\User;
 class EmployeeComponent extends Component
 {
     public $search = "";
-    public $perPage = 10;
+    public $perPage = 5;
 
     public function render()
     {
@@ -39,5 +39,10 @@ class EmployeeComponent extends Component
     {
         $user = User::find($id);
         return redirect()->route('employee.profile', ['user'=>$user->code]);
+    }
+
+    public function hireNewEmployee()
+    {
+        return redirect()->route('employee.hire');
     }
 }

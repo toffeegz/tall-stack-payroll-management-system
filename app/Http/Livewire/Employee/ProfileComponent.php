@@ -36,6 +36,8 @@ class ProfileComponent extends Component
 
     public $department_id = "";
     public $designation_id = "";
+
+    public $daily_rate = 0; 
     
     public $is_tax_exempted = false;
     public $is_paid_holidays = false;
@@ -102,15 +104,20 @@ class ProfileComponent extends Component
         ->get();
     }
 
+    public function updatedDesignationId($value)
+    {
+        $this->daily_rate = Designation::find($value)->value('daily_rate');
+    }  
+
 
     // submit
 
     public function submitPersonalInformation()
     {
         $this->validate([
-            'last_name' => 'required|string|min:3|max:255',
-            'first_name' => 'required|string|min:3|max:255',
-            'middle_name' => 'nullable|string|min:3|max:255',
+            'last_name' => 'required|string|min:2|max:255',
+            'first_name' => 'required|string|min:2|max:255',
+            'middle_name' => 'nullable|string|min:2|max:255',
             // 'code' => 'required|unique:users,code',
             'email' => 'required|email',
             'phone_number' => 'required|numeric',
