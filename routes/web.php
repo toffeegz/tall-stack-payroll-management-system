@@ -25,6 +25,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
 
+            // EMPLOYEE
+            Route::group(['namespace' => 'Employee'], function() {
+                Route::get('employee', EmployeeComponent::class)->name('employee');
+                Route::get('employee/profile', ProfileComponent::class)->name('employee.profile');
+            });
+
             // Payroll
             Route::group(['namespace' => 'Payroll'], function() {
                 Route::get('payroll', PayrollComponent::class)->name('payroll');
@@ -33,7 +39,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 Route::get('payroll/run', RunPayrollComponent::class)->name('payroll.run');
                 Route::get('payroll/review', ReviewProcessedPayrollComponent::class)->name('payroll.review');
             });
-
 
             // REPORTS
             Route::group(['namespace' => 'Reports'], function() {
