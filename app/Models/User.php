@@ -16,6 +16,7 @@ use App\Models\Designation;
 use App\Models\Payslip;
 use App\Models\TaxContribution;
 use App\Models\Loan;
+use App\Models\LoanInstallment;
 
 class User extends Authenticatable
 {
@@ -108,6 +109,11 @@ class User extends Authenticatable
     public function loans()
     {
         return $this->hasMany(Loan::class);
+    }
+
+    public function loanInstallments()
+    {
+        return $this->hasMany(LoanInstallment::class);
     }
 
 
