@@ -3,7 +3,7 @@
     
     <dialog {{ $attributes->merge(['id'=> $id,'class' => 'bg-transparent z-0 relative w-screen h-screen']) }}>
         <div class="p-7 flex justify-center items-start overflow-x-hidden overflow-y-auto fixed left-0 top-0 w-full h-full bg-stone-900 bg-opacity-50 z-50 transition-opacity duration-300">
-            <div class="bg-white rounded-xl max-w-sm w-full relative">
+            <div class="bg-white rounded-xl max-w-lg w-full relative">
                 {{-- modal header --}}
                 <div class="px-4 pt-4 flex items-center w-full">
                     <div class="text-stone-900 font-bold text-base">
