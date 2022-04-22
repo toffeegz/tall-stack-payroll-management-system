@@ -23,7 +23,7 @@ class CreateLoansTable extends Migration
             $table->float('balance')->default(0);
             $table->float('pay_next')->default(0);
             $table->float('installment_amount')->default(0);
-            $table->date('date_approved');
+            $table->date('date_approved')->nullable();
             $table->text('details')->nullable();
             $table->unsignedTinyInteger('status')->default(1)->comment('1-pending,2-approved,3-disapproved');
             $table->boolean('auto_deduct')->default(false);
