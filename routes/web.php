@@ -22,6 +22,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::get('attendance', Attendance\AttendanceComponent::class)->name('attendance');
 
+        Route::get('loan', Loan\LoanComponent::class)->name('loan');
+
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
 
@@ -30,6 +32,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 Route::get('employee', EmployeeComponent::class)->name('employee');
                 Route::get('employee/profile', ProfileComponent::class)->name('employee.profile');
                 Route::get('employee/hire-new-employee', NewEmployeeFormComponent::class)->name('employee.hire');
+            });
+
+            // LOAN
+            Route::group(['namespace' => 'Loan'], function() {
+                Route::get('loan/grand', GrandLoanComponent::class)->name('loan.grand');
+                Route::get('loan/installment', LoanInstallmentComponent::class)->name('loan.installment');
             });
 
             // Payroll
