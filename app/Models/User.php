@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Attendance;
 use App\Models\Project;
@@ -85,7 +86,13 @@ class User extends Authenticatable
 
     public function latestDesignation()
     {
-        return $this->designations()->latest()->first();
+        // return $this->designations()->latest()->first();
+        $latest_record = DB::table('designation_user')->where('user_id', $this->id)->latest('created_at')->first();
+        if($latest_record){
+        return $this->designations()->find($latest_record->designation_id);
+        } else {
+            return null;
+        }
     }
 
     public function payslips()
