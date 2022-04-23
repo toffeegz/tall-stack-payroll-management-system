@@ -25,14 +25,12 @@
                             <table class="w-full whitespace-no-wrap">
                                 <thead>
                                 <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
-                                    
                                     <th class="px-4 py-3">Start Date</th>
                                     <th class="px-4 py-3">End Date</th>
-                                    <th class="px-4 py-3">Duration (hrs)</th>
-                                    <th class="px-4 py-3">Day Type</th>
-                                    <th class="px-4 py-3">Leave Type</th>
+                                    <th class="px-4 py-3">Duration</th>
+                                    <th class="px-4 py-3 whitespace-nowrap">Day Type</th>
+                                    <th class="px-4 py-3 whitespace-nowrap">Leave Type</th>
                                     <th class="px-4 py-3">Status</th>
-                                    
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y "  >
@@ -67,9 +65,6 @@
                                                         Disapproved
                                                     </span>
                                                 @endif
-                                            </td>
-                                            <td class="px-4 py-3 text-sm">
-                                                {{ $leave->duration }}
                                             </td>
                                         </tr>
                                     @endforeach

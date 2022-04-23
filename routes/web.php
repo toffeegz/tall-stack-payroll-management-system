@@ -30,6 +30,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
 
+            Route::get('leave', Leave\LeaveComponent::class)->name('leave');
+
             // EMPLOYEE
             Route::group(['namespace' => 'Employee'], function() {
                 Route::get('employee', EmployeeComponent::class)->name('employee');
