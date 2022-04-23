@@ -13,7 +13,7 @@
                     <div class="flex justify-between my-4 px-2">
                         <p class="font-bold">Leave History</p>
                         <div>
-                            <button wire:click="downloadPaymentHistory" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                            <button wire:click="download" class="cursor-pointer text-blue-500 text-xs font-semibold">
                                 Download <i class="fa-solid fa-download"></i>
                             </button>
                         </div>
@@ -38,9 +38,38 @@
                                 <tbody class="bg-white divide-y "  >
                                     @foreach($leaves as $leave)
                                         <tr class="text-stone-700 cursor-pointer"  wire:click="goToProfile({{ $leave->id }})">
-                                            
+                                            <td class="px-4 py-3 text-xs font-semibold">
+                                                {{ $leave->start_date ? Carbon\Carbon::parse($leave->start_date)->format('d/m/Y') : '' }}
+                                            </td>
+                                            <td class="px-4 py-3 text-xs font-semibold">
+                                                {{ $leave->end_date ? Carbon\Carbon::parse($leave->end_date)->format('d/m/Y') : '' }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm font-semibold">
+                                                {{ $leave->hours_duration }}hrs
+                                            </td>
+                                            <td class="px-4 py-3 text-xs font-semibold whitespace-nowrap">
+                                                {{ config('company.leave_type.'.$leave->type_id) }}
+                                            </td>
+                                            <td class="px-4 py-3 text-xs font-semibold whitespace-nowrap">
+                                                {{ $leave->leaveType->name }}
+                                            </td>
+                                            <td class="px-4 py-3 text-xs text-center">
+                                                @if($leave->status == 1)
+                                                    <span class="px-4 py-1 font-semibold text-stone-700 bg-stone-100 leading-tight bg rounded-full ">
+                                                        Pending
+                                                    </span>
+                                                @elseif($leave->status == 2)
+                                                    <span class="px-4 py-1 font-semibold text-green-700 bg-green-100 leading-tight bg rounded-full ">
+                                                        Approved
+                                                    </span>
+                                                @elseif($leave->status == 3)
+                                                    <span class="px-4 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full ">
+                                                        Disapproved
+                                                    </span>
+                                                @endif
+                                            </td>
                                             <td class="px-4 py-3 text-sm">
-                                                    adfadfad
+                                                {{ $leave->duration }}
                                             </td>
                                         </tr>
                                     @endforeach

@@ -23,4 +23,10 @@ return [
         5 => 'Freelance',
     ],
 
+    'leave_type' => [
+        '1' => 'Full Day',
+        '2' => 'Half Day',
+        '3' => 'Above a Day',
+    ],
+
 ];

@@ -4,10 +4,14 @@ namespace App\Http\Livewire\Profile\MyLeave;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\Leave\UserLeaveHistoryExport;
 
 use App\Models\Leave;
 use App\Models\LeaveType;
 use Helper;
+use Carbon\Carbon;
 
 class MyLeaveComponent extends Component
 {
@@ -89,6 +93,15 @@ class MyLeaveComponent extends Component
         $this->start_date = "";
         $this->end_date = "";
         $this->reason = "";
+    }
+
+    public function download()
+    {
+        $data = Leave::where('user_id', Auth::user()->id)
+        ->latest('created_at')->get();
+        
+        $filename = Carbon::now()->format("Y-m-d") . " " . Auth::user()->code . " " . ' Leave History.xlsx';
+        return Excel::download(new UserLeaveHistoryExport($data), $filename);
     }
 
 
