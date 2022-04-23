@@ -809,7 +809,7 @@ class PayrollClass {
 
         // only 1 day
         $leave = Leave::where('user_id', $user_id)
-        ->where('approved', true)
+        ->where('status', 2)
         ->where('is_paid', true)
         ->whereIn('type_id', [1,2])
         ->whereNull('end_date')
@@ -827,7 +827,7 @@ class PayrollClass {
         // leave falls some day in payroll period dates (start date)
         
         $leave_1 = Leave::where('user_id', $user_id)
-        ->where('approved', true)
+        ->where('status', 2)
         ->where('is_paid', true)
         ->where('type_id', 3)
         ->where('start_date', '>=', $period_start)
@@ -835,7 +835,7 @@ class PayrollClass {
         ->get();
 
         $leave_2 = Leave::where('user_id', $user_id)
-        ->where('approved', true)
+        ->where('status', 2)
         ->where('is_paid', true)
         ->where('type_id', 3)
         ->where('start_date', '<=', $period_start)
@@ -845,7 +845,7 @@ class PayrollClass {
         $leave = $leave_1->merge($leave_2);
 
         $leave_3 = Leave::where('user_id', $user_id)
-        ->where('approved', true)
+        ->where('status', 2)
         ->where('is_paid', true)
         ->where('type_id', 3)
         ->where('start_date', '<=', $period_end)
@@ -928,7 +928,7 @@ class PayrollClass {
                 // absent ka potangina
                 // only 1 day
                 $leave = Leave::where('user_id', $user_id)
-                ->where('approved', true)
+                ->where('status', 2)
                 ->where('is_paid', false)
                 ->whereIn('type_id', [1,2])
                 ->whereNull('end_date')
@@ -948,7 +948,7 @@ class PayrollClass {
                 if(!$leave)
                 {
                     $leave = Leave::where('user_id', $user_id)
-                    ->where('approved', true)
+                    ->where('status', 2)
                     ->where('is_paid', true)
                     ->where('type_id', 3)
                     ->where('start_date', '<=', $period_end)

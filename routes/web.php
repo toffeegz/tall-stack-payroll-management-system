@@ -24,6 +24,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::get('loan', Loan\LoanComponent::class)->name('loan');
 
+        Route::get('my-leave', Profile\MyLeave\MyLeaveComponent::class)->name('profile.leave');
+
+
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
 

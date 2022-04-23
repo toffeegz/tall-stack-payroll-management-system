@@ -22,7 +22,7 @@ class CreateLeavesTable extends Migration
             $table->date('end_date')->nullable();
             $table->integer('hours_duration')->comment('hours');
             $table->longText('reason');
-            $table->boolean('approved')->default(false);
+            $table->unsignedTinyInteger('status')->default(1)->comment('1-pending,2-approved,3-disapproved');
             $table->boolean('is_paid')->default(false);
             $table->timestamps();
             $table->softDeletes();

@@ -2,7 +2,8 @@
     {{-- Desktop Sidebar --}}
     <div class="fixed">
         <aside class="z-20 hidden w-64 overflow-y-auto scrollbar-hide h-screen bg-white md:block flex-shrink-0 shadow-sm shadow-stone-200 border-r border-stone-100">
-            <div class="py-4 text-stone-500 flex flex-col h-full">
+            <div class="pt-4 text-stone-500 flex flex-col h-full">
+                
                 <a href="#" class="ml-6 text-lg font-bold text-stone-800 flex-none">
                     toffeegz
                 </a>
@@ -269,20 +270,61 @@
                         @endif
                     </ul>
                 </div>
-                <div class="flex justify-center items-center mt-6">
-                    <div class="flex flex-col space-y-2">
-                        <div class="flex justify-center items-center">
-                            <button class="flex items-center justify-center bg-white rounded-xl border border-stone-300 p-1 focus:outline-none focus:shadow-outline-stone">
-                                <img src="{{ asset('storage/img/users/'. Auth::user()->profile_photo_path) }}" 
-                                    class="h-10 w-10 rounded-lg object-cover"
-                                />
-                            </button>
+
+                {{-- PROFILE --}}
+                <div x-data="{ profileDropdown: false }" class="flex flex-col items-center border border-stone-200 rounded-t-2xl">
+                    {{-- profile button --}}
+                    <button x-on:click="profileDropdown = !profileDropdown" class="px-4 py-4 flex justify-between w-full space-x-2 focus:outline-none border-0 ">
+                        <div class="flex">
+                            <div class="flex justify-center items-center">
+                                <div class="flex items-center justify-center bg-white rounded-xl border border-stone-300 p-1 focus:outline-none focus:shadow-outline-stone">
+                                    <img src="{{ asset('storage/img/users/'. Auth::user()->profile_photo_path) }}" 
+                                        class="h-10 w-10 rounded-lg object-cover"
+                                    />
+                                </div>
+                            </div>
+                            <div class="flex items-center h-12">
+                                <div class="flex flex-col">
+                                    <div class="text-center text-sm font-bold leading-5 text-stone-900">
+                                        {{ Auth::user()->informal_name() }}
+                                    </div>
+                                    <div class="text-center text-sm ml-2 font-medium leading-5 text-stone-500">
+                                        {{ Auth::user()->email }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-center text-sm font-medium leading-5 text-stone-500">
-                            {{ Auth::user()->informal_name() }}
+                        <div class="flex items-center justify-center m-1 h-10 fa-sm text-stone-400">
+                            <i class="fa-solid fa-angles-down"></i>
                         </div>
+                    </button>
+                    {{-- DROPDOWN --}}
+                    <div x-show="profileDropdown" class="w-full text-black text-sm pb-4" style="font-weight: 600;">
+                        <ul class="space-y-1">
+                            {{-- dashboard --}}
+                            <li class="px-4">
+                                <a href="{{ route('dashboard') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
+                                    <i class="@isset($menu) {{ $menu == 'my-profile' ? 'text-stone-500' : 'text-stone-900' }} @endisset fa-solid fa-user"></i>
+                                    <span class="ml-6">My Profile</span>
+                                </a>
+                            </li>
+                            <li class="px-4">
+                                <a href="{{ route('profile.leave') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'my-leave') bg-stone-100 text-stone-500 @endif @endisset ">
+                                    <i class="@isset($menu) {{ $menu == 'my-leave' ? 'text-stone-500' : 'text-stone-900' }} @endisset  fa-solid fa-calendar-xmark"></i>
+                                    <span class="ml-6">Leaves</span>
+                                </a>
+                            </li>
+                            <li class="px-4">
+                                <a href="{{ route('logout') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
+                                    <i class=" fa-solid fa-arrow-right-from-bracket "></i>
+                                    <span class="ml-6">Logout</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+
+
             </div>
         </aside>
     </div>

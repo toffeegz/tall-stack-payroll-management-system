@@ -65,6 +65,24 @@ class Helper
         return $bool_str;
     }
 
+    public static function getHoursDurationWorkingDay($period_start, $period_end)
+    {
+        $date_range = Helper::getRangeBetweenDates($period_start, $period_end);
+
+        $hours_duration = 0;
+        foreach($date_range as $date)
+        {
+            $is_date_working_day = Helper::isDateWorkingDay($date);
+            if($is_date_working_day)
+            {
+                $hours_duration += 8;
+            }
+        }
+
+        return $hours_duration;
+
+    }
+
     // COMPANY INFORMATION
     
     public function getCompanyInformation()
