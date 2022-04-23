@@ -37,7 +37,7 @@
                         {{-- attendance --}}
                         @if(Auth::user()->hasRole('administrator'))
                             <li class="px-4" x-data="{ leave_attendance: @isset($menu) @if($menu == 'attendance' || $menu == 'leave') true @else false @endif @endisset }">
-                                <button class="px-6 py-3 flex justify-between items-center w-full transition-colors duration-150 font-semibold hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'loan'  || $menu == 'grand-loan' || $menu == 'loan-installment') bg-stone-100 text-stone-500 @endif @endisset "
+                                <button class="px-6 py-3 flex justify-between items-center w-full transition-colors duration-150 font-semibold hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'attendance'  || $menu == 'leave') bg-stone-100 text-stone-500 @endif @endisset "
                                     @click="leave_attendance = !leave_attendance"
                                     aria-haspopup="true" >
                                     <span class="inline-flex items-center">
@@ -64,14 +64,14 @@
                                         class="p-2 space-y-2 overflow-hidden text-black " 
                                         aria-label="submenu" >
 
-                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'grand-loan') text-stone-500 @endif @endisset" >
+                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'attendance') text-stone-500 @endif @endisset" >
                                             <a href="{{ route('attendance') }}">
                                                 <span class="ml-3">
                                                     Attendance
                                                 </span>
                                             </a>
                                         </li>
-                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'loan-installment') text-stone-500 @endif @endisset" >
+                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'leave') text-stone-500 @endif @endisset" >
                                             <a href="{{ route('leave') }}">
                                                 <span class="ml-3">
                                                     Leave
@@ -354,12 +354,6 @@
                                 <a href="{{ route('dashboard') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
                                     <i class="@isset($menu) {{ $menu == 'my-profile' ? 'text-stone-500' : 'text-stone-900' }} @endisset fa-solid fa-user"></i>
                                     <span class="ml-6">My Profile</span>
-                                </a>
-                            </li>
-                            <li class="px-4">
-                                <a href="{{ route('profile.leave') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'my-leave') bg-stone-100 text-stone-500 @endif @endisset ">
-                                    <i class="@isset($menu) {{ $menu == 'my-leave' ? 'text-stone-500' : 'text-stone-900' }} @endisset  fa-solid fa-calendar-xmark"></i>
-                                    <span class="ml-6">Leaves</span>
                                 </a>
                             </li>
                             <li class="px-4">
