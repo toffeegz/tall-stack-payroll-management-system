@@ -97,7 +97,7 @@
 
 
 {{-- modal loan details --}}
-<x-modal-small id="modalGrantLoan" title="Loan Details" wire:ignore.self>
+<x-modal-small id="modalGrantLoan" title="Grant Loan" wire:ignore.self>
     {{-- modal body --}}
     <div class="space-y-4 my-4">
         <div class="">

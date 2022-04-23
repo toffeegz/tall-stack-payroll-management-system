@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Loan;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\User;
 use App\Models\Loan;
 use App\Models\LoanInstallment;
@@ -10,6 +11,7 @@ use Carbon\Carbon;
 
 class LoanInstallmentComponent extends Component
 {
+    use WithPagination;
     public $search = "";
     public $perPage = 5;
 
