@@ -62,27 +62,9 @@ class LoanComponent extends Component
 
     public function render()
     {
-        return view('livewire.loan.loan-component',[
-            'loans' => $this->loans,
-            'loan_installments' => $this->loanInstallments,
-        ])
+        return view('livewire.loan.loan-component')
         ->layout('layouts.app',  ['menu' => 'loan']);
     }
-
-    public function getLoanInstallmentsProperty()
-    {
-        return LoanInstallment::where('user_id', Auth::user()->id)
-        ->latest('pay_date')
-        ->paginate($this->perPage);
-    }
-
-    public function getLoansProperty()
-    {
-        return Loan::where('user_id', Auth::user()->id)
-        ->latest()
-        ->paginate($this->perPage);
-    }
-
 
     public function cancelRequest()
     {
@@ -143,14 +125,22 @@ class LoanComponent extends Component
 
     public function downloadPaymentHistory()
     {
+        $data = LoanInstallment::where('user_id', Auth::user()->id)
+        ->latest('pay_date')
+        ->get();
+
         $filename = Carbon::now()->format("Y-m-d") . " " . Auth::user()->code . " " . ' Payment History.xlsx';
-        return Excel::download(new PaymentHistoryExport($this->loanInstallments), $filename);
+        return Excel::download(new PaymentHistoryExport($data), $filename);
     }
 
     public function downloadRequestHistory()
     {
+        $data = Loan::where('user_id', Auth::user()->id)
+        ->latest()
+        ->get();
+
         $filename = Carbon::now()->format("Y-m-d") . " " . Auth::user()->code . " " . ' Request History.xlsx';
-        return Excel::download(new RequestHistoryExport($this->loans), $filename);
+        return Excel::download(new RequestHistoryExport($data), $filename);
     }
     
 }
