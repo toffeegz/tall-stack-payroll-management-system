@@ -2,22 +2,17 @@
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
     <div class="h-full overflow-y-auto px-6 md:px-auto">
         <div class="ml-12 md:ml-0 my-5 text-2xl font-semibold text-stone-700">
-            Reports
+            Loans (Cash Advance)
         </div>
         <div class="grid grid-cols-1 md:grid-cols-10 gap-5">
             
-            {{-- LOAN INSTALLMENTS --}}
+            {{-- left panel --}}
                 <div class="md:col-span-7 space-y-6"> 
                     {{-- payment history --}}
                     <div>
                         {{-- Table header --}}
-                        <div class="flex justify-between my-4 px-2">
+                        <div class="flex justify-start my-4 px-2">
                             <p class="font-bold">Payment History</p>
-                            <div class="space-x-2 flex">
-                                <button class="cursor-pointer text-blue-500 text-xs font-semibold">
-                                    Download <i class="fa-solid fa-download"></i>
-                                </button>
-                            </div>
                         </div>
 
                         {{-- payment history table --}}
@@ -35,7 +30,7 @@
                                     </thead>
                                     <tbody class="bg-white divide-y "  >
                                         @foreach($loan_installments as $loan_installment)
-                                            <tr class="text-stone-700 cursor-pointer"  wire:click="openLoanDetails('{{ $loan_installment->id }}')">
+                                            <tr class="text-stone-700r"  >
                                                 
                                                 <td class="px-4 py-3 text-xs font-semibold whitespace-nowrap">
                                                     {{ $loan_installment->pay_date ? Carbon\Carbon::parse($loan_installment->pay_date)->format('M d, Y') : '' }}
@@ -61,13 +56,8 @@
                     {{-- Loan history --}}
                     <div>
                         {{-- Table header --}}
-                        <div class="flex justify-between my-4 px-2">
+                        <div class="flex justify-start my-4 px-2">
                             <p class="font-bold">Loan History</p>
-                            <div class="space-x-2 flex">
-                                <button class="cursor-pointer text-blue-500 text-xs font-semibold">
-                                    Download <i class="fa-solid fa-download"></i>
-                                </button>
-                            </div>
                         </div>
 
                         {{-- loan history table --}}
@@ -86,7 +76,7 @@
                                     </thead>
                                     <tbody class="bg-white divide-y "  >
                                         @foreach($loans as $loan)
-                                            <tr class="text-stone-700 cursor-pointer"  wire:click="openLoanDetails('{{ $loan_installment->id }}')">
+                                            <tr class="text-stone-700">
                                                 
                                                 <td class="px-4 py-3 text-sm text-stone-900 ">
                                                     <p class="line-clamp-2 ">{{ $loan->details }}</p>
@@ -135,16 +125,25 @@
                     
                 </div>
             {{--  --}}
-            {{-- balance and loan table --}}
+
+
+            {{-- right panel --}}
                 <div class="space-y-4 md:-mt-10 md:col-span-3">
 
                     
                     {{-- balance --}}
                     @if($total_balance != 0)
-                        <div class="space-y-2 bg-purple-700 p-8 text-sm font-semibold text-stone-900 rounded-xl border border-stone-200 ">
+                        <div class="space-y-2 {{ $paid_percentage >= 100 ? 'bg-green-500' : 'bg-purple-700' }} p-8 text-sm font-semibold text-stone-900 rounded-xl border border-stone-200 ">
                             
                             <div class="w-full text-stone-200 text-xs text-center">
-                                Total left to Pay
+                                @if($paid_percentage >= 100)
+                                    Your loan is fully paid 
+                                    <span>
+                                        <i class="fa-solid fa-check-double fa-lg text-white"></i>
+                                    </span>
+                                @else 
+                                    Total left to Pay
+                                @endif
                             </div>
 
                             <div class="w-full text-white text-3xl font-bold text-center">
@@ -153,7 +152,7 @@
 
                             <div class="flex items-center justify-between space-x-2">
                                 <div class="w-full bg-stone-400 rounded-full h-2">
-                                    <div class="bg-white h-2 rounded-full" style="width: 45%"></div>
+                                    <div class="bg-white h-2 rounded-full" style="width: {{ $paid_percentage }} %"></div>
                                 </div>
                                 <p class="text-xs text-white font-semibold">{{ $paid_percentage }}%</p>
                             </div>
@@ -248,6 +247,52 @@
                         </div>
                     @endif
 
+
+                    {{-- download history of payments --}}
+                        <div class="pb-4 flex items-center justify-between p-4 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200 focus:outline-none focus:shadow-outline-stone">
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="items-center rounded-md p-2">
+                                        <img src="{{ asset('storage/img/icons/cash-icon.png') }}" class="w-10 h-10 object-cover"/>
+                                    </div>
+                                    <div class="font-bold text-sm">
+                                        Loan History
+                                    </div>
+                                    <div class="text-stone-500 text-xs font-light">
+                                        Download copy of cash advance requests with loan details such as amount, install period, date, etc.
+                                    </div>
+                                </div>
+                                <div>
+                                    <button wire:click="downloadRequestHistory" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                                        Download <i class="fa-solid fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {{--  --}}
+
+                     {{-- download history of payments --}}
+                     <div class="pb-4 flex items-center justify-between p-4 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200 focus:outline-none focus:shadow-outline-stone">
+                        <div class="space-y-4">
+                            <div>
+                                <div class="items-center rounded-md p-2">
+                                    <img src="{{ asset('storage/img/icons/loan.png') }}" class="w-10 h-10 object-cover"/>
+                                </div>
+                                <div class="font-bold text-sm">
+                                    Payment History
+                                </div>
+                                <div class="text-stone-500 text-xs font-light">
+                                    Download copy of loan payment history with details.
+                                </div>
+                            </div>
+                            <div>
+                                <button wire:click="downloadPaymentHistory" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                                    Download <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {{--  --}}
                     
         
                 </div>

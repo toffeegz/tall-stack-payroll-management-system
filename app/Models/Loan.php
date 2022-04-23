@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User;
+use App\Models\Project;
 use App\Models\LoanInstallment;
 
 class Loan extends Model
@@ -18,8 +19,14 @@ class Loan extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     public function loanInstallments()
     {
         return $this->hasMany(LoanInstallment::class);
     }
+    
 }

@@ -7,12 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\User;
+use App\Models\Loan;
 use App\Models\Attendance;
 
 class Project extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
 
     public function users()
     {

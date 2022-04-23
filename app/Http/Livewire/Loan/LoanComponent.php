@@ -5,15 +5,22 @@ namespace App\Http\Livewire\Loan;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\Loan\PaymentHistoryExport;
+use App\Exports\Loan\RequestHistoryExport;
 
 use App\Models\LoanInstallment;
 use App\Models\Loan;
+
+
+use Carbon\Carbon;
 
 class LoanComponent extends Component
 {
     use WithPagination;
 
-    public $perPage = 10;
+    public $perPage = 5;
 
     public $pending_request;
     public $total_balance;
@@ -65,7 +72,7 @@ class LoanComponent extends Component
     public function getLoanInstallmentsProperty()
     {
         return LoanInstallment::where('user_id', Auth::user()->id)
-        ->latest()
+        ->latest('pay_date')
         ->paginate($this->perPage);
     }
 
@@ -130,6 +137,20 @@ class LoanComponent extends Component
 
         return redirect()->route('loan');
 
+    }
+
+    // DOWNLOAD
+
+    public function downloadPaymentHistory()
+    {
+        $filename = Carbon::now()->format("Y-m-d") . " " . Auth::user()->code . " " . ' Payment History.xlsx';
+        return Excel::download(new PaymentHistoryExport($this->loanInstallments), $filename);
+    }
+
+    public function downloadRequestHistory()
+    {
+        $filename = Carbon::now()->format("Y-m-d") . " " . Auth::user()->code . " " . ' Request History.xlsx';
+        return Excel::download(new RequestHistoryExport($this->loans), $filename);
     }
     
 }
