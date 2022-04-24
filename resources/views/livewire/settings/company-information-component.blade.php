@@ -36,14 +36,10 @@
         {{-- right --}}
         <div class="col-span-10 md:col-span-4">
             <div class="border border-stone-200 rounded-lg">
-                <div x-data="{ hoverImage: false }" @mouseover.away = "hoverImage = false" class="relative justify-center pt-12 pb-1/4 border-b border-stone-100">
-
-                    <img  @mouseover="hoverImage = true" src="{{ asset('storage/img/company/'.Helper::getCompanyInformation()->logo_path) }}" 
-                    class="absolute rounded-lg w-full h-full object-cover inset-0">
-                    <div x-cloak x-show="hoverImage" class="absolute w-full h-full flex justify-end p-4 inset-0 ">
-                        <button onclick="modalObject.openModal('modalUpdateImage')" class="cursor-pointer text-indigo-500 text-xs font-semibold rounded-full bg-indigo-100 w-7 h-7 flex items-center justify-center">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
+                <div x-data="{ hoverImage: false }" @mouseover.away = "hoverImage = false" >
+                    <div class="w-full flex justify-center">
+                        <img  @mouseover="hoverImage = true" src="{{ asset('storage/img/company/'.Helper::getCompanyInformation()->logo_path) }}" 
+                        class=" rounded-lg w-28 h-28 object-cover inset-0">
                     </div>
                 </div>
 
