@@ -5,7 +5,7 @@
             <div class="pt-4 text-stone-500 flex flex-col h-full">
                 
                 <a href="#" class="ml-6 text-lg font-bold text-stone-800 flex-none">
-                    toffeegz
+                    {{ Helper::getCompanyInformation()->name }}
                 </a>
                 <div class="mt-6 flex-auto text-black text-sm" style="font-weight: 600;">
                     <ul class="space-y-1">
