@@ -65,8 +65,8 @@ class ProjectComponent extends Component
 
     public function openProject($value)
     {
-        $this->selected_project = Project::find($value);
-        $this->emit('openProjectDetailsModal');
+        $code = Project::find($value)->value('code');
+        return redirect()->route('project.details', ['id'=>$code]);
     }
 
     public function nextPage()

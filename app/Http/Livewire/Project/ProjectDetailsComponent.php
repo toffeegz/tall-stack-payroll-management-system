@@ -14,7 +14,16 @@ class ProjectDetailsComponent extends Component
 
     public function mount(Request $request)
     {
-        $this->project = Project::find($request->id);
+        $this->project = Project::where('code', $request->id)->first();
+        if($this->project)
+        {
+
+        } 
+        else 
+        {
+            // $message =  " No project found with ID: " . $request->id;
+            return abort(404);
+        }
     }
 
     public function render()
