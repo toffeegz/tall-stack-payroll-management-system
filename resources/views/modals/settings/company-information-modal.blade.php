@@ -89,7 +89,7 @@
 </x-modal-small>
 {{-- end loan --}}
 
-{{-- modal loan details --}}
+{{-- modal edit designation --}}
 <x-modal-small id="modalEditDesignation" title="Edit Designation" wire:ignore.self>
     {{-- modal body --}}
     <div class="space-y-4 my-4">
@@ -133,7 +133,7 @@
 {{-- end loan --}}
 
 
-{{-- modal loan details --}}
+{{-- modal add designation --}}
 <x-modal-small id="modalAddDesignation" title="Add Designation" wire:ignore.self>
     {{-- modal body --}}
     <div class="space-y-4 my-4">
@@ -170,6 +170,40 @@
         </x-forms.button-rounded-md-secondary>
         <x-forms.button-rounded-md-primary wire:click="addDesignation" >
             Submit
+        </x-forms.button-rounded-md-primary>
+    </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{-- end loan --}}
+
+{{-- modal edit department --}}
+<x-modal-small id="modalEditDepartment" title="Edit Department" wire:ignore.self>
+    {{-- modal body --}}
+    <div class="space-y-4 my-4">
+
+
+        
+        <div>
+            <x-forms.label>
+                Department Name
+            </x-forms.label>
+            <x-forms.input wire:model="department_name" type="text"></x-forms.input>
+            @error('department_name')
+                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+            @enderror
+        </div>
+
+
+
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+    <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
+        <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalEditDepartment')">
+            Close
+        </x-forms.button-rounded-md-secondary>
+        <x-forms.button-rounded-md-primary wire:click="editDepartment" >
+            Update
         </x-forms.button-rounded-md-primary>
     </div>
     {{-- end modal footer --}}

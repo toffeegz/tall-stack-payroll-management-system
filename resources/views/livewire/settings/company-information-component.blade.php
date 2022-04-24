@@ -11,12 +11,17 @@
                 <div class="px-2 space-y-2">
                     @foreach($departments as $department)
                         <div x-data="{ open: false }">
-                            <a x-on:click="open = !open" class="flex justify-between border-b border-stone-200 py-1">
-                                <p class="text-sm font-semibold text-stone-600">{{ $department->department_name }}</p>
-                                <button wire:click="addDesignationModal({{ $department->id }})" class="flex items-center justify-center px-2 py-2 cursor-pointer">
-                                    <i class="fa-solid fa-plus fa-xs text-blue-500"></i>
-                                </button>
-                            </a>
+                            <div class="flex justify-between border-b border-stone-200 py-1">
+                                <a x-on:click="open = !open" class="text-sm font-semibold text-stone-600 cursor-pointer">{{ $department->department_name }}</a>
+                                <div class="flex space-x-2">
+                                    <button wire:click="editDepartmentNameModal({{ $department->id }})" class="flex items-center justify-center px-2 py-2 cursor-pointer">
+                                        <i class="fa-solid fa-pen fa-xs text-blue-500"></i>
+                                    </button>
+                                    <button wire:click="addDesignationModal({{ $department->id }})" class="flex items-center justify-center px-2 py-2 cursor-pointer">
+                                        <i class="fa-solid fa-plus fa-xs text-blue-500"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <div x-show="open" class="space-y-2 px-8 my-4">
                                 @foreach($department->designations as $designation)
                                     <div class="text-sm flex justify-between">

@@ -22,6 +22,8 @@ class CompanyInformationComponent extends Component
 
     public $department_id, $new_designation_name, $new_daily_rate;
 
+    public $department, $department_name;
+
     public function mount()
     {
         $this->name = Helper::getCompanyInformation()->name;
@@ -118,5 +120,20 @@ class CompanyInformationComponent extends Component
         $this->emit('closeAddDesignationModal');    
         $this->designation = null;
 
+    }
+
+    public function editDepartmentNameModal($value)
+    {
+        $this->department = Department::find($value);
+        $this->department_name = $this->department->department_name;
+
+        $this->emit('openEditDepartmentModal');    
+    }
+
+    public function editDepartment()
+    {
+        $this->department->department_name = $this->department_name;
+        $this->department->save();
+        $this->emit('closeEditDepartmentModal');    
     }
 }
