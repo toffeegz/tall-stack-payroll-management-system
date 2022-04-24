@@ -15,14 +15,16 @@ class ProjectDetailsComponent extends Component
     use WithPagination;
     public $project;
     public $search = "";
+    public $search_add = "";
     public $perPage = 10;
+    public $selected_users_to_add = [];
 
     public function mount(Request $request)
     {
         $this->project = Project::where('code', $request->id)->first();
         if($this->project)
         {
-
+            // dd($this->users_to_add);
         } 
         else 
         {
@@ -35,6 +37,7 @@ class ProjectDetailsComponent extends Component
     {
         return view('livewire.project.project-details-component', [
             'users' => $this->users,
+            'users_to_add' => $this->users_to_add,
         ])->layout('layouts.app',  ['menu' => 'project']);
 
     }
@@ -50,7 +53,6 @@ class ProjectDetailsComponent extends Component
         ->where(function ($query) use ($search) {
             return $query->where('last_name', 'like', '%' . $search . '%')
             ->orWhere('first_name', 'like', '%' . $search . '%')
-            ->orWhere('last_name', 'like', '%' . $search . '%')
             ->orWhere('middle_name', 'like', '%' . $search . '%')
             ->orWhere('code', 'like', '%' . $search . '%')
             ->orWhere('email', 'like', '%' . $search . '%');
@@ -58,4 +60,26 @@ class ProjectDetailsComponent extends Component
         ->paginate($this->perPage);
     }
 
+    public function getUsersToAddProperty()
+    {
+        // dd($this->project->users->pluck('id'));
+        $search = $this->search_add;
+
+        return User::whereNotIn('id', $this->project->users->pluck('id'))
+        ->latest('hired_date')
+        ->where(function ($query) use ($search) {
+            return $query->where('last_name', 'like', '%' . $search . '%')
+            ->orWhere('first_name', 'like', '%' . $search . '%')
+            ->orWhere('middle_name', 'like', '%' . $search . '%')
+            ->orWhere('code', 'like', '%' . $search . '%');
+        })
+        ->get();
+    }
+
+    public function submitUsers()
+    {
+        $this->project->users()->attach($this->selected_users_to_add);
+        $this->emit('closeAddUsersModal');
+        $this->emit('openNotifModal');
+    }
 }

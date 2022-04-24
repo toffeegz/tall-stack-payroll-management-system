@@ -3,7 +3,7 @@
     <div class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">
             <h2 class="my-6 text-2xl font-semibold text-stone-700">
-                Employee
+                Project
             </h2>
             {{-- body --}}
             <div class=" w-full grid grid-cols-3 gap-4">
@@ -16,7 +16,7 @@
                                 <x-forms.search-input placeholder="search employee" name="search"/>
                             </div>
                             <div class="space-x-2 flex">
-                                <x-forms.button-rounded-md-primary class="whitespace-nowrap" wire:click="hireNewEmployee">
+                                <x-forms.button-rounded-md-primary class="whitespace-nowrap" onclick="modalObject.openModal('modalAddUsers')">
                                     <i class="fa-solid fa-plus"></i>
                                     <span class="hidden md:inline-flex">Add Employee</span>
                                 </x-forms.button-rounded-md-primary>
@@ -80,6 +80,6 @@
     </div>
 
     {{--  --}}
-    {{-- @include('scripts.employee.profile-script')
-    @include('modals.employee.profile-modal') --}}
+    @include('scripts.project.project-details-script')
+    @include('modals.project.project-details-modal')
 </div>
