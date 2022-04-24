@@ -47,7 +47,7 @@
                 <div class="p-4">
                     <div class="flex justify-between">
                         <p class="font-bold">Company</p>
-                        <button wire:click="userDownload" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                        <button onclick="modalObject.openModal('modalEditCompanyInformation')" class="cursor-pointer text-blue-500 text-xs font-semibold">
                             Edit <i class="fa-solid fa-pen ml-2"></i>
                         </button>
                     </div>
@@ -93,4 +93,6 @@
 
 
     </div>
+    @include('modals.settings.company-information-modal')
+    @include('scripts.settings.company-information-script')
 </div>
