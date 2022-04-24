@@ -10,6 +10,13 @@
             modalObject.closeModal('modalAddUsers'); 
         });
 
+        Livewire.on('openRemoveUsersModal', (el, component) => {
+            modalObject.openModal('modalRemoveUsers'); 
+        });
+        Livewire.on('closeRemoveUsersModal', (el, component) => {
+            modalObject.closeModal('modalRemoveUsers'); 
+        });
+
         Livewire.on('openNotifModal', (el, component) => {
             modalObject.openModal('modalNotif'); 
         });

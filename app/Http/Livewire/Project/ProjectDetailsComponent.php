@@ -18,6 +18,7 @@ class ProjectDetailsComponent extends Component
     public $search_add = "";
     public $perPage = 10;
     public $selected_users_to_add = [];
+    public $selected_users_to_remove = [];
 
     public function mount(Request $request)
     {
@@ -81,5 +82,11 @@ class ProjectDetailsComponent extends Component
         $this->project->users()->attach($this->selected_users_to_add);
         $this->emit('closeAddUsersModal');
         $this->emit('openNotifModal');
+    }
+
+    public function removeUsers()
+    {
+        $this->project->users()->detach($this->selected_users_to_remove);
+        $this->emit('closeRemoveUsersModal');
     }
 }

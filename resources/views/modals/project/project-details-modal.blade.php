@@ -16,7 +16,7 @@
 
 
 
-{{-- modal new project  --}}
+{{-- modal add user  --}}
 <x-modal-small id="modalAddUsers" title="Add Employee" wire:ignore.self>
 
     {{-- modal body --}}
@@ -75,3 +75,30 @@
     {{-- end modal footer --}}
 </x-modal-small>
 {{--  --}}
+
+
+{{-- modal loan details --}}
+<x-modal-small id="modalRemoveUsers" title="Remove Users" wire:ignore.self>
+    {{-- modal body --}}
+    <div class="space-y-4 my-4">
+
+        <x-notification.delete title="Remove Selected Users?">
+            Are you sure you want to remove {{ count($selected_users_to_remove) }} users?
+        </x-notification.delete>
+
+
+
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+    <div class="w-full py-4 flex space-x-2 justify-end border-t border-stone-200 px-4">
+        <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalRemoveUsers')">
+            Close
+        </x-forms.button-rounded-md-secondary>
+        <x-forms.button-rounded-md-danger wire:click="removeUsers">
+            Remove
+        </x-forms.button-rounded-md-danger>
+    </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{-- end loan --}}
