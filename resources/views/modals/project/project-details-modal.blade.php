@@ -65,11 +65,11 @@
     {{-- end modal body --}}
     {{-- modal footer --}}
         <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
-            <x-forms.button-rounded-md-secondary onclick="modalObject.openModal('modalAddUsers')">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalAddUsers')">
                 Cancel
             </x-forms.button-rounded-md-secondary>
             <x-forms.button-rounded-md-primary wire:click="submitUsers" wire:loading.attr="disabled">
-                Next
+                Submit
             </x-forms.button-rounded-md-primary>
         </div>
     {{-- end modal footer --}}
