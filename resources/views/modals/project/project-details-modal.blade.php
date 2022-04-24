@@ -196,6 +196,51 @@
 </x-modal-small>
 {{--  --}}
 
+{{-- modal update project  --}}
+<x-modal-small id="modalUpdateImage" title="Update Image" wire:ignore.self>
+
+    {{-- modal body --}}
+    <div class="space-y-4 my-4">
+        {{-- image --}}
+        <div class="">
+            <div class="w-full">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                    Upload <small class="text-gray-400 ml-2">Image(jpg,png)</small>
+                </label> 
+                <label class="flex flex-col w-full hover:bg-gray-100">
+                    <div class="relative flex flex-col items-center justify-center pt-12 pb-1/4">
+
+                        <img @if($profile_photo_path) src="{{ $profile_photo_path->temporaryUrl() }}" @endif 
+                        class="absolute rounded-lg w-full h-full object-cover border-dashed border-4 border-gray-100 inset-0">
+                        <i class="far fa-image fa-3x text-gray-300 group-hover:text-gray-400"></i>
+                        <p class="pt-1 text-sm tracking-wider font-semibold text-gray-300 group-hover:text-gray-400">
+                            Select a photo
+                        </p>
+                        <input type="file" class="opacity-0" accept="image/*" wire:model="profile_photo_path"/>
+                    </div>
+                </label>
+            </div>
+            @error('profile_photo_path')
+                <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+            @enderror
+        </div>
+        
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+        <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.openModal('modalUpdateImage')">
+                Cancel
+            </x-forms.button-rounded-md-secondary>
+            <x-forms.button-rounded-md-primary wire:click="updateImage" wire:loading.attr="disabled">
+                Update
+            </x-forms.button-rounded-md-primary>
+        </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{--  --}}
+
+
 {{-- modal delete project --}}
 <x-modal-small id="modalDeleteProject" title="Delete" wire:ignore.self>
     {{-- modal body --}}

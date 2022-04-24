@@ -87,11 +87,15 @@
                 <div class="col-span-3 md:col-span-1">
 
                     
-                    <div class="relative flex flex-col items-center justify-center pt-12 pb-2/4 border border-stone-200 rounded-md">
+                    <div x-data="{ hoverImage: false }" @mouseover.away = "hoverImage = false" class="relative justify-center pt-12 pb-2/4 border border-stone-200 rounded-md">
 
-                        <img  src="{{ asset('storage/img/projects/'.$project->profile_photo_path) }}" alt="{{ $project->code }}"
+                        <img  @mouseover="hoverImage = true" src="{{ asset('storage/img/projects/'.$project->profile_photo_path) }}" alt="{{ $project->code }}"
                         class="absolute rounded-lg w-full h-full object-cover inset-0">
-                        
+                        <div x-cloak x-show="hoverImage" class="absolute w-full h-full flex justify-end p-4 inset-0 ">
+                            <button onclick="modalObject.openModal('modalUpdateImage')" class="cursor-pointer text-indigo-500 text-xs font-semibold rounded-full bg-indigo-100 w-7 h-7 flex items-center justify-center">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="p-8 text-left space-y-3">

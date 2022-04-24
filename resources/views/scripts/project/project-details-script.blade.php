@@ -31,6 +31,13 @@
             modalObject.closeModal('modalUpdateProject'); 
         });
 
+        Livewire.on('openUpdateImageModal', (el, component) => {
+            modalObject.openModal('modalUpdateImage'); 
+        });
+        Livewire.on('closeUpdateImageModal', (el, component) => {
+            modalObject.closeModal('modalUpdateImage'); 
+        });
+
 
         Livewire.on('openNotifModal', (el, component) => {
             modalObject.openModal('modalNotif'); 

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 
 use App\Models\Project;
 use App\Models\User;
@@ -13,6 +14,8 @@ use App\Models\User;
 class ProjectDetailsComponent extends Component
 {
     use WithPagination;
+    use WithFileUploads;
+
     public $project;
     public $search = "";
     public $search_add = "";
@@ -27,6 +30,7 @@ class ProjectDetailsComponent extends Component
     public $start_date;
     public $end_date;
     public $is_subcontractual;
+    public $profile_photo_path;
 
     public function mount(Request $request)
     {
@@ -141,5 +145,27 @@ class ProjectDetailsComponent extends Component
             $this->project->status = 1;
         }
         $this->project->save();
+    }
+
+    public function updateImage()
+    {
+        // validate
+        $this->validate([
+            'profile_photo_path' => "nullable|image|mimes:jpg,png,jpeg|max:2048",
+        ]);
+
+        $this->emit('closeUpdateImageModal');
+
+        $imageFileName = null;
+        if($this->profile_photo_path != null)
+        {
+            $imageFileName = $this->code . $this->profile_photo_path->extension();
+
+            $this->profile_photo_path->storeAs('public/img/projects', $imageFileName);
+        }
+
+        $this->project->profile_photo_path = $imageFileName;
+        $this->project->save();
+           
     }
 }
