@@ -85,7 +85,7 @@
                     <a href="#" class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-stone-900 bg-white rounded-xl border-2 border-stone-100 focus:outline-none focus:shadow-outline-stone">
                         <div class="flex flex-row space-x-4">
                             <div class="flex items-center bg-purple-100 rounded-md p-1">
-                                <img src="{{ asset('storage/img/icons/report.png') }}" class="w-10 h-10 object-cover"/>
+                                <img src="{{ asset('storage/img/icons/calendar-icon.png') }}" class="w-10 h-10 object-cover"/>
                             </div>
                             <div class="">
                                 <div class="font-bold text-base">
