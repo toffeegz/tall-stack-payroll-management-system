@@ -212,7 +212,7 @@
                                             </a>
                                         </li>
                                         <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'payslip') text-stone-500 @endif @endisset" >
-                                            <a href="#">
+                                            <a href="{{ route('payslip') }}">
                                                 <span class="ml-3">
                                                     My Payslip
                                                 </span>
@@ -320,7 +320,7 @@
                 </div>
 
                 {{-- PROFILE --}}
-                <div x-data="{ profileDropdown: false }" class="flex flex-col items-center border border-stone-200 rounded-t-2xl">
+                <div x-cloak x-data="{ profileDropdown: false }" class="flex flex-col items-center border border-stone-200 rounded-t-2xl">
                     {{-- profile button --}}
                     <button x-on:click="profileDropdown = !profileDropdown" class="px-4 py-4 flex justify-between w-full space-x-2 focus:outline-none border-0 ">
                         <div class="flex">

@@ -27,6 +27,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('leave',Leave\LeaveComponent::class)->name('leave');
 
 
+        Route::get('payslip',Payroll\PayslipComponent::class)->name('payslip');
+
+
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
 
