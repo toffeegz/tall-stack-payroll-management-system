@@ -292,10 +292,14 @@
                                 </a>
                             </li>
                             <li class="px-4">
-                                <a href="{{ route('logout') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
-                                    <i class=" fa-solid fa-arrow-right-from-bracket "></i>
-                                    <span class="ml-6">Logout</span>
-                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
+                                        <i class=" fa-solid fa-arrow-right-from-bracket "></i>
+                                        <span class="ml-6">Logout</span>
+                                    </button>
+                                </form>
+                                
                             </li>
                         </ul>
                     </div>

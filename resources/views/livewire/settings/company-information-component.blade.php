@@ -1,0 +1,100 @@
+<div>
+    {{-- Because she competes with no one, no one can compete with her. --}}
+    <div class="grid grid-cols-10 gap-4">
+
+        {{-- left --}}
+        <div class="col-span-10 md:col-span-6">
+
+            <div>
+                <p class="font-bold mb-4">Departments</p>
+
+                <div class="px-2 space-y-2">
+                    @foreach($departments as $department)
+                        <div x-data="{ open: false }">
+                            <a x-on:click="open = !open" class="flex justify-between border-b border-stone-200 py-1">
+                                <p class="text-sm font-semibold text-stone-600">{{ $department->department_name }}</p>
+                            </a>
+                            <div x-show="open" class="space-y-2 px-8 my-4">
+                                @foreach($department->designations as $designation)
+                                    <div class="text-sm flex justify-between">
+                                        <p>{{ $designation->designation_name }}</p>
+                                        <div class="flex space-x-2">
+                                            <p class="text-xs font-semibold text-stone-500">₱{{ $designation->daily_rate }}</p>
+                                            <span class="flex items-center justify-center"><i class="fa-solid fa-pen fa-xs text-blue-500"></i></span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            
+
+        </div>
+
+        {{-- right --}}
+        <div class="col-span-10 md:col-span-4">
+            <div class="border border-stone-200 rounded-lg">
+                <div x-data="{ hoverImage: false }" @mouseover.away = "hoverImage = false" class="relative justify-center pt-12 pb-1/4 border-b border-stone-100">
+
+                    <img  @mouseover="hoverImage = true" src="{{ asset('storage/img/company/'.Helper::getCompanyInformation()->logo_path) }}" 
+                    class="absolute rounded-lg w-full h-full object-cover inset-0">
+                    <div x-cloak x-show="hoverImage" class="absolute w-full h-full flex justify-end p-4 inset-0 ">
+                        <button onclick="modalObject.openModal('modalUpdateImage')" class="cursor-pointer text-indigo-500 text-xs font-semibold rounded-full bg-indigo-100 w-7 h-7 flex items-center justify-center">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="p-4">
+                    <div class="flex justify-between">
+                        <p class="font-bold">Company</p>
+                        <button wire:click="userDownload" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                            Edit <i class="fa-solid fa-pen ml-2"></i>
+                        </button>
+                    </div>
+                    
+
+                    <div class="grid grid-cols-3 gap-2 py-2">
+                        <div class="col-span-1 text-right text-stone-500 font-semibold text-sm">
+                            Name
+                        </div>
+                        <div class="col-span-2 text-left text-sm">
+                            {{ Helper::getCompanyInformation()->name }}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 py-2">
+                        <div class="col-span-1 text-right text-stone-500 font-semibold text-sm">
+                            Email
+                        </div>
+                        <div class="col-span-2 text-left text-sm">
+                            {{ Helper::getCompanyInformation()->email }}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 py-2">
+                        <div class="col-span-1 text-right text-stone-500 font-semibold text-sm">
+                            Phone #
+                        </div>
+                        <div class="col-span-2 text-left text-sm">
+                            {{ Helper::getCompanyInformation()->phone }}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 py-2">
+                        <div class="col-span-1 text-right text-stone-500 font-semibold text-sm">
+                            Address
+                        </div>
+                        <div class="col-span-2 text-left text-sm">
+                            {{ Helper::getCompanyInformation()->address }}
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
