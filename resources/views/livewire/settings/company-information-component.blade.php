@@ -28,6 +28,7 @@
                                         <p>{{ $designation->designation_name }}</p>
                                         <div class="flex space-x-2">
                                             <p class="text-xs font-semibold text-stone-500">₱{{ $designation->daily_rate }}</p>
+                                            
                                             <button wire:click="editDesignationModal({{ $designation->id }})" class="flex items-center justify-center px-2 py-2 cursor-pointer">
                                                 <i class="fa-solid fa-pen fa-xs text-blue-500"></i>
                                             </button>

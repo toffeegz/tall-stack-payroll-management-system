@@ -120,13 +120,18 @@
     </div>
     {{-- end modal body --}}
     {{-- modal footer --}}
-    <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
-        <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalEditDesignation')">
-            Close
-        </x-forms.button-rounded-md-secondary>
-        <x-forms.button-rounded-md-primary wire:click="editDesignation" >
-            Update
-        </x-forms.button-rounded-md-primary>
+    <div class="w-full py-4 flex justify-between space-x-2 border-t border-stone-200">
+        <x-forms.button-rounded-md-danger wire:click="deleteDesignation" >
+            Delete
+        </x-forms.button-rounded-md-danger>
+        <div class="flex justify-end space-x-2 ">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalEditDesignation')">
+                Close
+            </x-forms.button-rounded-md-secondary>
+            <x-forms.button-rounded-md-primary wire:click="editDesignation" >
+                Update
+            </x-forms.button-rounded-md-primary>
+        </div>
     </div>
     {{-- end modal footer --}}
 </x-modal-small>

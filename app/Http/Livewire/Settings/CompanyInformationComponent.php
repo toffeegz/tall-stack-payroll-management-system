@@ -97,6 +97,14 @@ class CompanyInformationComponent extends Component
 
     }
 
+    public function deleteDesignation()
+    {
+        $this->designation->delete();
+
+        $this->emit('closeEditDesignationModal');    
+        $this->designation = null;
+    }
+
     public function addDesignationModal($value)
     {
         $this->department_id = $value;
