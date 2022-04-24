@@ -20,6 +20,8 @@ class CompanyInformationComponent extends Component
 
     public $designation, $designation_name, $daily_rate;
 
+    public $department_id, $new_designation_name, $new_daily_rate;
+
     public function mount()
     {
         $this->name = Helper::getCompanyInformation()->name;
@@ -89,6 +91,31 @@ class CompanyInformationComponent extends Component
         $this->designation->save();
 
         $this->emit('closeEditDesignationModal');    
+        $this->designation = null;
+
+    }
+
+    public function addDesignationModal($value)
+    {
+        $this->department_id = $value;
+
+        $this->emit('openAddDesignationModal');    
+    }
+
+    public function addDesignation()
+    {
+        $this->validate([
+            'new_designation_name' => 'required|string|min:2|max:255',
+            'new_daily_rate' => 'required|numeric',
+        ]);
+
+        $designation = new Designation;
+        $designation->department_id = $this->department_id;
+        $designation->designation_name = $this->new_designation_name;
+        $designation->daily_rate = $this->new_daily_rate;
+        $designation->save();
+
+        $this->emit('closeAddDesignationModal');    
         $this->designation = null;
 
     }

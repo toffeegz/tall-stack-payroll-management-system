@@ -20,6 +20,13 @@
         });
 
 
+        Livewire.on('openAddDesignationModal', (el, component) => {
+            modalObject.openModal('modalAddDesignation'); 
+        });
+        Livewire.on('closeAddDesignationModal', (el, component) => {
+            modalObject.closeModal('modalAddDesignation'); 
+        });
+
     });
     // 
 
