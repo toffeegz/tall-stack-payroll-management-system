@@ -299,7 +299,6 @@
                                         <span class="ml-6">Logout</span>
                                     </button>
                                 </form>
-                                
                             </li>
                         </ul>
                     </div>

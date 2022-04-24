@@ -14,7 +14,8 @@ class SettingsComponent extends Component
 
     public function render()
     {
-        return view('livewire.settings.settings-component');
+        return view('livewire.settings.settings-component')
+        ->layout('layouts.app',  ['menu' => 'settings']);
     }
 
     public function page($value)
