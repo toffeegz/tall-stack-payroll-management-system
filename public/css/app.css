@@ -936,8 +936,20 @@ select {
 .w-7 {
   width: 1.75rem;
 }
+.w-40 {
+  width: 10rem;
+}
+.w-36 {
+  width: 9rem;
+}
+.w-32 {
+  width: 8rem;
+}
 .min-w-0 {
   min-width: 0px;
+}
+.min-w-full {
+  min-width: 100%;
 }
 .max-w-sm {
   max-width: 24rem;
@@ -1928,6 +1940,12 @@ select {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 .checked\:border-blue-600:checked {
   --tw-border-opacity: 1;

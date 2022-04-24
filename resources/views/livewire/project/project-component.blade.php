@@ -60,13 +60,13 @@
                                             {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '' }}
                                         </td>
                                         <td class="py-3 px-6 text-center">
-                                            <div class="flex items-center justify-center">
+                                            <div class="flex items-center justify-center w-28">
                                                 @foreach($project->usersImage(4) as $user)
                                                 <img class="w-8 h-8 object-cover rounded-full border-gray-200 border -m-1"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}"/>
                                                 @endforeach
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 text-xs text-center">
+                                        <td class="px-4 py-3 text-xs text-center whitespace-nowrap">
                                             @if($project->status == 1)
                                                 <span class="px-2 py-1 font-semibold text-blue-700 bg-blue-100 leading-tight bg rounded-full ">
                                                     On-going
@@ -82,7 +82,7 @@
                                             @endif
                                         </td>
                                         <td class="px-4 py-3 text-sm">
-                                            {{ $project->location }}
+                                            <p class=" line-clamp-3">{{ $project->location }}</p>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -92,6 +92,8 @@
                 </div>
                 {{ $projects->links() }}
             </div>
+
+            
         </div>
     </div>
 
