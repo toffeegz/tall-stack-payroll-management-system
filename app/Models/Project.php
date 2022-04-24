@@ -25,6 +25,11 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_user');
     }
 
+    public function usersImage($count)
+    {
+        return $this->users()->take($count)->get();
+    }
+
     public function attendances()
     {
         return $this->hasMany(Attendance::class);

@@ -28,7 +28,7 @@
                         {{-- project --}}
                         @if(Auth::user()->hasRole('administrator'))
                             <li class="px-4">
-                                <a class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'project') bg-stone-100 text-stone-500 @endif @endisset " href="index.html">
+                                <a href="{{ route('project') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'project') bg-stone-100 text-stone-500 @endif @endisset " >
                                     <svg class="w-5 h-5" style=" fill:@isset($menu) @if($menu == 'project') #78716c; @endif @endisset " xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"viewBox="0 0 48 48"><path d="M 8.5 8 C 6.0324991 8 4 10.032499 4 12.5 L 4 35.5 C 4 37.967501 6.0324991 40 8.5 40 L 39.5 40 C 41.967501 40 44 37.967501 44 35.5 L 44 17.5 C 44 15.032499 41.967501 13 39.5 13 L 24.042969 13 L 19.572266 9.2753906 C 18.584055 8.4521105 17.339162 8 16.052734 8 L 8.5 8 z M 8.5 11 L 16.052734 11 C 16.638307 11 17.202555 11.205358 17.652344 11.580078 L 21.15625 14.5 L 17.652344 17.419922 C 17.202555 17.794642 16.638307 18 16.052734 18 L 7 18 L 7 12.5 C 7 11.653501 7.6535009 11 8.5 11 z M 24.042969 16 L 39.5 16 C 40.346499 16 41 16.653501 41 17.5 L 41 35.5 C 41 36.346499 40.346499 37 39.5 37 L 8.5 37 C 7.6535009 37 7 36.346499 7 35.5 L 7 21 L 16.052734 21 C 17.339162 21 18.584055 20.547889 19.572266 19.724609 L 24.042969 16 z"></path></svg>
                                     <span class="ml-6">Project</span>
                                 </a>
@@ -223,7 +223,7 @@
                             </li>
                         @else 
                             <li class="px-4">
-                                <a class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'project') bg-stone-100 text-stone-500 @endif @endisset " href="index.html">
+                                <a href="{{ route('project') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'project') bg-stone-100 text-stone-500 @endif @endisset ">
                                     <svg class="w-5 h-5" style=" fill:@isset($menu) @if($menu == 'payslip') #78716c; @endif @endisset xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-dollar" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                         <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>

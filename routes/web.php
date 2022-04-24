@@ -30,6 +30,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
 
+            // PROJECT
+            Route::group(['namespace' => 'Project'], function() {
+                Route::get('project', ProjectComponent::class)->name('project');
+                Route::get('project/details', ProjectDetailsComponent::class)->name('project.details');
+                // Route::get('employee/hire-new-employee', NewEmployeeFormComponent::class)->name('employee.hire');
+            });
 
             // EMPLOYEE
             Route::group(['namespace' => 'Employee'], function() {

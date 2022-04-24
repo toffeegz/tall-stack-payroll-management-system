@@ -17,12 +17,12 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
-            $table->date('start_date');
+            $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->text('location');
+            $table->text('location')->nullable();
             $table->longText('details')->nullable();
-            $table->smallInteger('status');
-            $table->smallInteger('subcontractual');
+            $table->unsignedTinyInteger('status')->comment('1-ongoing, 2-finished, 3-upcoming');
+            $table->boolean('is_subcontractual')->default(false);
             $table->string('profile_photo_path');
             $table->timestamps();
             $table->softDeletes();
