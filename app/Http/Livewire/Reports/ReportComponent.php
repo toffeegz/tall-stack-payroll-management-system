@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Reports;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Exports\Report\PayrollSummaryExport;
@@ -13,6 +12,8 @@ use App\Exports\Report\LoanExport;
 use App\Exports\Report\EmployeeListExport;
 use App\Exports\Report\PayrollJournalExport;
 use App\Exports\Report\ProjectListExport;
+use App\Exports\Report\PayslipsExport;
+use App\Classes\Payroll\PayslipClass;
 
 
 use App\Models\PayrollPeriod;
@@ -86,6 +87,29 @@ class ReportComponent extends Component
         }
 
         
+    }
+
+    public function generatePayslips()
+    {
+        $this->validate([
+            'payroll_period'=>'required'
+        ]);
+        $raw_data = Payslip::where('payroll_period_id', $this->payroll_period)->get();
+
+        if($raw_data->count() != 0)
+        { 
+            $data = [];
+            foreach($raw_data as $collection)
+            {
+                $data[] = PayslipClass::payslipViewDataVariable($collection);
+            }
+            $filename = Carbon::now()->format('Ymd') . ' Payslips.xlsx';
+            return Excel::download(new PayslipsExport($data), $filename);
+        }
+        else
+        {
+            $this->emit('openNotifModal');
+        }
     }
 
     public function generateTaxContributionReport()

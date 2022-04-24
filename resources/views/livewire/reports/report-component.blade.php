@@ -50,9 +50,13 @@
                                 </div>
                                 
                             </div>
-                            <div class="flex justify-end">
+                            <div class="flex justify-end space-x-2" >
+                                <button wire:click="generatePayslips" wire:loading.attr="disabled" class="px-4 py-1.5 text-xs font-semibold leading-5 text-white transition-colors duration-150 bg-purple-500 border border-transparent rounded-full active:bg-purple-600 hover:bg-purple-600 focus:outline-none focus:shadow-outline-purple">
+                                    Payslips
+                                    <i class="fa-solid fa-download ml-2"></i>
+                                </button>
                                 <button wire:click="generatePayrollSummaryReport" wire:loading.attr="disabled" class="px-4 py-1.5 text-xs font-semibold leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-full active:bg-blue-600 hover:bg-blue-600 focus:outline-none focus:shadow-outline-purple">
-                                    Generate Report 
+                                    Payroll Summary 
                                     <i class="ml-2 fa-solid fa-arrow-right-long"></i>
                                 </button>
                             </div>
