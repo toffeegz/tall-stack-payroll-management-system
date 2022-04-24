@@ -57,7 +57,7 @@
                         <thead>
                         <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
                             <th class="px-4 py-3">Name</th>
-                            <th class="px-4 py-3 text-center">Days</th>
+                            <th class="px-4 py-3 text-center">Date</th>
                             <th class="px-4 py-3 text-right">Type</th>
                         </tr>
                         </thead>
