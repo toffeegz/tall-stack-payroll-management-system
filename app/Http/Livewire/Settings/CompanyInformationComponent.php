@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings;
 
 use Livewire\Component;
 use App\Models\Department;
+use App\Models\Designation;
 use App\Models\CompanyInformation;
 use Helper;
 use Livewire\WithFileUploads;
@@ -16,6 +17,8 @@ class CompanyInformationComponent extends Component
     public $email;
     public $phone;
     public $address;
+
+    public $designation, $designation_name, $daily_rate;
 
     public function mount()
     {
@@ -63,5 +66,30 @@ class CompanyInformationComponent extends Component
 
         $this->emit('closeEditCompanyInformationModal');
         
+    }
+
+    public function editDesignationModal($value)
+    {
+        $this->designation = Designation::find($value);
+        $this->designation_name = $this->designation->designation_name;
+        $this->daily_rate = $this->designation->daily_rate;
+
+        $this->emit('openEditDesignationModal');    
+    }
+
+    public function editDesignation()
+    {
+        $this->validate([
+            'designation_name' => 'required|string|min:2|max:255',
+            'daily_rate' => 'required|numeric',
+        ]);
+
+        $this->designation->designation_name = $this->designation_name;
+        $this->designation->daily_rate = $this->daily_rate;
+        $this->designation->save();
+
+        $this->emit('closeEditDesignationModal');    
+        $this->designation = null;
+
     }
 }

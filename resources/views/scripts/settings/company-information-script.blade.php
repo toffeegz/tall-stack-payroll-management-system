@@ -11,6 +11,15 @@
         });
 
 
+        
+        Livewire.on('openEditDesignationModal', (el, component) => {
+            modalObject.openModal('modalEditDesignation'); 
+        });
+        Livewire.on('closeEditDesignationModal', (el, component) => {
+            modalObject.closeModal('modalEditDesignation'); 
+        });
+
+
     });
     // 
 
