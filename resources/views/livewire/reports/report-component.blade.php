@@ -156,6 +156,29 @@
                         </div>
                     {{--  --}}
 
+                    {{-- project list report --}}
+                    <div class="pb-4 flex items-center justify-between p-4 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200 focus:outline-none focus:shadow-outline-stone">
+                        <div class="space-y-4">
+                            <div>
+                                <div class="items-center rounded-md p-2">
+                                    <img src="{{ asset('storage/img/icons/construction.png') }}" class="w-10 h-10 object-cover"/>
+                                </div>
+                                <div class="font-bold text-sm">
+                                    Project List Report
+                                </div>
+                                <div class="text-stone-500 text-xs font-light">
+                                    This report prints an project list by latest created. 
+                                </div>
+                            </div>
+                            <div>
+                                <a wire:click="generateProjectListReport" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                                    View <i class="fa-solid fa-angle-right ml-2 fa-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {{--  --}}
+
                     
         
                 </div>

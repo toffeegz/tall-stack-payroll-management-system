@@ -12,6 +12,7 @@ use App\Exports\Report\TaxContributionExport;
 use App\Exports\Report\LoanExport;
 use App\Exports\Report\EmployeeListExport;
 use App\Exports\Report\PayrollJournalExport;
+use App\Exports\Report\ProjectListExport;
 
 
 use App\Models\PayrollPeriod;
@@ -189,6 +190,20 @@ class ReportComponent extends Component
         {
             
             $this->emit('closeEmployeeListModal');
+            $this->emit('openNotifModal');
+        }
+    }
+
+    public function generateProjectListReport()
+    {
+        $data = Project::latest('created_at')->get();
+        if($data->count() != 0)
+        { 
+            $filename = Carbon::now()->format('Ymd') . ' Project List.xlsx';
+            return Excel::download(new ProjectListExport($data), $filename);
+        }
+        else
+        {
             $this->emit('openNotifModal');
         }
     }
