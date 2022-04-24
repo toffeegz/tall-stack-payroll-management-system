@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User;
 use App\Models\Loan;
 use App\Models\Attendance;
+use App\Models\Timekeeper;
 
 class Project extends Model
 {
@@ -33,6 +34,11 @@ class Project extends Model
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function timekeepers()
+    {
+        return $this->belongsToMany(Timekeeper::class, 'timekeepers', 'project_id', 'id');
     }
 
     // scope

@@ -8,7 +8,7 @@
             {{-- body --}}
             <div class=" w-full grid grid-cols-3 gap-4">
 
-                <div class="col-span-3 md:col-span-2">
+                <div class="col-span-3 md:col-span-2 space-y-6">
                     <div>
                         {{-- Table header --}}
                         <div class="flex justify-between my-4 space-x-4">
@@ -81,6 +81,36 @@
                         </div>
                         {{ $users->links() }}
                     </div>
+
+                    <a href="#" class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-stone-900 bg-white rounded-xl border-2 border-stone-100 focus:outline-none focus:shadow-outline-stone">
+                        <div class="flex flex-row space-x-4">
+                            <div class="flex items-center bg-purple-100 rounded-md p-1">
+                                <img src="{{ asset('storage/img/icons/report.png') }}" class="w-10 h-10 object-cover"/>
+                            </div>
+                            <div class="">
+                                <div class="font-bold text-base">
+                                    Timekeeper
+                                </div>
+                                <div class="text-stone-700 text-sm font-light">
+                                    @if($current_timekeeper)
+                                        Current Timekeeper of the project: <span class="font-semibold">{{ $current_timekeeper->user->formal_name() }}</span>
+                                    @else
+                                        Assign employee as a timekeeper
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @if($current_timekeeper)
+                            <button wire:click="removeCurrentTimekeeper" class="cursor-pointer text-red-500 text-xs font-semibold">
+                                Remove <i class="fa-solid fa-xmark  ml-2 fa-xs"></i>
+                            </button>
+                        @else
+                            <button onclick="modalObject.openModal('modalAssignTimekeeper')" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                                Assign <i class="fa-solid fa-angle-right ml-2 fa-xs"></i>
+                            </button>
+                        @endif
+                        
+                    </a>    
                 </div>
 
                 {{-- right panel --}}
@@ -161,6 +191,7 @@
                             </x-forms.button-rounded-md-danger>
                         </div>
                     </div>
+
                 </div>
 
             </div>

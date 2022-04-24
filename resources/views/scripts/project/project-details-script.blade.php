@@ -38,6 +38,13 @@
             modalObject.closeModal('modalUpdateImage'); 
         });
 
+        Livewire.on('openAssignTimekeeperModal', (el, component) => {
+            modalObject.openModal('modalAssignTimekeeper'); 
+        });
+        Livewire.on('closeAssignTimekeeperModal', (el, component) => {
+            modalObject.closeModal('modalAssignTimekeeper'); 
+        });
+
 
         Livewire.on('openNotifModal', (el, component) => {
             modalObject.openModal('modalNotif'); 

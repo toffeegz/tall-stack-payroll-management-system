@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Timekeeper;
 use App\Models\Attendance;
 use App\Models\Project;
 use App\Models\Designation;
@@ -114,6 +115,11 @@ class User extends Authenticatable
     public function loanInstallments()
     {
         return $this->hasMany(LoanInstallment::class);
+    }
+
+    public function timeekeepers()
+    {
+        return $this->hasMany(Timekeeper::class);
     }
 
 

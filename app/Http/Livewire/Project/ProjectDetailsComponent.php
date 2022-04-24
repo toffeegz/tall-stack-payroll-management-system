@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
 use App\Models\Project;
+use App\Models\Timekeeper;
 use App\Models\User;
 
 class ProjectDetailsComponent extends Component
@@ -32,6 +33,10 @@ class ProjectDetailsComponent extends Component
     public $is_subcontractual;
     public $profile_photo_path;
 
+    public $current_timekeeper = null;
+    public $selected_timekeeper = null;
+    
+
     public function mount(Request $request)
     {
         $this->project = Project::where('code', $request->id)->first();
@@ -45,6 +50,8 @@ class ProjectDetailsComponent extends Component
             $this->start_date = $this->project->start_date;
             $this->end_date = $this->project->end_date;
             $this->is_subcontractual = $this->project->is_subcontractual;
+            
+            Self::findTimekeeper();
         } 
         else 
         {
@@ -167,5 +174,27 @@ class ProjectDetailsComponent extends Component
         $this->project->profile_photo_path = $imageFileName;
         $this->project->save();
            
+    }
+
+    public function removeCurrentTimekeeper()
+    {
+        $this->current_timekeeper->delete();
+        $this->current_timekeeper = null;
+    }
+
+    public function assignTimekeeper()
+    {
+        $this->validate([
+            'selected_timekeeper' => 'required|numeric',
+        ]);
+
+        $this->project->timekeepers()->attach($this->selected_timekeeper, ['user_id' => $this->selected_timekeeper]);
+        $this->emit('closeAssignTimekeeperModal');
+        Self::findTimekeeper();
+    }
+    
+    public function findTimekeeper()
+    {
+        $this->current_timekeeper = Timekeeper::where('project_id', $this->project->id)->latest('updated_at')->first();
     }
 }
