@@ -17,6 +17,21 @@
             modalObject.closeModal('modalRemoveUsers'); 
         });
 
+        Livewire.on('openDeleteProjectModal', (el, component) => {
+            modalObject.openModal('modalDeleteProject'); 
+        });
+        Livewire.on('closeDeleteProjectModal', (el, component) => {
+            modalObject.closeModal('modalDeleteProject'); 
+        });
+
+        Livewire.on('openUpdateProjectModal', (el, component) => {
+            modalObject.openModal('modalUpdateProject'); 
+        });
+        Livewire.on('closeUpdateProjectModal', (el, component) => {
+            modalObject.closeModal('modalUpdateProject'); 
+        });
+
+
         Livewire.on('openNotifModal', (el, component) => {
             modalObject.openModal('modalNotif'); 
         });

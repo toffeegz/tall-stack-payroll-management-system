@@ -1,20 +1,4 @@
 
-{{-- modal notif hours --}}
-<x-modal-small id="modalNotif" title="Success" wire:ignore.self>
-    {{-- modal body --}}
-    <div class="text-center p-5 flex-auto justify-center">
-        <x-notification.success title="Great!">
-            Users has been added
-        </x-notification.success>
-    </div>
-    {{-- end modal body --}}
-    {{-- modal footer --}}
-    {{-- end modal footer --}}
-</x-modal-small>
-{{--  --}}
-
-
-
 
 {{-- modal add user  --}}
 <x-modal-small id="modalAddUsers" title="Add Employee" wire:ignore.self>
@@ -77,7 +61,7 @@
 {{--  --}}
 
 
-{{-- modal loan details --}}
+{{-- modal remove user --}}
 <x-modal-small id="modalRemoveUsers" title="Remove Users" wire:ignore.self>
     {{-- modal body --}}
     <div class="space-y-4 my-4">
@@ -102,3 +86,163 @@
     {{-- end modal footer --}}
 </x-modal-small>
 {{-- end loan --}}
+
+
+{{-- modal update project  --}}
+<x-modal-small id="modalUpdateProject" title="Update Project" wire:ignore.self>
+
+    {{-- modal body --}}
+    <div class="space-y-4 my-4">
+        {{-- project information --}}
+        
+
+            {{-- name and code --}}
+            <div class="grid grid-cols-3 gap-4">
+                {{-- name --}}
+                <div class="col-span-3 md:col-span-2">
+                    <x-forms.label>
+                        Name
+                    </x-forms.label>
+                    <x-forms.input type="text" class="w-full" wire:model="name">
+                    </x-forms.input>
+                    @error('name')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+                {{-- code --}}
+                <div class="col-span-3 md:col-span-1">
+                    <x-forms.label>
+                        Code
+                    </x-forms.label>
+                    <x-forms.input type="text"  class="w-full" wire:model="code">
+                    </x-forms.input>
+                    @error('code')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            {{-- location --}}
+            <div>
+                <x-forms.label>
+                    Location
+                </x-forms.label>
+                <x-forms.textarea rowspan="2" class="w-full" wire:model="location">
+                </x-forms.textarea>
+                @error('location')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- start and end date --}}
+            <div class="flex justify-between gap-4">
+                {{-- date --}}
+                <div class="w-full">
+                    <x-forms.label>
+                        Start Date
+                    </x-forms.label>
+                    <x-forms.input type="date" wire:model="start_date"></x-forms.input>
+                    @error('start_date')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+                {{-- end date --}}
+                <div class="w-full">
+                    <x-forms.label>
+                        End Date
+                    </x-forms.label>
+                    <x-forms.input type="date" wire:model="end_date"></x-forms.input>
+                    @error('end_date')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            {{-- details --}}
+            <div>
+                <x-forms.label>
+                    Details
+                </x-forms.label>
+                <x-forms.textarea rowspan="2" class="w-full" wire:model="details">
+                </x-forms.textarea>
+                @error('details')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- subcontractual --}}
+            <div class="ml-2">
+                <x-forms.checkbox wire:model="is_subcontractual"></x-forms.checkbox>
+                <x-forms.checkbox-label>
+                    Subcontractual
+                </x-forms.checkbox-label>
+                @error('is_subcontractual')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+        
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+        <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.openModal('modalUpdateProject')">
+                Cancel
+            </x-forms.button-rounded-md-secondary>
+            <x-forms.button-rounded-md-primary wire:click="updateProject" wire:loading.attr="disabled">
+                Update
+            </x-forms.button-rounded-md-primary>
+        </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{--  --}}
+
+{{-- modal delete project --}}
+<x-modal-small id="modalDeleteProject" title="Delete" wire:ignore.self>
+    {{-- modal body --}}
+    <div class="space-y-4 my-4">
+
+        <x-notification.delete title="Delete Project">
+            Are you sure you want to delete this project?
+        </x-notification.delete>
+
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+    <div class="w-full py-4 flex space-x-2 justify-end border-t border-stone-200 px-4">
+        <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalDeleteProject')">
+            Cancel
+        </x-forms.button-rounded-md-secondary>
+        <x-forms.button-rounded-md-danger wire:click="deleteProject">
+            Yes
+        </x-forms.button-rounded-md-danger>
+    </div>
+    {{-- end modal footer --}}
+</x-modal-small>
+{{-- end loan --}}  
+
+{{-- modal notif hours --}} 
+<x-modal-small id="modalNotif" title="Success" wire:ignore.self>
+    {{-- modal body --}}
+    <div class="text-center p-5 flex-auto justify-center">
+        <x-notification.success title="Great!">
+            Users has been added
+        </x-notification.success>
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+    {{-- end modal footer --}}
+</x-modal-small>
+{{--  --}}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,12 +20,27 @@ class ProjectDetailsComponent extends Component
     public $selected_users_to_add = [];
     public $selected_users_to_remove = [];
 
+    public $name;
+    public $code;
+    public $location;
+    public $details;
+    public $start_date;
+    public $end_date;
+    public $is_subcontractual;
+
     public function mount(Request $request)
     {
         $this->project = Project::where('code', $request->id)->first();
         if($this->project)
         {
             // dd($this->users_to_add);
+            $this->name = $this->project->name;
+            $this->code = $this->project->code;
+            $this->location = $this->project->location;
+            $this->details = $this->project->details;
+            $this->start_date = $this->project->start_date;
+            $this->end_date = $this->project->end_date;
+            $this->is_subcontractual = $this->project->is_subcontractual;
         } 
         else 
         {
@@ -88,5 +103,43 @@ class ProjectDetailsComponent extends Component
     {
         $this->project->users()->detach($this->selected_users_to_remove);
         $this->emit('closeRemoveUsersModal');
+    }
+
+    public function deleteProject()
+    {
+        $this->project->delete();
+        $this->emit('closeDeleteProjectModal');
+        return redirect()->route('project');
+    }
+
+    public function updateProject()
+    {
+        $this->validate([
+            'name' => 'required|string|min:2|max:255',
+            'code' => 'required|unique:projects,code,'. $this->project->id,
+            'is_subcontractual' => 'required',
+        ]);
+
+        $this->project->name = $this->name;
+        $this->project->code = $this->code;
+        $this->project->location = $this->location;
+        $this->project->details = $this->details;
+        $this->project->start_date = $this->start_date;
+        $this->project->end_date = $this->end_date;
+        $this->project->is_subcontractual = $this->is_subcontractual;
+        $this->project->save();
+
+        $this->emit('closeUpdateProjectModal');
+    }
+
+    public function updateStatus()
+    {
+        if($this->project->status == 1 || $this->project->status == 2)
+        {
+            $this->project->status += 1;
+        } else {
+            $this->project->status = 1;
+        }
+        $this->project->save();
     }
 }

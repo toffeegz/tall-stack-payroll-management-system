@@ -86,12 +86,84 @@
                 {{-- right panel --}}
                 <div class="col-span-3 md:col-span-1">
 
+                    
+                    <div class="relative flex flex-col items-center justify-center pt-12 pb-2/4 border border-stone-200 rounded-md">
+
+                        <img  src="{{ asset('storage/img/projects/'.$project->profile_photo_path) }}" alt="{{ $project->code }}"
+                        class="absolute rounded-lg w-full h-full object-cover inset-0">
+                        
+                    </div>
+
+                    <div class="p-8 text-left space-y-3">
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <h3 class=" font-bold text-stone-900 text-xl block hover:text-primary " >
+                                    {{ $project->name }} 
+                                </h3>
+                                <button onclick="modalObject.openModal('modalUpdateProject')" class="cursor-pointer text-blue-500 text-xs font-semibold rounded-full bg-blue-100 w-7 h-7 flex items-center justify-center">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            </div>
+                            <div class="flex space-x-2">
+                                <p class="text-sm text-stone-500">{{ $project->code }}</p>
+                            </div>
+                            <div class="flex justify-between space-x-2">
+                                <button class="text-xs" wire:click="updateStatus" wire:loading.attr="disabled">
+                                    @if($project->status == 1)
+                                        <span class="px-2 py-1 font-semibold text-blue-700 bg-blue-100 leading-tight bg rounded-full ">
+                                            On-going
+                                        </span>
+                                    @elseif($project->status == 2)
+                                        <span class="px-2 py-1 font-semibold text-green-700 bg-green-100 leading-tight bg rounded-full ">
+                                            Finished
+                                        </span>
+                                    @elseif($project->status == 3)
+                                        <span class="px-2 py-1 font-semibold leading-tight text-stone-700 bg-stone-100 rounded-full ">
+                                            Upcoming
+                                        </span>
+                                    @endif
+                                </button>
+                                <p class="text-xs text-green-500">{{ $project->is_subcontractual == true ? 'Subcontractual' : ''}}</p>
+                                
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <span class="text-purple-400">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </span>
+                            <p class="text-xs text-body-color leading-relaxed">
+                                {{ $project->start_date ? Carbon\Carbon::parse($project->start_date)->format('M d, Y') : 'MM/DD/YYYY' }} - {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y')  : 'MM/DD/YYYY' }}
+                            </p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <span class="text-red-400">
+                                <i class="fa-solid fa-map-pin"></i>
+                            </span>
+                            <p class="text-xs text-body-color leading-relaxed">
+                                {{ $project->location }}
+                            </p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <span class="text-blue-400">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </span>
+                            <p class="text-xs text-body-color leading-relaxed">
+                                {{ $project->details }}
+                            </p>
+                        </div>
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <x-forms.button-rounded-md-danger onclick="modalObject.openModal('modalDeleteProject')">
+                                Delete
+                            </x-forms.button-rounded-md-danger>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
 
+    
     {{--  --}}
     @include('scripts.project.project-details-script')
     @include('modals.project.project-details-modal')
