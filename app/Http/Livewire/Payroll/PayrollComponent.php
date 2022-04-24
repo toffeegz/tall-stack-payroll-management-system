@@ -3,9 +3,14 @@
 namespace App\Http\Livewire\Payroll;
 
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\Report\UserPayslipExport;
+use App\Classes\Payroll\PayslipClass;
+
 use App\Models\PayrollPeriod;
 use App\Models\Payslip;
 use App\Models\Attendance;
+use Carbon\Carbon;
 
 use Livewire\WithPagination;
 
@@ -70,7 +75,7 @@ class PayrollComponent extends Component
             ->orWhere('users.first_name', 'like', '%' . $search . '%')
             ->orWhere('users.code', 'like', '%' . $search . '%');
         })
-        
+        ->select('payslips.*')
         ->paginate(15);
     }
 
@@ -88,5 +93,14 @@ class PayrollComponent extends Component
         return redirect()->route('payroll.run', [
             'payroll_period'  => $this->selected_payroll_period
         ]);
+    }
+
+    public function downloadPayslip($value)
+    {
+        $payslip = Payslip::find($value);
+        $data = PayslipClass::payslipViewDataVariable($payslip);
+
+        $filename = Carbon::parse($payslip->payout_date)->format('M d Y') . ' Payslip.xlsx';
+        return Excel::download(new UserPayslipExport($data), $filename);
     }
 }

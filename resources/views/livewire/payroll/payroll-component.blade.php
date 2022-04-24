@@ -43,7 +43,7 @@
                                 </thead>
                                 <tbody class="bg-white divide-y">
                                     @foreach($payslips as $payslip)
-                                        <tr>
+                                        <tr class="cursor-pointer" wire:click="downloadPayslip({{ $payslip->id }})">
                                             <td class="px-2 md:px-4 py-3 align-top">
                                                 <p class=" text-xs text-stone-700 font-bold">{{ $payslip->user->formal_name() }}</p>
                                             </td>
