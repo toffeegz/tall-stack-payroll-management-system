@@ -29,4 +29,8 @@
         </div>
 
     </div>
+
+    @include('scripts.settings.leave-holiday-script')
+    @include('scripts.settings.company-information-script')
+
 </div>

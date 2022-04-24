@@ -105,5 +105,4 @@
 
     </div>
     @include('modals.settings.company-information-modal')
-    @include('scripts.settings.company-information-script')
 </div>
