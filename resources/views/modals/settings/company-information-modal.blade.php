@@ -3,6 +3,30 @@
     {{-- modal body --}}
     <div class="space-y-4 my-4">
 
+        {{-- image --}}
+        <div class="">
+            <div class="w-full">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                    Upload <small class="text-gray-400 ml-2">Image(jpg,png)</small>
+                </label> 
+                <label class="flex flex-col w-full hover:bg-gray-100">
+                    <div class="relative flex flex-col items-center justify-center pt-12 pb-1/4">
+
+                        <img @if($logo_path) src="{{ $logo_path->temporaryUrl() }}" @endif 
+                        class="absolute rounded-lg w-full h-full object-cover border-dashed border-4 border-gray-100 inset-0">
+                        <i class="far fa-image fa-3x text-gray-300 group-hover:text-gray-400"></i>
+                        <p class="pt-1 text-sm tracking-wider font-semibold text-gray-300 group-hover:text-gray-400">
+                            Select a photo
+                        </p>
+                        <input type="file" class="opacity-0" accept="image/*" wire:model="logo_path"/>
+                    </div>
+                </label>
+            </div>
+            @error('logo_path')
+                <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+            @enderror
+        </div>
+
         {{-- company name --}}
         <div>
             <x-forms.label>
