@@ -2,7 +2,7 @@
     {{-- Because she competes with no one, no one can compete with her. --}}
     <div class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">
-            <h2 class="my-6 text-2xl font-semibold text-stone-700 dark:text-stone-200">
+            <h2 class="my-6 text-2xl font-semibold text-stone-700 ">
                 Dashboard
             </h2>
             <a href="#" class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-stone-900 bg-white rounded-xl border-2 border-stone-100 focus:outline-none focus:shadow-outline-stone">
@@ -79,7 +79,7 @@
               class="flex items-center p-4 bg-orange-50 rounded-2xl shadow-xs "
             >
               <div
-                class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500"
+                class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full "
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -89,12 +89,12 @@
               </div>
               <div>
                 <p
-                  class="mb-2 text-sm font-medium text-stone-600 dark:text-stone-400"
+                  class="mb-2 text-sm font-medium text-stone-600 "
                 >
                   Total clients
                 </p>
                 <p
-                  class="text-lg font-semibold text-stone-700 dark:text-stone-200"
+                  class="text-lg font-semibold text-stone-700 "
                 >
                   6389
                 </p>
@@ -105,7 +105,7 @@
               class="flex items-center p-4 bg-green-50 rounded-2xl shadow-xs "
             >
               <div
-                class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500"
+                class="p-3 mr-4 text-green-500 bg-green-100 rounded-full "
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -117,12 +117,12 @@
               </div>
               <div>
                 <p
-                  class="mb-2 text-sm font-medium text-stone-600 dark:text-stone-400"
+                  class="mb-2 text-sm font-medium text-stone-600 "
                 >
                   Account balance
                 </p>
                 <p
-                  class="text-lg font-semibold text-stone-700 dark:text-stone-200"
+                  class="text-lg font-semibold text-stone-700 "
                 >
                   $ 46,760.89
                 </p>
@@ -133,7 +133,7 @@
               class="flex items-center p-4 bg-stone-50 rounded-2xl shadow-xs "
             >
               <div
-                class="p-3 mr-4 text-stone-500 bg-stone-100 rounded-full dark:bg-stone-900"
+                class="p-3 mr-4 text-stone-500 bg-stone-100 rounded-full "
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -143,12 +143,12 @@
               </div>
               <div>
                 <p
-                  class="mb-2 text-sm font-medium text-stone-600 dark:text-stone-400"
+                  class="mb-2 text-sm font-medium text-stone-600 "
                 >
                   New sales
                 </p>
                 <p
-                  class="text-lg font-semibold text-stone-700 dark:text-stone-200"
+                  class="text-lg font-semibold text-stone-700 "
                 >
                   376
                 </p>
@@ -159,7 +159,7 @@
               class="flex items-center p-4 bg-teal-50 rounded-2xl shadow-xs "
             >
               <div
-                class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500"
+                class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full "
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -171,12 +171,12 @@
               </div>
               <div>
                 <p
-                  class="mb-2 text-sm font-medium text-stone-600 dark:text-stone-400"
+                  class="mb-2 text-sm font-medium text-stone-600 "
                 >
                   Pending contacts
                 </p>
                 <p
-                  class="text-lg font-semibold text-stone-700 dark:text-stone-200"
+                  class="text-lg font-semibold text-stone-700 "
                 >
                   35
                 </p>
@@ -190,7 +190,7 @@
               <table class="w-full whitespace-no-wrap">
                 <thead>
                   <tr
-                    class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b dark:border-stone-700 bg-stone-50 dark:text-stone-400 dark:bg-stone-800"
+                    class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b "
                   >
                     <th class="px-4 py-3">Client</th>
                     <th class="px-4 py-3">Amount</th>
@@ -199,9 +199,9 @@
                   </tr>
                 </thead>
                 <tbody
-                  class="bg-white divide-y dark:divide-stone-700 dark:bg-stone-800"
+                  class="bg-white divide-y "
                 >
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -221,7 +221,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Hans Burger</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             10x Developer
                           </p>
                         </div>
@@ -232,7 +232,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full "
                       >
                         Approved
                       </span>
@@ -242,7 +242,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -262,7 +262,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Jolina Angelie</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             Unemployed
                           </p>
                         </div>
@@ -273,7 +273,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600"
+                        class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full "
                       >
                         Pending
                       </span>
@@ -283,7 +283,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -303,7 +303,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Sarah Curry</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             Designer
                           </p>
                         </div>
@@ -314,7 +314,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700"
+                        class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full "
                       >
                         Denied
                       </span>
@@ -324,7 +324,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -344,7 +344,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Rulia Joberts</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             Actress
                           </p>
                         </div>
@@ -355,7 +355,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full "
                       >
                         Approved
                       </span>
@@ -365,7 +365,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -385,7 +385,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Wenzel Dashington</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             Actor
                           </p>
                         </div>
@@ -396,7 +396,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-stone-700 bg-stone-100 rounded-full dark:text-stone-100 dark:bg-stone-700"
+                        class="px-2 py-1 font-semibold leading-tight text-stone-700 bg-stone-100 rounded-full "
                       >
                         Expired
                       </span>
@@ -406,7 +406,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -426,7 +426,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Dave Li</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             Influencer
                           </p>
                         </div>
@@ -437,7 +437,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full "
                       >
                         Approved
                       </span>
@@ -447,7 +447,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -467,7 +467,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Maria Ramovic</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             Runner
                           </p>
                         </div>
@@ -478,7 +478,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full "
                       >
                         Approved
                       </span>
@@ -488,7 +488,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -508,7 +508,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Hitney Wouston</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             Singer
                           </p>
                         </div>
@@ -519,7 +519,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full "
                       >
                         Approved
                       </span>
@@ -529,7 +529,7 @@
                     </td>
                   </tr>
 
-                  <tr class="text-stone-700 dark:text-stone-400">
+                  <tr class="text-stone-700 ">
                     <td class="px-4 py-3">
                       <div class="flex items-center text-sm">
                         <!-- Avatar with inset shadow -->
@@ -549,7 +549,7 @@
                         </div>
                         <div>
                           <p class="font-semibold">Hans Burger</p>
-                          <p class="text-xs text-stone-600 dark:text-stone-400">
+                          <p class="text-xs text-stone-600 ">
                             10x Developer
                           </p>
                         </div>
@@ -560,7 +560,7 @@
                     </td>
                     <td class="px-4 py-3 text-xs">
                       <span
-                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full "
                       >
                         Approved
                       </span>
@@ -573,7 +573,7 @@
               </table>
             </div>
             <div
-              class="grid px-4 py-3 text-xs font-semibold tracking-wide text-stone-500 uppercase border-t dark:border-stone-700 bg-stone-50 sm:grid-cols-9 dark:text-stone-400 dark:bg-stone-800"
+              class="grid px-4 py-3 text-xs font-semibold tracking-wide text-stone-500 uppercase border-t  bg-stone-50 sm:grid-cols-9 "
             >
               <span class="flex items-center col-span-3">
                 Showing 21-30 of 100
@@ -672,20 +672,20 @@
 
           <!-- Charts -->
           <h2
-            class="my-6 text-2xl font-semibold text-stone-700 dark:text-stone-200"
+            class="my-6 text-2xl font-semibold text-stone-700 "
           >
             Charts
           </h2>
           <div class="grid gap-6 mb-8 md:grid-cols-2">
             <div
-              class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-stone-800"
+              class="min-w-0 p-4 bg-white rounded-lg shadow-xs "
             >
-              <h4 class="mb-4 font-semibold text-stone-800 dark:text-stone-300">
+              <h4 class="mb-4 font-semibold text-stone-800 ">
                 Revenue
               </h4>
               <canvas id="pie"></canvas>
               <div
-                class="flex justify-center mt-4 space-x-3 text-sm text-stone-600 dark:text-stone-400"
+                class="flex justify-center mt-4 space-x-3 text-sm text-stone-600 "
               >
                 <!-- Chart legend -->
                 <div class="flex items-center">
@@ -709,14 +709,14 @@
               </div>
             </div>
             <div
-              class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-stone-800"
+              class="min-w-0 p-4 bg-white rounded-lg shadow-xs "
             >
-              <h4 class="mb-4 font-semibold text-stone-800 dark:text-stone-300">
+              <h4 class="mb-4 font-semibold text-stone-800 ">
                 Traffic
               </h4>
               <canvas id="line"></canvas>
               <div
-                class="flex justify-center mt-4 space-x-3 text-sm text-stone-600 dark:text-stone-400"
+                class="flex justify-center mt-4 space-x-3 text-sm text-stone-600 "
               >
                 <!-- Chart legend -->
                 <div class="flex items-center">
