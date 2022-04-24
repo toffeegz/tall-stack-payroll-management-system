@@ -94,7 +94,7 @@ class LeaveComponent extends Component
 
     public function getLeaveTypesProperty()
     {
-        return LeaveType::all();
+        return LeaveType::where('is_active', true)->get();
     }
 
     public function getUsersProperty()
