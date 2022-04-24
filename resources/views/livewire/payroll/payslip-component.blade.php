@@ -15,7 +15,7 @@
                 <div class="flex justify-between my-4 space-x-4">
                     <p class="font-bold">Payslip History</p>
                     <div>
-                        <button wire:click="userDownload" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                        <button wire:click="downloadPayslip" class="cursor-pointer text-blue-500 text-xs font-semibold">
                             Download Selected Payslip  <i class="ml-2 fa-solid fa-download"></i>
                         </button>
                     </div>

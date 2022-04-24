@@ -4,9 +4,14 @@ namespace App\Http\Livewire\Payroll;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Classes\Payroll\PayslipClass;
+use App\Exports\Report\UserPayslipExport;
 
 use App\Models\Payslip;
 use App\Models\PayrollPeriod;
+
 use Carbon\Carbon;
 
 class PayslipComponent extends Component
@@ -142,5 +147,13 @@ class PayslipComponent extends Component
         $this->hdmf = $label_deductions['tax_contribution']['hdmf'];
 
         $this->deductions = $this->selected_payslip->deductions;
+    }
+
+    public function downloadPayslip()
+    {
+        
+        $data = PayslipClass::payslipViewDataVariable($this->selected_payslip);
+        $filename = Carbon::parse($this->selected_payslip->payout_date)->format('M d Y') . ' Payslip.xlsx';
+        return Excel::download(new UserPayslipExport($data), $filename);
     }
 }
