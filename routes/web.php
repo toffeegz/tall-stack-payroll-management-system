@@ -67,6 +67,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 Route::get('reports', ReportComponent::class)->name('reports');
             });
 
+            // SETTINGS
+            Route::group(['namespace' => 'Settings'], function() {
+                Route::get('settings', SettingsComponent::class)->name('settings');
+            });
+
         });
     });
     
