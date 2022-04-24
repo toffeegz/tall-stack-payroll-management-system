@@ -17,7 +17,7 @@ class CreateLeaveTypesTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->integer('days')->default(1);
-            $table->unsignedTinyInteger('status');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

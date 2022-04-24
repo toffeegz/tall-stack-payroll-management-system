@@ -794,6 +794,9 @@ select {
 .mb-7 {
   margin-bottom: 1.75rem;
 }
+.-ml-10 {
+  margin-left: -2.5rem;
+}
 .block {
   display: block;
 }
@@ -1460,6 +1463,10 @@ select {
 .bg-purple-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(168 85 247 / var(--tw-bg-opacity));
+}
+.bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
