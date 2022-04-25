@@ -1,64 +1,87 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><img src="https://i.im.ge/2021/07/27/Dpko1.png" width="400"></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+# Getting Started
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## About Payroll Management System
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Payroll Management System is a web application using Laravel. The main objective of the system is to automatically compute for the salary of the project, and non-project employees accurately. 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Specifically, it aims to include the following modules:
+-	employee and project module which includes:
+1.	managing of the employees’ personal information;
+2.	creating of new projects with project details and deployed employees; 
+3.	request application for loan
+-	attendance and leave module which includes:
+1.	recording of employees’ attendance (including the overtime and under time);
+2.	reviewing of recorded attendance;
+3.	managing of the leave entry;
+4.	displaying of employees who are on-leave;
+-	short-term loan (cash advance) module which includes:
+1.	recording of employees’ loans; and
+2.	managing of loans through installment;
+-	payroll module which includes:
+1.	compute and generate payroll per cut-off;
+2.	generate payslip for each employee; 
+-	settings module which can be used to manage the system’s content including:
+1.	departments, 
+2.	designations with daily rate, 
+3.	employees with automatic user register,
+4.	leave types,
+5.	holidays, and 
+6.	tax contribution table;
+-	reports module which can be used to generate: 
+1.	salary slips,
+2.	employee lists,
+3.	deductions and contributions report,
+4.	short-term loan report, and
+5.	employee details report.
+6.	Finance report
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Please check the official laravel installation guide for server requirements before you start. [Official Documentation](https://laravel.com/docs/5.4/installation#installation)
 
-## Laravel Sponsors
+Alternative installation is possible without local dependencies relying on [Docker](#docker). 
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Clone the repository
 
-### Premium Partners
+    git clone git@github.com:toffeegz/payroll-management-system-aero.git
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Switch to the repo folder
 
-## Contributing
+    cd payroll-management-system
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install all the dependencies using composer
 
-## Code of Conduct
+    composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Run the database migrations (**Set the database connection in .env before migrating**)
 
-## Security Vulnerabilities
+    php artisan migrate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Install all Dev dependencies 
 
-## License
+    npm install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Run to compile assets (mix)
+
+    npm run dev
+
+Start the local development server
+
+    php artisan serve
+
+You can now access the server at http://localhost:8000
+
+
+## About the Developer
+
+Gezryl Beato Gallego (toffeegz) is a Full Stack Developer based in Philippines. Studying at Cavite State University and working as a Laravel Developer.
+
+- [LinkedIn](https://www.linkedin.com/in/gezryl-clariz-beato-078312139/)
+- [Github](https://github.com/toffeegz)
+- [Facebook](https://www.facebook.com/toffeegz/)
+- [Instagram](https://www.instagram.com/toffeegz_/)
+- [Twitter](https://twitter.com/toffeegz_)
