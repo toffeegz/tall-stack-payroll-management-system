@@ -2,6 +2,8 @@
 
 
 # Getting Started
+## TALL STACK
+Payroll Management System is a web application using TALL stack (TailwindCSS, AlpineJS, Livewire, and Laravel)
 
 ## About Payroll Management System
 
