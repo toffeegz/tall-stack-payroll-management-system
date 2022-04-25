@@ -9,6 +9,7 @@
                 </a>
                 <div class="mt-6 flex-auto text-black text-sm" style="font-weight: 600;">
                     <ul class="space-y-1">
+                        @if(Auth::user()->hasRole('administrator'))
                         {{-- dashboard --}}
                         <li class="px-4">
                             <a href="{{ route('dashboard') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
@@ -16,6 +17,7 @@
                                 <span class="ml-6">Dashboard</span>
                             </a>
                         </li>
+                        @endif
                         {{-- employee --}}
                         @if(Auth::user()->hasRole('administrator'))
                             <li class="px-4">
@@ -35,60 +37,51 @@
                             </li>
                         @endif
                         {{-- attendance --}}
-                        @if(Auth::user()->hasRole('administrator'))
-                            <li class="px-4" x-data="{ leave_attendance: @isset($menu) @if($menu == 'attendance' || $menu == 'leave') true @else false @endif @endisset }">
-                                <button class="px-6 py-3 flex justify-between items-center w-full transition-colors duration-150 font-semibold hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'attendance'  || $menu == 'leave') bg-stone-100 text-stone-500 @endif @endisset "
-                                    @click="leave_attendance = !leave_attendance"
-                                    aria-haspopup="true" >
-                                    <span class="inline-flex items-center">
-                                        <svg class="w-5 h-5" style=" fill:@isset($menu) @if($menu == 'attendance') #78716c; @endif @endisset " xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48" style=" fill:#000000;"><path d="M 24 4 C 12.972066 4 4 12.972074 4 24 C 4 35.027926 12.972066 44 24 44 C 35.027934 44 44 35.027926 44 24 C 44 12.972074 35.027934 4 24 4 z M 24 7 C 33.406615 7 41 14.593391 41 24 C 41 33.406609 33.406615 41 24 41 C 14.593385 41 7 33.406609 7 24 C 7 14.593391 14.593385 7 24 7 z M 23.476562 11.978516 A 1.50015 1.50015 0 0 0 22 13.5 L 22 25.5 A 1.50015 1.50015 0 0 0 23.5 27 L 31.5 27 A 1.50015 1.50015 0 1 0 31.5 24 L 25 24 L 25 13.5 A 1.50015 1.50015 0 0 0 23.476562 11.978516 z"></path></svg>
-                                        <span class="ml-6">Attendance</span>
-                                    </span>
-                                    <svg
-                                        class="w-4 h-4"
-                                        aria-hidden="true"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                        >
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" ></path>
-                                    </svg>
-                                </button>
-                                <template x-if="leave_attendance">
-                                    <ul
-                                        x-transition:enter="transition-all ease-in-out duration-300"
-                                        x-transition:enter-start="opacity-25 max-h-0"
-                                        x-transition:enter-end="opacity-100 max-h-xl"
-                                        x-transition:leave="transition-all ease-in-out duration-300"
-                                        x-transition:leave-start="opacity-100 max-h-xl"
-                                        x-transition:leave-end="opacity-0 max-h-0"
-                                        class="p-2 space-y-2 overflow-hidden text-black " 
-                                        aria-label="submenu" >
-
-                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'attendance') text-stone-500 @endif @endisset" >
-                                            <a href="{{ route('attendance') }}">
-                                                <span class="ml-3">
-                                                    Attendance
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'leave') text-stone-500 @endif @endisset" >
-                                            <a href="{{ route('leave') }}">
-                                                <span class="ml-3">
-                                                    Leave
-                                                </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </template>
-                            </li>
-                        @else 
-                            <li class="px-4">
-                                <a href="{{ route('attendance') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'attendance') bg-stone-100 text-stone-500 @endif @endisset ">
+                        <li class="px-4" x-data="{ leave_attendance: @isset($menu) @if($menu == 'attendance' || $menu == 'leave') true @else false @endif @endisset }">
+                            <button class="px-6 py-3 flex justify-between items-center w-full transition-colors duration-150 font-semibold hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'attendance'  || $menu == 'leave') bg-stone-100 text-stone-500 @endif @endisset "
+                                @click="leave_attendance = !leave_attendance"
+                                aria-haspopup="true" >
+                                <span class="inline-flex items-center">
                                     <svg class="w-5 h-5" style=" fill:@isset($menu) @if($menu == 'attendance') #78716c; @endif @endisset " xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48" style=" fill:#000000;"><path d="M 24 4 C 12.972066 4 4 12.972074 4 24 C 4 35.027926 12.972066 44 24 44 C 35.027934 44 44 35.027926 44 24 C 44 12.972074 35.027934 4 24 4 z M 24 7 C 33.406615 7 41 14.593391 41 24 C 41 33.406609 33.406615 41 24 41 C 14.593385 41 7 33.406609 7 24 C 7 14.593391 14.593385 7 24 7 z M 23.476562 11.978516 A 1.50015 1.50015 0 0 0 22 13.5 L 22 25.5 A 1.50015 1.50015 0 0 0 23.5 27 L 31.5 27 A 1.50015 1.50015 0 1 0 31.5 24 L 25 24 L 25 13.5 A 1.50015 1.50015 0 0 0 23.476562 11.978516 z"></path></svg>
                                     <span class="ml-6">Attendance</span>
-                                </a>
-                            </li>
-                        @endif
+                                </span>
+                                <svg
+                                    class="w-4 h-4"
+                                    aria-hidden="true"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    >
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" ></path>
+                                </svg>
+                            </button>
+                            <template x-if="leave_attendance">
+                                <ul
+                                    x-transition:enter="transition-all ease-in-out duration-300"
+                                    x-transition:enter-start="opacity-25 max-h-0"
+                                    x-transition:enter-end="opacity-100 max-h-xl"
+                                    x-transition:leave="transition-all ease-in-out duration-300"
+                                    x-transition:leave-start="opacity-100 max-h-xl"
+                                    x-transition:leave-end="opacity-0 max-h-0"
+                                    class="p-2 space-y-2 overflow-hidden text-black " 
+                                    aria-label="submenu" >
+
+                                    <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'attendance') text-stone-500 @endif @endisset" >
+                                        <a href="{{ route('attendance') }}">
+                                            <span class="ml-3">
+                                                Attendance
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'leave') text-stone-500 @endif @endisset" >
+                                        <a href="{{ route('leave') }}">
+                                            <span class="ml-3">
+                                                Leave
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </template>
+                        </li>
                         {{-- loans --}}
                         @if(Auth::user()->hasRole('administrator'))
                             <li class="px-4" x-data="{ loan: @isset($menu) @if($menu == 'loan' || $menu == 'grand-loan' || $menu == 'loan-installment') true @else false @endif @endisset }">
@@ -223,8 +216,8 @@
                             </li>
                         @else 
                             <li class="px-4">
-                                <a href="{{ route('project') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'project') bg-stone-100 text-stone-500 @endif @endisset ">
-                                    <svg class="w-5 h-5" style=" fill:@isset($menu) @if($menu == 'payslip') #78716c; @endif @endisset xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-dollar" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <a href="{{ route('payslip') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'payslip') bg-stone-100 text-stone-500 @endif @endisset ">
+                                    <svg class="w-5 h-5" style=" " xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-dollar" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                         <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
                                         <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
@@ -235,6 +228,7 @@
                                 </a>
                             </li>
                         @endif
+                        @if(Auth::user()->hasRole('administrator'))
                         {{-- report --}}
                         <li class="px-4">
                             <a href="{{ route('reports') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'report') bg-stone-100 text-stone-500 @endif @endisset " >
@@ -242,6 +236,7 @@
                                 <span class="ml-6">Report</span>
                             </a>
                         </li>
+                        @endif
                         {{-- settings --}}
                         @if(Auth::user()->hasRole('administrator'))
                             <li class="px-4">

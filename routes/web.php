@@ -18,7 +18,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/', function () {
             return redirect()->route('dashboard');
         });
-        Route::get('dashboard', Dashboard\DashboardComponent::class)->name('dashboard');
+        
 
         Route::get('attendance', Attendance\AttendanceComponent::class)->name('attendance');
 
@@ -33,6 +33,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
 
+            Route::get('dashboard', Dashboard\DashboardComponent::class)->name('dashboard');
+            
             // PROJECT
             Route::group(['namespace' => 'Project'], function() {
                 Route::get('project', ProjectComponent::class)->name('project');
