@@ -156,12 +156,12 @@
                         @endif
                         {{-- payroll --}}
                         @if(Auth::user()->hasRole('administrator'))
-                            <li class="px-4" x-data="{ payroll: @isset($menu) @if($menu == 'payroll' || $menu == 'payroll settings' || $menu == 'payslip') true @else false @endif @endisset }">
+                            <li class="px-4" x-data="{ payroll: @isset($menu) @if($menu == 'payroll' || $menu == 'payslip') true @else false @endif @endisset }">
                                 <button class="px-6 py-3 flex justify-between items-center w-full transition-colors duration-150 font-semibold hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'payroll'  || $menu == 'payroll settings' || $menu == 'payslip') bg-stone-100 text-stone-500 @endif @endisset "
                                     @click="payroll = !payroll"
                                     aria-haspopup="true" >
                                     <span class="inline-flex items-center">
-                                        <svg class="w-5 h-5" style=" color:@isset($menu) @if($menu == 'payroll' || $menu == 'payroll settings' || $menu == 'payslip') #78716c; @endif @endisset xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-dollar" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg class="w-5 h-5" style=" color:@isset($menu) @if($menu == 'payroll' || $menu == 'payslip') #78716c; @endif @endisset xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-dollar" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                             <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
                                             <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
@@ -194,13 +194,6 @@
                                             <a href="{{ route('payroll') }}">
                                                 <span class="ml-3">
                                                     Run Payroll
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'payroll settings') text-stone-500 @endif @endisset" >
-                                            <a >
-                                                <span class="ml-3">
-                                                    Settings
                                                 </span>
                                             </a>
                                         </li>
