@@ -28,6 +28,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
 
         Route::get('payslip',Payroll\PayslipComponent::class)->name('payslip');
+        Route::get('profile',Profile\ProfileComponent::class)->name('profile');
 
 
         // Administrator

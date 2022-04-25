@@ -281,8 +281,8 @@
                         <ul class="space-y-1">
                             {{-- dashboard --}}
                             <li class="px-4">
-                                <a href="{{ route('dashboard') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
-                                    <i class="@isset($menu) {{ $menu == 'my-profile' ? 'text-stone-500' : 'text-stone-900' }} @endisset fa-solid fa-user"></i>
+                                <a href="{{ route('profile') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'profile') bg-stone-100 text-stone-500 @endif @endisset ">
+                                    <i class="@isset($menu) {{ $menu == 'profile' ? 'text-stone-500' : 'text-stone-900' }} @endisset fa-solid fa-user"></i>
                                     <span class="ml-6">My Profile</span>
                                 </a>
                             </li>
