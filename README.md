@@ -71,7 +71,19 @@ Run to compile assets (mix)
 Start the local development server
 
     php artisan serve
+    
+Start the queue job
 
+    php artisan queue:work
+    
+Start the queue job
+
+    php artisan queue:work
+    
+Start the schedule
+
+    php artisan schedule:work
+    
 You can now access the server at http://localhost:8000
 
 
