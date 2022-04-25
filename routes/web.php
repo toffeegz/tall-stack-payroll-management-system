@@ -16,7 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::group(['namespace' => 'App\Http\Livewire'], function() {
         Route::get('/', function () {
-            return redirect()->route('dashboard');
+            if(Auth::user()->hasRole('administrator')) {
+                return redirect()->route('dashboard');
+            } else {
+                return redirect()->route('attendance');
+            }
+            
         });
         
 
