@@ -88,6 +88,8 @@ Start the schedule
     
 You can now access the server at http://localhost:8000
 
+## IMPORTANT
+Make sure to run queue jobs and scheduler for system to generate weekly and semimonthly payroll periods, employee payslip.
 
 ## About the Developer
 
