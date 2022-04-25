@@ -1,0 +1,2 @@
+@props(['disabled' => false])
+<input type="checkbox" {{ $disabled ? 'disabled' : '' }} {{ $attributes->merge(['class' => 'form-check-input appearance-none h-4 w-4 border border-stone-300 rounded-sm bg-white checked:bg-green-500 checked:border-green-500 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer text-green-400 focus:ring-2 focus:ring-green-200']) }}>
