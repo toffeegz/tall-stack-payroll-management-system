@@ -18,6 +18,7 @@ use App\Models\Payslip;
 use App\Models\TaxContribution;
 use App\Models\Loan;
 use App\Models\LoanInstallment;
+use App\Models\Leave;
 
 class User extends Authenticatable
 {
@@ -120,6 +121,11 @@ class User extends Authenticatable
     public function timeekeepers()
     {
         return $this->hasMany(Timekeeper::class);
+    }
+
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
     }
 
 
