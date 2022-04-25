@@ -36,7 +36,6 @@ Specifically, it aims to include the following modules:
 3.	deductions and contributions report,
 4.	short-term loan report, and
 5.	employee details report.
-6.	Finance report
 
 
 ## Installation
