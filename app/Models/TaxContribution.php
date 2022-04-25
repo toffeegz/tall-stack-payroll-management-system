@@ -12,8 +12,14 @@ class TaxContribution extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'user_id',
+        'payroll_period_id'
+    ];
+    
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }
