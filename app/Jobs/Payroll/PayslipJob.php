@@ -324,8 +324,7 @@ class PayslipJob implements ShouldQueue
 
                     // new payslip deductions
 
-                    $new_payslip_deductions = new PayslipDeduction;
-                    $new_payslip_deductions->payslip_id = $new_payslip->id;
+                    $new_payslip_deductions = PayslipDeduction::firstOrNew(['payslip_id'=>$new_payslip->id]);
                     $new_payslip_deductions->tax_sss = $tax_sss;
                     $new_payslip_deductions->tax_hdmf = $tax_hdmf;
                     $new_payslip_deductions->tax_phic = $tax_phic;

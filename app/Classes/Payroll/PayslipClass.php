@@ -12,8 +12,8 @@ class PayslipClass {
     {
         foreach($data as $payslip)
         {
-            PayslipJob::dispatch($payslip)
-            ->delay(now()->addSeconds(15));
+            PayslipJob::dispatch($payslip);
+            // ->delay(now()->addSeconds(15));
         }
 
         return 'success';
