@@ -11,6 +11,10 @@ class LeaveHolidayComponent extends Component
     public $leave_type_name;
     public $leave_type_days;
 
+    public $selected_leave_type;
+    public $edit_leave_type_name;
+    public $edit_leave_type_days;
+
     public $holiday_name = null;
     public $holiday_date = null;
     public $holiday_type = "1";
@@ -48,6 +52,41 @@ class LeaveHolidayComponent extends Component
         $this->emit('closeAddLeaveTypeModal');
         $this->leave_type_name = null;
         $this->leave_type_days = null;
+    }
+
+    public function editLeaveTypeModal($value)
+    {
+        $this->selected_leave_type = LeaveType::find($value);
+        $this->edit_leave_type_name = $this->selected_leave_type->name;
+        $this->edit_leave_type_days = $this->selected_leave_type->days;
+        $this->emit('openEditLeaveTypeModal');
+    }
+
+    public function editLeaveType()
+    {
+        $this->validate([
+            'edit_leave_type_name' => 'required|unique:leave_types,name',
+            'edit_leave_type_days' => 'required|numeric',
+        ]);
+
+        $this->selected_leave_type->name = $this->edit_leave_type_name;
+        $this->selected_leave_type->days = $this->edit_leave_type_days;
+        $this->selected_leave_type->save();
+
+        $this->emit('closeEditLeaveTypeModal');
+        $this->selected_leave_type = null;
+        $this->edit_leave_type_name = null;
+        $this->edit_leave_type_days = null;
+    }
+
+    public function deleteLeaveType()
+    {
+        $this->selected_leave_type->delete();
+
+        $this->emit('closeEditLeaveTypeModal');
+        $this->selected_leave_type = null;
+        $this->edit_leave_type_name = null;
+        $this->edit_leave_type_days = null;
     }
 
     public function addHoliday()

@@ -23,7 +23,7 @@
                         </thead>
                         <tbody class="bg-white divide-y "  >
                             @foreach($leave_types as $leave_type)
-                                <tr class="text-stone-700 cursor-pointer" >
+                                <tr class="text-stone-700 cursor-pointer" wire:click="editLeaveTypeModal({{ $leave_type->id }})">
                                     <td class="px-4 py-3 text-xs whitespace-nowrap">
                                         {{ $leave_type->name }}
                                     </td>
