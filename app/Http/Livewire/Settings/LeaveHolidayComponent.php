@@ -69,7 +69,7 @@ class LeaveHolidayComponent extends Component
     public function editLeaveType()
     {
         $this->validate([
-            'edit_leave_type_name' => 'required|unique:leave_types,name',
+            'edit_leave_type_name' => 'required',
             'edit_leave_type_days' => 'required|numeric',
         ]);
 
@@ -126,7 +126,7 @@ class LeaveHolidayComponent extends Component
     public function editHoliday()
     {
         $this->validate([
-            'selected_holiday_name' => 'required|unique:holidays,name',
+            'selected_holiday_name' => 'required|',
             'selected_holiday_date' => 'required|date',
             'selected_holiday_type' => 'required',
         ]);
