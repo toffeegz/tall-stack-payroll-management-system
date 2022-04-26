@@ -10,6 +10,13 @@
             modalObject.closeModal('modalAddHoliday'); 
         });
 
+        Livewire.on('openEditHolidayModal', (el, component) => {
+            modalObject.openModal('modalEditHoliday'); 
+        });
+        Livewire.on('closeEditHolidayModal', (el, component) => {
+            modalObject.closeModal('modalEditHoliday'); 
+        });
+
 
 
         Livewire.on('openAddLeaveTypeModal', (el, component) => {

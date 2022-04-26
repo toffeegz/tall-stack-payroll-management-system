@@ -63,8 +63,8 @@
                         </thead>
                         <tbody class="bg-white divide-y "  >
                             @foreach($holidays as $holiday)
-                                <tr class="text-stone-700 cursor-pointer" wire:key="{{$holiday->id}}">
-                                    <td  wire:click="openEditLeaveType({{ $holiday->id }})" class="px-4 py-3 text-xs whitespace-nowrap">
+                                <tr class="text-stone-700 cursor-pointer" wire:click="editHolidayModal({{ $holiday->id }})" wire:key="{{$holiday->id}}">
+                                    <td class="px-4 py-3 text-xs whitespace-nowrap">
                                         {{ $holiday->name }}
                                     </td>
                                     <td class="px-4 py-3 text-xs whitespace-nowrap text-center">
