@@ -120,9 +120,10 @@ class NewEmployeeFormComponent extends Component
         ->get();
     }
 
-    public function updatedDesignationId($value)
+    public function updatingDesignationId($value)
     {
-        $this->daily_rate = Designation::find($value)->value('daily_rate');
+        $des = Designation::find($value);
+        $this->daily_rate = $des->daily_rate;
     }  
 
     public function insertUser()
