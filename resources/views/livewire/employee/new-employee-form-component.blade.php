@@ -225,14 +225,28 @@
                                     @enderror
                                 </div>
                                 {{-- hired_date --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Hired Date
-                                    </x-forms.label>
-                                    <x-forms.input type="date" wire:model="hired_date"></x-forms.input>
-                                    @error('hired_date')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="">
+                                        <x-forms.label>
+                                            Hired Date
+                                        </x-forms.label>
+                                        <x-forms.input type="date" wire:model="hired_date"></x-forms.input>
+                                        @error('hired_date')
+                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="">
+                                        <x-forms.label>
+                                            Frequency
+                                        </x-forms.label>
+                                        <x-forms.select wire:model="frequency_id">
+                                            <option value="1">Semi-Monthly</option>
+                                            <option value="2">Weekly</option>
+                                        </x-forms.select>
+                                        @error('frequency_id')
+                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                        @enderror
+                                    </div>
                                 </div>
                 
                                 {{-- department --}}

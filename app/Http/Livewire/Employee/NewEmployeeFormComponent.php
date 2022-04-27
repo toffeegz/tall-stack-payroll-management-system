@@ -42,6 +42,7 @@ class NewEmployeeFormComponent extends Component
     public $designation_id = "";
 
     public $daily_rate = 0; 
+    public $frequency_id;
     
     public $is_tax_exempted = false;
     public $is_paid_holidays = false;
@@ -90,6 +91,7 @@ class NewEmployeeFormComponent extends Component
                 'hired_date' => 'required|date|',
                 'is_active' => 'required|boolean',
                 'designation_id' => 'required|numeric',
+                'frequency_id' => 'required|numeric',
                 'profile_photo_path' => "nullable|image|mimes:jpg,png,jpeg|max:2048",//2mb
             ]);
 
@@ -153,6 +155,7 @@ class NewEmployeeFormComponent extends Component
         $new_user->address = $this->address;
         $new_user->employment_status = $this->employment_status;
         $new_user->hired_date = $this->hired_date;
+        $new_user->frequency_id = $this->frequency_id;
         $new_user->is_active = true;
         $new_user->save();
 

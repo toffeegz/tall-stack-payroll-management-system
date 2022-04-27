@@ -65,7 +65,8 @@ class ProjectComponent extends Component
 
     public function openProject($value)
     {
-        $code = Project::find($value)->value('code');
+        $project = Project::find($value);
+        $code  = $project->code;
         return redirect()->route('project.details', ['id'=>$code]);
     }
 

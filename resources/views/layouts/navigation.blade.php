@@ -247,7 +247,7 @@
                     {{-- profile button --}}
                     <button x-on:click="profileDropdown = !profileDropdown" class="px-4 py-4 flex justify-between w-full space-x-2 focus:outline-none border-0 ">
                         <div class="flex">
-                            <div class="flex justify-center items-center">
+                            <div class="flex justify-center items-center w-12">
                                 <div class="flex items-center justify-center bg-white rounded-xl border border-stone-300 p-1 focus:outline-none focus:shadow-outline-stone">
                                     <img src="{{ asset('storage/img/users/'. Auth::user()->profile_photo_path) }}" 
                                         class="h-10 w-10 rounded-lg object-cover"
@@ -259,7 +259,7 @@
                                     <div class="text-center text-sm font-bold leading-5 text-stone-900">
                                         {{ Auth::user()->informal_name() }}
                                     </div>
-                                    <div class="text-center text-sm ml-2 font-medium leading-5 text-stone-500">
+                                    <div class="text-center text-sm ml-2 font-medium leading-5 line-clamp-1 text-stone-500">
                                         {{ Auth::user()->email }}
                                     </div>
                                 </div>
