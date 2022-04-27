@@ -292,6 +292,48 @@
                                 </p>
                             </div>
                         </div>
+                        {{-- sss --}}
+                        <div class="grid grid-cols-3 gap-4">
+                            {{-- labels --}}
+                            <div class="col-span-1 items-center flex justify-end">
+                                <p class="text-xs text-stone-500 font-semibold">
+                                    SSS Number
+                                </p>
+                            </div>
+                            <div class="col-span-2 items-end flex justify-start">
+                                <p class="text-sm text-stone-900 font-semibold">
+                                    {{ $user->sss_number }}
+                                </p>
+                            </div>
+                        </div>
+                        {{-- hdmf --}}
+                        <div class="grid grid-cols-3 gap-4">
+                            {{-- labels --}}
+                            <div class="col-span-1 items-center flex justify-end">
+                                <p class="text-xs text-stone-500 font-semibold">
+                                    HDMF Number
+                                </p>
+                            </div>
+                            <div class="col-span-2 items-end flex justify-start">
+                                <p class="text-sm text-stone-900 font-semibold">
+                                    {{ $user->hmdf_number }}
+                                </p>
+                            </div>
+                        </div>
+                        {{-- phic --}}
+                        <div class="grid grid-cols-3 gap-4">
+                            {{-- labels --}}
+                            <div class="col-span-1 items-center flex justify-end">
+                                <p class="text-xs text-stone-500 font-semibold">
+                                    PHIC Number
+                                </p>
+                            </div>
+                            <div class="col-span-2 items-end flex justify-start">
+                                <p class="text-sm text-stone-900 font-semibold">
+                                    {{ $user->phic_number }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
