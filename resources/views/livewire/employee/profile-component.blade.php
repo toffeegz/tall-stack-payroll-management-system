@@ -316,7 +316,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->hmdf_number }}
+                                    {{ $user->hdmf_number }}
                                 </p>
                             </div>
                         </div>

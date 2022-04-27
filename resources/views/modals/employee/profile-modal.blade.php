@@ -302,6 +302,38 @@
                     </x-forms.checkbox-label>
                 </div>
             </div>
+
+            {{--  --}}
+            {{-- sss --}}
+            <div class="">
+                <x-forms.label>
+                    SSS Number
+                </x-forms.label>
+                <x-forms.input type="text" wire:model="sss_number"></x-forms.input>
+                @error('sss_number')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+            {{-- hdmf --}}
+            <div class="">
+                <x-forms.label>
+                    HDMF Number
+                </x-forms.label>
+                <x-forms.input type="text" wire:model="hdmf_number"></x-forms.input>
+                @error('hdmf_number')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+            {{-- phic --}}
+            <div class="">
+                <x-forms.label>
+                    PHIC Number
+                </x-forms.label>
+                <x-forms.input type="text" wire:model="phic_number"></x-forms.input>
+                @error('phic_number')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
     {{-- end modal body --}}
     {{-- modal footer --}}

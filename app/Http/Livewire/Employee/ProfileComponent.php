@@ -41,6 +41,9 @@ class ProfileComponent extends Component
     
     public $is_tax_exempted = false;
     public $is_paid_holidays = false;
+    public $sss_number = null;
+    public $hdmf_number = null;
+    public $phic_number = null;
 
     public function mount(Request $request)
     {
@@ -76,6 +79,10 @@ class ProfileComponent extends Component
 
             $this->is_tax_exempted = $this->user->is_tax_exempted;
             $this->is_paid_holidays = $this->user->is_paid_holidays;
+
+            $this->sss_number = $this->user->sss_number;
+            $this->hdmf_number = $this->user->hdmf_number;
+            $this->phic_number = $this->user->phic_number;
 
 
         }
@@ -170,7 +177,15 @@ class ProfileComponent extends Component
     {
         $this->validate([
             'designation_id' => 'required|numeric',
+            'sss_number' => 'nullable|max:255',
+            'hdmf_number' => 'nullable|max:255',
+            'phic_number' => 'nullable|max:255',
         ]);
+
+        $this->user->sss_number = $this->sss_number;
+        $this->user->hdmf_number = $this->hdmf_number;
+        $this->user->phic_number = $this->phic_number;
+        $this->user->save();
         
         $new_designation = DB::table('designation_user')->insert([
             'user_id' => $this->user->id,
