@@ -126,7 +126,7 @@ class ProfileComponent extends Component
             'first_name' => 'required|string|min:2|max:255',
             'middle_name' => 'nullable|string|min:2|max:255',
             // 'code' => 'required|unique:users,code',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'phone_number' => 'required|numeric',
             'gender' => 'required|numeric',
             'marital_status' => 'required|numeric',
