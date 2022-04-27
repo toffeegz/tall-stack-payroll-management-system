@@ -188,6 +188,9 @@ class ProjectDetailsComponent extends Component
             'selected_timekeeper' => 'required|numeric',
         ]);
 
+        $user = User::find($this->selected_timekeeper);
+        $user->attachRole('timekeeper');
+
         $this->project->timekeepers()->attach($this->selected_timekeeper, ['user_id' => $this->selected_timekeeper]);
         $this->emit('closeAssignTimekeeperModal');
         Self::findTimekeeper();
