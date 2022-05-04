@@ -246,7 +246,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : ''  }}
+                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A'  }}
                                 </p>
                             </div>
                         </div>

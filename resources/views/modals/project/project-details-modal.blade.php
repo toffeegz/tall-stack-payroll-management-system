@@ -31,7 +31,7 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-xs font-semibold text-stone-700">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : '' }}
+                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A' }}
                                 </td>
                                 <td class="px-2 md:px-4 py-3 w-6">
                                     <div class="form-check">
@@ -321,7 +321,7 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-xs font-semibold text-stone-700">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : '' }}
+                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A' }}
                                 </td>
                                 <td class="px-2 md:px-4 py-3 w-6">
                                     <div class="form-check">
