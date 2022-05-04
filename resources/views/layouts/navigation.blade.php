@@ -12,7 +12,7 @@
                         @if(Auth::user()->hasRole('administrator'))
                         {{-- dashboard --}}
                         <li class="px-4">
-                            <a href="{{ route('dashboard') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'home') bg-stone-100 text-stone-500 @endif @endisset ">
+                            <a href="{{ route('dashboard') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'dashboard') bg-stone-100 text-stone-500 @endif @endisset ">
                                 <svg class="w-5 h-5" style=" fill:@isset($menu) @if($menu == 'dashboard') #78716c; @endif @endisset " xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48" ><path d="M 23.951172 4 A 1.50015 1.50015 0 0 0 23.072266 4.3222656 L 8.859375 15.519531 C 7.0554772 16.941163 6 19.113506 6 21.410156 L 6 40.5 C 6 41.863594 7.1364058 43 8.5 43 L 18.5 43 C 19.863594 43 21 41.863594 21 40.5 L 21 30.5 C 21 30.204955 21.204955 30 21.5 30 L 26.5 30 C 26.795045 30 27 30.204955 27 30.5 L 27 40.5 C 27 41.863594 28.136406 43 29.5 43 L 39.5 43 C 40.863594 43 42 41.863594 42 40.5 L 42 21.410156 C 42 19.113506 40.944523 16.941163 39.140625 15.519531 L 24.927734 4.3222656 A 1.50015 1.50015 0 0 0 23.951172 4 z M 24 7.4101562 L 37.285156 17.876953 C 38.369258 18.731322 39 20.030807 39 21.410156 L 39 40 L 30 40 L 30 30.5 C 30 28.585045 28.414955 27 26.5 27 L 21.5 27 C 19.585045 27 18 28.585045 18 30.5 L 18 40 L 9 40 L 9 21.410156 C 9 20.030807 9.6307412 18.731322 10.714844 17.876953 L 24 7.4101562 z"></path></svg>
                                 <span class="ml-6">Dashboard</span>
                             </a>
@@ -243,36 +243,36 @@
                 </div>
 
                 {{-- PROFILE --}}
-                <div x-cloak x-data="{ profileDropdown: false }" class="flex flex-col items-center border border-stone-200 rounded-t-2xl">
+                <div x-cloak x-data="{ profileDropdown: false }" class="flex flex-col border border-stone-200 rounded-t-2xl">
                     {{-- profile button --}}
-                    <button x-on:click="profileDropdown = !profileDropdown" class="px-4 py-4 flex justify-between w-full space-x-2 focus:outline-none border-0 ">
+                    <button x-on:click="profileDropdown = !profileDropdown" class="px-4 py-4 flex justify-between space-x-2 focus:outline-none border-0">
                         <div class="flex">
-                            <div class="flex justify-center items-center w-12">
+                            <div class="flex-none flex justify-center items-center w-12">
                                 <div class="flex items-center justify-center bg-white rounded-xl border border-stone-300 p-1 focus:outline-none focus:shadow-outline-stone">
                                     <img src="{{ asset('storage/img/users/'. Auth::user()->profile_photo_path) }}" 
                                         class="h-10 w-10 rounded-lg object-cover"
                                     />
                                 </div>
                             </div>
-                            <div class="flex items-center h-12">
-                                <div class="flex flex-col">
-                                    <div class="text-center text-sm font-bold leading-5 text-stone-900">
+                            <div class="flex-auto flex items-center justify-center">
+                                <div class="w-40 px-2">
+                                    <p class="text-left text-sm font-bold leading-5 text-stone-900">
                                         {{ Auth::user()->informal_name() }}
-                                    </div>
-                                    <div class="text-center text-sm ml-2 font-medium leading-5 line-clamp-1 text-stone-500">
-                                        {{ Auth::user()->email }}
-                                    </div>
+                                    </p>
+                                    <p class="text-left text-sm font-medium line-clamp-2 text-stone-500">
+                                        <span class="">{{ Auth::user()->email }}</span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-center m-1 h-10 fa-sm text-stone-400">
+                        <div class="flex-none flex items-center justify-center m-1 h-10 fa-sm text-stone-400">
                             <i class="fa-solid fa-angles-down"></i>
                         </div>
                     </button>
                     {{-- DROPDOWN --}}
                     <div x-show="profileDropdown" class="w-full text-black text-sm pb-4" style="font-weight: 600;">
                         <ul class="space-y-1">
-                            {{-- dashboard --}}
+                            {{-- profile --}}
                             <li class="px-4">
                                 <a href="{{ route('profile') }}" class="px-6 py-3 inline-flex items-center w-full transition-colors duration-150 hover:text-stone-500 rounded-full @isset($menu) @if($menu == 'profile') bg-stone-100 text-stone-500 @endif @endisset ">
                                     <i class="@isset($menu) {{ $menu == 'profile' ? 'text-stone-500' : 'text-stone-900' }} @endisset fa-solid fa-user"></i>
