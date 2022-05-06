@@ -108,21 +108,45 @@ class AttendanceComponent extends Component
     {
         foreach($this->import_create as $value)
         {
+            $date = Carbon::createFromFormat('m/d/Y', $value['date']);
+            $date_str = $date->format('Y-m-d');
+            $updated_hours = Self::getHoursAttendance($date_str, $value['time_in'], $value['time_out']);
+
+            if(Auth::user()->hasRole('administrator')) {
+                $status = Self::getAttendanceStatus($date_str, $updated_hours['late']);
+            } else {
+                $status = 4;
+            }
+
+            $user = User::where('code', $value['employee_id'])->first();
+            $project = Project::where('code', $value['project_code'])->first();
             $data = new Attendance;
-            $data->user_id = $value['employee_id'];
-            $data->project_id = $value['project_code'];
-            $data->date = $value['date'];
+            $data->user_id = $user->id;
+            $data->project_id = $project->id;
+            $data->date = $date;
             $data->time_in = $value['time_in'];
             $data->time_out = $value['time_out'];
+            
+            $data->regular = $updated_hours['regular'];
+            $data->late = $updated_hours['late'];
+            $data->undertime = $updated_hours['undertime'];
+            $data->overtime = $updated_hours['overtime'];
+            $data->night_differential = $updated_hours['night_differential'];
+            $data->status = $status;
+
+            $data->created_by = Auth::user()->id;
             $data->save();
         }
 
         foreach($this->import_update  as $value)
         {
-            $data = Attendance::firstOrNew(['user_id' => $value['employee_id'], 'project_id' => $value['project_code']]);
-            $data->date = $value['date'];
+            $user = User::where('code', $value['employee_id'])->first();
+            $project = Project::where('code', $value['project_code'])->first();
+            $data = Attendance::firstOrNew(['user_id' => $user->id, 'project_id' => $project->id]);
+            $data->date = Carbon::createFromFormat('m/d/Y', $value['date']);
             $data->time_in = $value['time_in'];
             $data->time_out = $value['time_out'];
+            $data->created_by = Auth::user()->id;
             $data->save();
         }
 
