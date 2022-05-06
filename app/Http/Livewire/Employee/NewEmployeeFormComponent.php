@@ -133,7 +133,7 @@ class NewEmployeeFormComponent extends Component
         $imageFileName = null;
         if($this->profile_photo_path != null)
         {
-            $imageFileName = Carbon::now()->format('YmdHis.') . $this->profile_photo_path->extension();
+            $imageFileName = $this->code . $this->profile_photo_path->extension();
 
             $this->profile_photo_path->storeAs('public/img/users', $imageFileName);
         }
