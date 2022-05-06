@@ -22,7 +22,7 @@ class EmployeeComponent extends Component
     {
         $search = $this->search;
 
-        return User::latest('hired_date')
+        return User::latest()
         ->where(function ($query) use ($search) {
             return $query->where('last_name', 'like', '%' . $search . '%')
             ->orWhere('first_name', 'like', '%' . $search . '%')
