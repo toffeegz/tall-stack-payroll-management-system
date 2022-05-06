@@ -1,5 +1,5 @@
-  {{-- modal add attendance --}}
-  <x-modal-small id="modalAddAttendance" title="Add Attendance" wire:ignore.self>
+{{-- modal add attendance --}}
+<x-modal-small id="modalAddAttendance" title="Add Attendance" wire:ignore.self>
     {{-- modal body --}}
     @if($next_page_attendance ==  false && $hide == false)
         <div class="space-y-4 mt-4">
@@ -233,68 +233,6 @@
 </x-modal-small>
 {{-- end modal approve attendance --}}
 
-{{-- modal notif attendance --}}
-<x-modal-small id="modalNotif" title="Notification" wire:ignore.self>
-    {{-- modal body --}}
-    @if($hide == false)
-    <div class="space-y-4 mt-4">
-        <div>
-            <p class="font-semibold text-sm text-stone-600">
-                {{ $updated_count }} updated and {{ $added_count }} added succesfully.
-            </p>
-        </div>
-        <div class="pb-4 flex justify-between space-x-4">
-            @if(array_key_exists('Added', $logs))
-            <div class="w-full">
-                <div class="text-blue-500 font-bold">
-                    Added
-                </div>
-                <div class="px-4">
-                    @foreach($logs['Added'] as $user)
-                        <p class="text-stone-900 text-xs">
-                            {{ $user }}
-                        </p>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-            @if(array_key_exists('Updated', $logs))
-            <div class="w-full">
-                <div class="text-blue-500 font-bold">
-                    Updated
-                </div>
-                <div class="px-4">
-                    @foreach($logs['Updated'] as $user)
-                        <p class="text-stone-900 text-xs">
-                            {{ $user }}
-                        </p>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-        </div>
-    </div>
-    @else
-    <div class="space-y-4 mt-4">
-        <div class="mb-4">
-            <p class="font-semibold text-sm text-stone-600">
-                {{ $this->date_add_attendance }} {{ $added_count != 0 ? 'added':'updated'}} succesfully.
-            </p>
-        </div>
-    </div>
-    @endif
-    {{-- end modal body --}}
-    {{-- modal footer --}}
-    <div class="w-full py-4 flex justify-end border-t border-stone-200">
-        <div class="flex space-x-2">
-            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalNotif')">
-                Close
-            </x-forms.button-rounded-md-secondary>
-        </div>
-    </div>
-    {{-- end modal footer --}}
-</x-modal-small>
-{{-- end modal notif attendance --}}
 
 {{-- modal attendance details --}}
 <x-modal-small id="modalAttendanceDetails" title="Attendance" wire:ignore.self>
@@ -410,3 +348,115 @@
     {{-- end modal footer --}}
 </x-modal-small>
 {{-- end modal notif attendance --}}
+
+
+{{-- modal add attendance --}}
+<x-modal-medium id="modalImportAttendance" title="Import Attendance" wire:ignore.self>
+    <div class="p-4">
+        <div class="mt-8 space-y-3">
+            <div class="grid grid-cols-1 space-y-2">
+                <label class="text-sm font-bold text-gray-500 tracking-wide">Attach Document</label>
+                <div class="flex items-center justify-center w-full">
+                    <label class="flex flex-col rounded-lg border-4 border-dashed w-full h-60 px-10 pb-10 pt-4 group text-center">
+                        <div class="h-full w-full text-center flex flex-col items-center justify-center ">
+                            <div class="flex mx-auto">
+                                <img class="has-mask h-24 object-center" src="{{ asset('storage/img/icons/xlsx-icon-13.jpg')}}" alt="xlsx image">
+                            </div>
+                            <p class="pointer-none text-gray-500 text-sm">
+                                @if($excel_file)
+                                    {{ $excel_file->getClientOriginalName() }}
+                                @else 
+                                    Drag and drop files here <br /> 
+                                    or select a file from your computer
+                                @endif
+                            </p>
+                        </div>
+                        <input wire:model="excel_file" type="file" class="hidden" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    </label>
+                </div>
+            </div>
+            <p class="text-sm text-gray-400">
+                <span>File type: xlsx, csv</span>
+            </p>
+            <div class="flex justify-end">
+                @if($isDisabledImport == true)
+                    <x-button-rounded-primary-stone wire:click="uploadExcel" disabled="true">
+                        <i class="fa-solid fa-upload"></i>
+                        Upload
+                    </x-button-rounded-primary-stone>
+                @else 
+                    <x-button-rounded-primary-stone wire:click="uploadExcel">
+                        <i class="fa-solid fa-upload"></i>
+                        Upload
+                    </x-button-rounded-primary-stone>
+                @endif
+            </div>
+        </div>
+    </div>
+</x-modal-medium>
+{{-- end modal add attendance --}}
+
+
+{{-- modal notif --}}
+<x-modal-small id="modalNotif" title="Success" wire:ignore.self>
+    {{-- modal body --}}
+    <div class="text-center p-5 flex-auto justify-center">
+        <x-notification.success title="Great!">
+            @if($notif_message == 'not import')
+                @if($hide == false)
+                <div class="space-y-4 mt-4">
+                    <div>
+                        <p class="font-semibold text-sm text-stone-600">
+                            {{ $updated_count }} updated and {{ $added_count }} added succesfully.
+                        </p>
+                    </div>
+                    <div class="pb-4 flex justify-between space-x-4">
+                        @if(array_key_exists('Added', $logs))
+                        <div class="w-full">
+                            <div class="text-blue-500 font-bold">
+                                Added
+                            </div>
+                            <div class="px-4">
+                                @foreach($logs['Added'] as $user)
+                                    <p class="text-stone-900 text-xs">
+                                        {{ $user }}
+                                    </p>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+                        @if(array_key_exists('Updated', $logs))
+                        <div class="w-full">
+                            <div class="text-blue-500 font-bold">
+                                Updated
+                            </div>
+                            <div class="px-4">
+                                @foreach($logs['Updated'] as $user)
+                                    <p class="text-stone-900 text-xs">
+                                        {{ $user }}
+                                    </p>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @else
+                <div class="space-y-4 mt-4">
+                    <div class="mb-4">
+                        <p class="font-semibold text-sm text-stone-600">
+                            {{ $this->date_add_attendance }} {{ $added_count != 0 ? 'added':'updated'}} succesfully.
+                        </p>
+                    </div>
+                </div>
+                @endif
+            @else 
+            {{ $notif_message }}
+            @endif
+        </x-notification.success>
+    </div>
+    {{-- end modal body --}}
+    {{-- modal footer --}}
+    {{-- end modal footer --}}
+</x-modal-small>
+{{--  --}}

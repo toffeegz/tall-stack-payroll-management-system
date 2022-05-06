@@ -1,11 +1,192 @@
 <div>
     {{-- Because she competes with no one, no one can compete with her. --}}
-    <div class="h-full overflow-y-auto">
+    <div class="h-full">
         <div class="container px-6 mx-auto grid">
             <h2 class="my-6 text-2xl font-semibold text-stone-700">
                 Attendance
             </h2>
             <div>
+                {{-- BULK INSERTION --}}
+                @if(auth()->user()->hasRole('administrator'))
+                    <div class="p-4 mb-8 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200">
+                        <div class="flex items-center justify-between ">
+                            <div>
+                                <div class="flex flex-row space-x-4">
+                                    <div class="flex items-center bg-blue-100 rounded-md h-fit w-fit p-2">
+                                        <svg class="w-5 h-5" style=" fill: #3b82f6;"xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"viewBox="0 0 48 48"><path d="M 12.5 4 C 10.032499 4 8 6.0324991 8 8.5 L 8 39.5 C 8 41.967501 10.032499 44 12.5 44 L 35.5 44 C 37.967501 44 40 41.967501 40 39.5 L 40 18.5 A 1.50015 1.50015 0 0 0 39.560547 17.439453 L 39.544922 17.423828 L 26.560547 4.4394531 A 1.50015 1.50015 0 0 0 25.5 4 L 12.5 4 z M 12.5 7 L 24 7 L 24 15.5 C 24 17.967501 26.032499 20 28.5 20 L 37 20 L 37 39.5 C 37 40.346499 36.346499 41 35.5 41 L 12.5 41 C 11.653501 41 11 40.346499 11 39.5 L 11 8.5 C 11 7.6535009 11.653501 7 12.5 7 z M 27 9.1210938 L 34.878906 17 L 28.5 17 C 27.653501 17 27 16.346499 27 15.5 L 27 9.1210938 z M 17.5 25 A 1.50015 1.50015 0 1 0 17.5 28 L 30.5 28 A 1.50015 1.50015 0 1 0 30.5 25 L 17.5 25 z M 17.5 32 A 1.50015 1.50015 0 1 0 17.5 35 L 26.5 35 A 1.50015 1.50015 0 1 0 26.5 32 L 17.5 32 z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-base">
+                                            Dry Run Import
+                                        </div>
+                                        <div class="text-stone-500 text-sm font-light">Process this file will create, update, and ignore:</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col md:flex-row">
+                                <x-forms.button-rounded-md-secondary class="whitespace-nowrap mx-2 mb-2" wire:click="downloadTemplate">
+                                    Download Template
+                                </x-forms.button-rounded-md-secondary>
+                                <x-forms.button-rounded-md-secondary class="whitespace-nowrap mx-2 mb-2" onclick="modalObject.openModal('modalImportAttendance')">
+                                    Import File
+                                </x-forms.button-rounded-md-secondary>
+                            </div>
+                        </div>
+                        @if($show_excel_results == true)
+                            <div class="flex my-4 justify-between">
+                                <div class="flex space-x-2 font-bold">
+                                    <a wire:click="importPage('create')" class="border-b-2 cursor-pointer {{ $import_page == 'create' ? 'border-red-300 text-stone-600':'border-transparent text-stone-300' }} px-2 py-0.5 flex items-end">
+                                        create <span class="text-blue-500 text-xs ml-1">({{ count($import_create) }})</span>
+                                    </a>
+                                    <a wire:click="importPage('update')" class="border-b-2 cursor-pointer {{ $import_page == 'update' ? 'border-red-300 text-stone-600':'border-transparent text-stone-300' }} px-2 py-0.5 flex items-end">
+                                        update <span class="text-blue-500 text-xs ml-1">({{ count($import_update) }})</span>
+                                    </p>
+                                    <a wire:click="importPage('ignore')" class="border-b-2 cursor-pointer {{ $import_page == 'ignore' ? 'border-red-300 text-stone-600':'border-transparent text-stone-300' }} px-2 py-0.5 flex items-end">
+                                        ignore <span class="text-blue-500 text-xs ml-1">({{ count($import_ignore) }})</span>
+                                    </a> 
+                                </div>
+                                <x-forms.button-rounded-md-primary class="whitespace-nowrap mx-2 mb-2" wire:click="submitImport">
+                                    Submit
+                                </x-forms.button-rounded-md-primary>
+                            </div>
+
+                            {{-- table --}}
+                            @if($import_page == 'create')
+                                <div class="w-full rounded-lg shadow-xs">
+                                    <div class="md:w-full md:max-w-full max-w-sm overflow-x-auto">
+                                        <table class="w-full whitespace-no-wrap">
+                                            <thead>
+                                            <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
+                                                <th class="px-4 py-2">Line #</th>
+                                                <th class="px-4 py-2">Employee ID</th>
+                                                <th class="px-4 py-2">Date</th>
+                                                <th class="px-4 py-2">Time In</th>
+                                                <th class="px-4 py-2">Time Out</th>
+                                                <th class="px-4 py-2">Project Code</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y "  >
+                                                @foreach($import_create as $key => $value)
+                                                <tr class="text-stone-700 text-xs">
+                                                    <td class="px-4 py-1">
+                                                        {{ $key }}
+                                                    </td>
+                                                    <td class="px-4 py-1 whitespace-nowrap">
+                                                        {{ $value['employee_id'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['date'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['time_in'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['time_out'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        <span class="whitespace-nowrap">{{ $value['project_code'] }}</span>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @elseif($import_page == 'update')
+                                <div class="w-full rounded-lg shadow-xs">
+                                    <div class="md:w-full md:max-w-full max-w-sm overflow-x-auto">
+                                        <table class="w-full whitespace-no-wrap">
+                                            <thead>
+                                            <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
+                                                <th class="px-4 py-2">Line #</th>
+                                                <th class="px-4 py-2">Employee ID</th>
+                                                <th class="px-4 py-2">Date</th>
+                                                <th class="px-4 py-2">Time In</th>
+                                                <th class="px-4 py-2">Time Out</th>
+                                                <th class="px-4 py-2">Project Code</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y "  >
+                                                @foreach($import_create as $key => $value)
+                                                <tr class="text-stone-700 text-xs">
+                                                    <td class="px-4 py-1">
+                                                        {{ $key }}
+                                                    </td>
+                                                    <td class="px-4 py-1 whitespace-nowrap">
+                                                        {{ $value['employee_id'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['date'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['time_in'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['time_out'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        <span class="whitespace-nowrap">{{ $value['project_code'] }}</span>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @elseif($import_page == 'ignore')
+                                <div class="w-full rounded-lg shadow-xs">
+                                    <div class="md:w-full md:max-w-full max-w-sm overflow-x-auto">
+                                        <table class="w-full whitespace-no-wrap">
+                                            <thead>
+                                            <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
+                                                <th class="px-4 py-2">Line #</th>
+                                                <th class="px-4 py-2">Employee ID</th>
+                                                <th class="px-4 py-2">Date</th>
+                                                <th class="px-4 py-2">Time In</th>
+                                                <th class="px-4 py-2">Time Out</th>
+                                                <th class="px-4 py-2">Project Code</th>
+                                                <th class="px-4 py-2">Details</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y "  >
+                                                @foreach($import_ignore as $key => $value)
+                                                <tr class="text-stone-700 text-xs">
+                                                    <td class="px-4 py-1">
+                                                        {{ $key }}
+                                                    </td>
+                                                    <td class="px-4 py-1 whitespace-nowrap">
+                                                        {{ $value['employee_id'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['date'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['time_in'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        {{ $value['time_out'] }}
+                                                    </td>
+                                                    <td class="px-4 py-1">
+                                                        <span class="whitespace-nowrap">{{ $value['project_code'] }}</span>
+                                                    </td>
+                                                    <td x-data="{ open: false }" class="px-4 py-1 cursor-pointer" :class="{ 'line-clamp-none': open, 'line-clamp-1': !open }">
+                                                        <a x-on:click="open = !open">
+                                                            @foreach($value['status'] as $status)
+                                                                <span class="whitespace-nowrap">:{{ $status }}</span> <br>
+                                                            @endforeach
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
+                            
+                        @endif
+                    </div>
+                @endif
                 {{-- Table header --}}
                 <div class="flex justify-between my-4 space-x-4">
                     <div class="md:w-72">
@@ -33,7 +214,7 @@
                 </div>
 
                 <!-- New Table -->
-                <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                <div class="w-full overflow-hidden rounded-lg shadow-xs mb-10">
                     <div class="w-full overflow-x-auto">
                         <table class="w-full whitespace-no-wrap">
                             <thead>

@@ -5,6 +5,12 @@ namespace App\Http\Livewire\Attendance;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+
+use App\Imports\AttendanceImport;
 
 use App\Models\Attendance;
 use App\Models\User;
@@ -17,6 +23,14 @@ use Carbon\Carbon;
 class AttendanceComponent extends Component
 {
     use WithPagination;
+    use WithFileUploads;
+
+    public $excel_file;
+    public $import_create = [], $import_update = [], $import_ignore = [];
+    public $show_excel_results = false;
+    public $import_page = 'create';
+    public $isDisabledImport = false;
+    public $notif_message = null;
 
     public $perPage = 5;
     public $search = "";
@@ -52,6 +66,7 @@ class AttendanceComponent extends Component
     public $added_count = 0;
     public $updated_count = 0;
 
+
     public function render()
     {
         return view('livewire.attendance.attendance-component',[
@@ -69,6 +84,157 @@ class AttendanceComponent extends Component
         {
             $this->hide = false;
         }
+        if (empty($this->excel_file)) {
+            $this->isDisabledImport = true;
+        }
+    }
+
+    public function updatedExcelFile()
+    {
+        if (empty($this->excel_file)) {
+            $this->isDisabledImport = true;
+        } else {
+
+            $this->validate([
+                'excel_file' => 'required|max:20000|mimes:csv,xlsx|'
+            ]);
+
+            $this->isDisabledImport = false;
+        }
+        
+    }
+
+    public function submitImport()
+    {
+        foreach($this->import_create as $value)
+        {
+            $data = new Attendance;
+            $data->user_id = $value['employee_id'];
+            $data->project_id = $value['project_code'];
+            $data->date = $value['date'];
+            $data->time_in = $value['time_in'];
+            $data->time_out = $value['time_out'];
+            $data->save();
+        }
+
+        foreach($this->import_update  as $value)
+        {
+            $data = Attendance::firstOrNew(['user_id' => $value['employee_id'], 'project_id' => $value['project_code']]);
+            $data->date = $value['date'];
+            $data->time_in = $value['time_in'];
+            $data->time_out = $value['time_out'];
+            $data->save();
+        }
+
+        // clear
+        $this->excel_file = null;
+        $this->isDisabledImport = true;
+        $this->import_create = [];
+        $this->import_update = [];
+        $this->import_ignore = [];
+        $this->show_excel_results = false;
+        $this->import_page = 'create';
+
+        $this->notif_message = "You've successfully imported new attendance.";
+        $this->emit('openNotifModal');
+    }
+
+
+    public function downloadTemplate()
+    {
+        $path = storage_path().'/'.'app/public/files/attendance-template.xlsx';
+        // if (file_exists($path)) {
+            return Response::download($path);
+        // }
+    }
+
+    public function importPage($page)
+    {
+        $this->import_page = $page;
+    }
+
+    public function uploadExcel()
+    {
+        $data = Excel::toCollection(new AttendanceImport(), $this->excel_file);
+
+        if($data) {
+            $this->show_excel_results = true;
+        } else {
+            $this->show_excel_results = false;
+        }
+        $row = [];
+        $ignore_row = [];
+        $update_row = [];
+        $create_row = [];
+
+        foreach($data[0] as $key => $value)
+        {
+            $key = $key + 2;
+            $date = Date::excelToDateTimeObject($value['date']);
+            $time_in = Date::excelToDateTimeObject($value['time_in']);
+            $time_out = Date::excelToDateTimeObject($value['time_out']);
+            $user_code = $value['employee_id'];
+            $project_code = $value['project_code'];
+            $task = $value['task'];
+
+            $date = Carbon::parse($date);
+
+            $isFutureDate = $date->gt(Carbon::now());
+
+            $valid_until = Carbon::now()->subYears(3);
+
+            $valid_date = $date->gt($valid_until);
+
+            $row[$key] = [
+                'employee_id' => $user_code,
+                'date' => $date->format('m/d/Y'),
+                'time_in' => $time_in->format('H:i'),
+                'time_out' => $time_out->format('H:i'),
+                'project_code' => $project_code,
+            ];
+
+            // ignore
+            // user not exist, project not exist, date invalid, 
+            
+            $user = User::where('code', $user_code)->first();
+            $project = Project::where('code', $project_code)->first();
+
+            if(!$user || !$project || $valid_date == false) {
+                // ignore
+                $str = [];
+                if(!$user) {
+                    $str[] = 'Employee ID not exist';
+                }
+                if(!$project) {
+                    $str[] = 'Project Code not exist';
+                }
+                if($valid_date == false) {
+                    $str[] = 'Date must be 3 years above';
+                }
+                $ignore_row[$key] = $row[$key];
+
+                $ignore_row[$key]['status'] = $str;
+            } else {
+                // update and create
+                $attendance = Attendance::where('user_id', $user->id)
+                ->where('date', $date)
+                ->first();
+
+                if($attendance)
+                {
+                    $update_row[$key] = $row[$key];
+                } else {
+                    $create_row[$key] = $row[$key];
+                }
+            }
+        }
+
+        $this->import_create = $create_row;
+        $this->import_update = $update_row;
+        $this->import_ignore = $ignore_row;
+
+        $this->emit('closeImportAttendanceModal');
+
     }
 
     // FETCH DATA
@@ -339,6 +505,7 @@ class AttendanceComponent extends Component
         }
         
         $this->emit('closeAddAttendanceModal');
+        $this->notif_message = "not import";
         $this->emit('openNotifModal');
     }
 
