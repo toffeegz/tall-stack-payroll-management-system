@@ -49,6 +49,7 @@ class ProjectComponent extends Component
             ->orWhere('location', 'like', '%' . $search . '%')
             ->orWhere('details', 'like', '%' . $search . '%')   ;
         })
+        ->latest()
         ->paginate($this->perPage);
     }
 
