@@ -74,7 +74,7 @@ class GrandLoanComponent extends Component
             ->orWhere('users.code', 'like', '%' . $search . '%');
         })
         ->select('loans.*', 'users.id as user_id')
-        ->latest('loans.updated_at')
+        ->latest('loans.created_at')
         ->paginate($this->perPage);
     }
 
