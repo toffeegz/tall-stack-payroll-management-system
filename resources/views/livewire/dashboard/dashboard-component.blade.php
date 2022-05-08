@@ -60,8 +60,8 @@
                 </div>
 
                 <!-- Card -->
-                <div class="flex items-center p-4 bg-stone-50 rounded-2xl shadow-xs " >
-                    <div class="p-3 mr-4 text-stone-500 bg-stone-100 rounded-full " >
+                <div class="flex items-center p-4 bg-indigo-50 rounded-2xl shadow-xs " >
+                    <div class="p-3 mr-4 text-indigo-500 bg-indigo-100 rounded-full " >
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
                         </svg>
@@ -116,6 +116,15 @@
                 </a>
             </div>
 
+
+            <div class="my-6">
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold text-black">
+                        On-Leave Today
+                    </h2>
+                    @livewire('leave.current-on-leave-component')
+                </div>
+            </div>
 
         </div>
     </div>

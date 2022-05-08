@@ -43,13 +43,17 @@ class DashboardComponent extends Component
 
     public function getOnLeaveUsersCountProperty()
     {
-        $users = User::where('is_active', true)->whereHas('leaves', function($q){
-            $q->where('start_date', Carbon::now()->format('Y-m-d'))
+        $leave_1 = Leave::where('status', 2)
             ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->where('end_date', '>=', Carbon::now()->format('Y-m-d'));
-        })->get();
+            ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
+            ->get();
+        $leave_2 = Leave::where('status', 2)
+            ->where('start_date', Carbon::now()->format('Y-m-d'))
+            ->get();
 
-        return $users->count();
+        $leave =  $leave_1->merge($leave_2);
+
+        return $leave->count();
     }
 
     public function getAttendanceRequestsCountProperty()
