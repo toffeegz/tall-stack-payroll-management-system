@@ -112,8 +112,8 @@ class LeaveComponent extends Component
                 'user_id' => 'required',
                 'type' => 'required',
                 'leave_type' => 'required',
-                'reason'=> 'required|max:255',
-                'start_date' => 'required|date|after:today',
+                'reason'=> 'required',
+                'start_date' => 'required|date|after:yesterday',
                 'end_date' => 'required_if:type,3|nullable|date|after:start_date',
             ]);
 
