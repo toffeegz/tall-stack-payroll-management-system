@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 use App\Imports\AttendanceImport;
+use App\Exports\Attendance\AttendanceExport;
 
 use App\Models\Attendance;
 use App\Models\User;
@@ -263,7 +264,7 @@ class AttendanceComponent extends Component
 
     // FETCH DATA
 
-    public function getAttendancesProperty()
+    public function getAttendancesQueryProperty()
     {
         $search = $this->search;
         $selected_project_id = $this->search_project_id_table;
@@ -290,8 +291,7 @@ class AttendanceComponent extends Component
                 
             })
             ->latest('attendances.updated_at')
-            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path')
-            ->paginate($this->perPage);
+            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path');
         }
         elseif(Auth::user()->hasRole('timekeeper'))
         {
@@ -316,8 +316,7 @@ class AttendanceComponent extends Component
                 ->orWhere('attendances.time_out', 'like', '%' . $search . '%');
             })
             ->latest('attendances.updated_at')
-            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path')
-            ->paginate($this->perPage);
+            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path');
         }
         else 
         {
@@ -337,10 +336,21 @@ class AttendanceComponent extends Component
                 ->orWhere('time_in', 'like', '%' . $search . '%')
                 ->orWhere('time_out', 'like', '%' . $search . '%');
             })
-            ->latest('updated_at')
-            ->paginate($this->perPage);
+            ->latest('updated_at');
         }
         return $data;
+    }
+
+    public function getAttendancesProperty()
+    {
+        return $this->attendances_query->paginate($this->perPage);
+    }
+
+    public function download()
+    {
+        $data = $this->attendances_query->get();
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Attendance Export.xlsx';
+        return Excel::download(new AttendanceExport($data), $filename);
     }
 
     public function getUsersProperty()

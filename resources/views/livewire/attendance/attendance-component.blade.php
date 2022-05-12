@@ -206,6 +206,10 @@
                             <span class="hidden md:inline-flex">Approve</span>
                         </x-forms.button-rounded-md-success>
                         @endif
+                        <x-forms.button-rounded-md-secondary class="whitespace-nowrap" wire:click="download">
+                            <i class="fa-solid fa-download"></i>
+                            Download
+                        </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap" onclick="modalObject.openModal('modalAddAttendance')">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">Add</span>
