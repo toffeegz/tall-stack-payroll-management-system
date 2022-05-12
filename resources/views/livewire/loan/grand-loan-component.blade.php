@@ -18,6 +18,12 @@
                             <option value="2">Approved</option>
                             <option value="3">Disapproved</option>
                         </x-forms.select>
+                        <x-forms.button-rounded-md-secondary class="whitespace-nowrap py-3" wire:click="download">
+                            <i class="fa-solid fa-download"></i>
+                            <span class="hidden md:inline-flex">
+                                Download
+                            </span>
+                        </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap"  onclick="modalObject.openModal('modalGrantLoan')">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">Grant Loan</span>

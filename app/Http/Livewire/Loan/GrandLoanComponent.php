@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Loan;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 use App\Models\User;
 use App\Models\Loan;
 use App\Models\LoanInstallment;
+use App\Exports\Loan\GrandLoanExport;
+
 use Carbon\Carbon;
 
 class GrandLoanComponent extends Component
@@ -56,7 +59,7 @@ class GrandLoanComponent extends Component
         return User::where('is_active', true)->get();
     }
 
-    public function getLoansProperty()
+    public function getLoansQueryProperty()
     {
         $status = $this->status;
         $search = $this->search;
@@ -74,8 +77,19 @@ class GrandLoanComponent extends Component
             ->orWhere('users.code', 'like', '%' . $search . '%');
         })
         ->select('loans.*', 'users.id as user_id')
-        ->latest('loans.created_at')
-        ->paginate($this->perPage);
+        ->latest('loans.created_at');
+    }
+
+    public function getLoansProperty()
+    {
+        return $this->loans_query->paginate($this->perPage);
+    }
+
+    public function download()
+    {
+        $data = $this->loans_query->get();
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Grand Loan Export.xlsx';
+        return Excel::download(new GrandLoanExport($data), $filename);
     }
 
     public function openLoanDetails($id)
