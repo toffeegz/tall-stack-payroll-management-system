@@ -39,10 +39,10 @@
                             <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
                                 
                                 <th class="px-4 py-3">Name</th>
-                                <th class="px-4 py-3">Date Requested</th>
-                                <th class="px-4 py-3">Date Approved</th>
+                                <th class="px-4 py-3 hidden md:table-cell">Date Requested</th>
+                                <th class="px-4 py-3 hidden md:table-cell">Date Approved</th>
                                 <th class="px-4 py-3 text-center">Status</th>
-                                <th class="px-4 py-3 text-right">Installment</th>
+                                <th class="px-4 py-3 text-right hidden md:table-cell">Installment</th>
                                 <th class="px-4 py-3 text-right">Amount</th>
                                 <th class="px-4 py-3 text-right">Balance</th>
                                 
@@ -66,10 +66,10 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 text-xs">
+                                        <td class="px-4 py-3 text-xs hidden md:table-cell">
                                             {{ $loan->created_at ? Carbon\Carbon::parse($loan->created_at)->format('M d, Y') : '-' }}
                                         </td>
-                                        <td class="px-4 py-3 text-xs">
+                                        <td class="px-4 py-3 text-xs hidden md:table-cell">
                                             {{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-center">
@@ -87,7 +87,7 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold">
+                                        <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold hidden md:table-cell">
                                             ₱{{ number_format($loan->installment_amount, 2, '.', ',') }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold">
