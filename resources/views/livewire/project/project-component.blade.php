@@ -33,9 +33,9 @@
                                 <th class="px-4 py-3">Name</th>
                                 <th class="px-4 py-3 whitespace-nowrap">Start Date</th>
                                 <th class="px-4 py-3 whitespace-nowrap">End Date</th>
-                                <th class="px-4 py-3 text-center hidden md:inline-table">Deployed</th>
+                                <th class="px-4 py-3 text-center hidden md:table-cell">Deployed</th>
                                 <th class="px-4 py-3 text-center">Status</th>
-                                <th class="px-4 py-3 hidden md:inline-table">Location</th>
+                                <th class="px-4 py-3 hidden md:table-cell">Location</th>
                                 
                             </tr>
                             </thead>
@@ -63,7 +63,7 @@
                                         <td class="px-4 py-3 text-xs whitespace-nowrap">
                                             {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '-' }}
                                         </td>
-                                        <td class="py-3 px-6 text-center hidden md:inline-table">
+                                        <td class="py-3 px-6 text-center hidden md:table-cell">
                                             <div class="flex items-center justify-center w-28">
                                                 @foreach($project->usersImage(4) as $user)
                                                 <img class="w-8 h-8 object-cover rounded-full border-gray-200 border -m-1"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}"/>
@@ -85,7 +85,7 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-3 text-sm  hidden md:inline-table">
+                                        <td class="px-4 py-3 text-sm  hidden md:table-cell">
                                             <p class=" line-clamp-3">{{ $project->location }}</p>
                                         </td>
                                     </tr>
