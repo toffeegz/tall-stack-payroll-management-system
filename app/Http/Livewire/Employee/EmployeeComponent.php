@@ -4,11 +4,19 @@ namespace App\Http\Livewire\Employee;
 
 use Livewire\Component;
 use App\Models\User;
+use App\Exports\Employee\EmployeeExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class EmployeeComponent extends Component
 {
     public $search = "";
     public $perPage = 5;
+
+    public function mount()
+    {
+        // dd($this->users_query->get());
+    }
 
     public function render()
     {
@@ -20,6 +28,11 @@ class EmployeeComponent extends Component
 
     public function getUsersProperty()
     {
+        return $this->users_query->paginate($this->perPage);
+    }
+
+    public function getUsersQueryProperty()
+    {
         $search = $this->search;
 
         return User::latest()
@@ -30,8 +43,14 @@ class EmployeeComponent extends Component
             ->orWhere('middle_name', 'like', '%' . $search . '%')
             ->orWhere('code', 'like', '%' . $search . '%')
             ->orWhere('email', 'like', '%' . $search . '%');
-        })
-        ->paginate($this->perPage);
+        });
+    }
+
+    public function download()
+    {
+        $data = $this->users_query->get();
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Employees Export.xlsx';
+        return Excel::download(new EmployeeExport($data), $filename);
     }
 
     // 
