@@ -55,7 +55,7 @@
                                             <p class="line-clamp-2 ">{{ $loan_installment->notes }}</p>
                                         </td>
                                         <td class="px-4 py-3 text-xs font-semibold whitespace-nowrap">
-                                            {{ $loan_installment->pay_date ? Carbon\Carbon::parse($loan_installment->pay_date)->format('M d, Y') : '' }}
+                                            {{ $loan_installment->pay_date ? Carbon\Carbon::parse($loan_installment->pay_date)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold">
                                             ₱{{ number_format($loan_installment->amount, 2, '.', ',') }}

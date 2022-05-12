@@ -50,7 +50,7 @@
                         Disapproved
                     @endif
                 </td>
-                <td colspan="2" style="text-align: center;">{{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('m/d/Y') : '' }}</td>
+                <td colspan="2" style="text-align: center;">{{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('m/d/Y') : '-' }}</td>
                 <td style="text-align:center;">{{ $loan->auto_deduct ? 'Yes' :'No'}}</td>
                 <td style="text-align:right;">{{ number_format($loan->install_period, 2, '.',',') }}</td>
                 <td style="text-align:right;">{{ number_format($loan->balance, 2, '.',',') }}</td>

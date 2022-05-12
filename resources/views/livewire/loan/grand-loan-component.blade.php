@@ -61,10 +61,10 @@
                                             </div>
                                         </td>
                                         <td class="px-4 py-3 text-xs">
-                                            {{ $loan->created_at ? Carbon\Carbon::parse($loan->created_at)->format('M d, Y') : '' }}
+                                            {{ $loan->created_at ? Carbon\Carbon::parse($loan->created_at)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs">
-                                            {{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('M d, Y') : '' }}
+                                            {{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-center">
                                             @if($loan->status == 1)

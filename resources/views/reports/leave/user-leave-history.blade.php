@@ -37,8 +37,8 @@
     @foreach($data as $value)
     
         <tr>
-            <td colspan="1" style="text-align: left;">{{ $value->start_date ? Carbon\Carbon::parse($value->start_date)->format('m/d/Y') : '' }}</td>
-            <td colspan="1" style="text-align: left;">{{ $value->end_date ? Carbon\Carbon::parse($value->end_date)->format('m/d/Y') : '' }}</td>
+            <td colspan="1" style="text-align: left;">{{ $value->start_date ? Carbon\Carbon::parse($value->start_date)->format('m/d/Y') : '-' }}</td>
+            <td colspan="1" style="text-align: left;">{{ $value->end_date ? Carbon\Carbon::parse($value->end_date)->format('m/d/Y') : '-' }}</td>
             <td colspan="1" style="text-align:center;">{{ $value->hours_duration }}</td>
             <td colspan="2" style="text-align:left;">{{ config('company.leave_type.'.$value->type_id) }}</td>
             <td colspan="2" style="text-align:left;">{{ $value->leaveType->name }}</td>
@@ -51,7 +51,7 @@
                     Disapproved
                 @endif
             </td>
-            <td colspan="1" style="text-align:left;">{{ $value->created_at ? Carbon\Carbon::parse($value->created_at)->format('m/d/Y') : '' }}</td>
+            <td colspan="1" style="text-align:left;">{{ $value->created_at ? Carbon\Carbon::parse($value->created_at)->format('m/d/Y') : '-' }}</td>
             <td colspan="3" style="text-align:right;">{{ $value->reason }}</td>
         </tr>
     @endforeach

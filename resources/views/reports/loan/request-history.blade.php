@@ -38,7 +38,7 @@
     @foreach($data as $loan)
     
         <tr>
-            <td style="text-align: left;">{{ $loan->created_at ? Carbon\Carbon::parse($loan->created_at)->format('m/d/Y') : '' }}</td>
+            <td style="text-align: left;">{{ $loan->created_at ? Carbon\Carbon::parse($loan->created_at)->format('m/d/Y') : '-' }}</td>
             <td colspan="2" style="text-align: center;">
                 @if($loan->status == 1)
                     Pending
@@ -53,7 +53,7 @@
             <td style="text-align:right;">{{ number_format($loan->installment_amount, 2, '.',',') }}</td>
             <td style="text-align:right;">{{ number_format($loan->amount, 2, '.',',') }}</td>
             <td style="text-align:right;">{{ number_format($loan->balance, 2, '.',',') }}</td>
-            <td style="text-align: center;">{{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('m/d/Y') : '' }}</td>
+            <td style="text-align: center;">{{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('m/d/Y') : '-' }}</td>
             <td colspan="4" style="text-align:left;  word-wrap: break-word;">{{ $loan->details }}</td>
         </tr>
     @endforeach

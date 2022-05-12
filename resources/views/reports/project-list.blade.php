@@ -26,8 +26,8 @@
             <tr>
                 <td colspan="2" rowspan="2" style="word-wrap: break-word;" valign="top">{{ $project->name }}</td>
                 <td colspan="1" rowspan="2"  valign="top">{{ $project->code }}</td>
-                <td colspan="2" rowspan="2" style="text-align: center;" valign="top">{{ $project->start_date ? Carbon\Carbon::parse($project->start_date)->format('M d, Y') : '' }}</td>
-                <td colspan="2" rowspan="2" style="text-align: center;" valign="top">{{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '' }}</td>
+                <td colspan="2" rowspan="2" style="text-align: center;" valign="top">{{ $project->start_date ? Carbon\Carbon::parse($project->start_date)->format('M d, Y') : '-' }}</td>
+                <td colspan="2" rowspan="2" style="text-align: center;" valign="top">{{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '-' }}</td>
                 <td colspan="2" rowspan="2" style="text-align: center;" valign="top">
                     @if($project->status == 1)
                         On-going

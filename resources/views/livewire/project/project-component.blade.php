@@ -54,10 +54,10 @@
                                             </div>
                                         </td>
                                         <td class="px-4 py-3 text-xs whitespace-nowrap">
-                                            {{ $project->start_date ? Carbon\Carbon::parse($project->start_date)->format('M d, Y') : '' }}
+                                            {{ $project->start_date ? Carbon\Carbon::parse($project->start_date)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs whitespace-nowrap">
-                                            {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '' }}
+                                            {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="py-3 px-6 text-center">
                                             <div class="flex items-center justify-center w-28">

@@ -157,7 +157,7 @@
                                         </span>
                                     @endif
                                 </button>
-                                <p class="text-xs text-green-500">{{ $project->is_subcontractual == true ? 'Subcontractual' : ''}}</p>
+                                <p class="text-xs text-green-500">{{ $project->is_subcontractual == true ? 'Subcontractual' : '-'}}</p>
                                 
                             </div>
                         </div>
