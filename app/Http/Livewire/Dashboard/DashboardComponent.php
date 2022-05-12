@@ -17,7 +17,8 @@ class DashboardComponent extends Component
     {
         return view('livewire.dashboard.dashboard-component',[
             'users_count' => $this->users_count,
-            'loan_balance' => $this->loan_balance,
+            'loan_balance' => $this->loans->sum('balance'),
+            'total_loan_with_balance' => $this->loans->sum('total_amount_to_pay'),
             'projects_count' => $this->projects_count,
             'on_leave_users_count' => $this->on_leave_users_count,
             'attendance_requests_count' => $this->attendance_requests_count,
@@ -31,9 +32,9 @@ class DashboardComponent extends Component
         return User::all()->count();
     }
 
-    public function getLoanBalanceProperty()
+    public function getLoansProperty()
     {
-        return Loan::where('status', 2)->where('balance', '!=', 0)->sum('balance');
+        return Loan::where('status', 2)->where('balance', '!=', 0)->get();
     }
 
     public function getProjectsCountProperty()
