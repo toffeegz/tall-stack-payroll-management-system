@@ -18,7 +18,7 @@ class ProjectComponent extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $page = 1;
+    public $newPage = 1;
 
     public $search = "";
     public $search_user = "";
@@ -90,7 +90,8 @@ class ProjectComponent extends Component
 
     public function nextPage()
     {
-        if($this->page == 1)
+
+        if($this->newPage == 1)
         {
             // validate
             $this->validate([
@@ -99,23 +100,11 @@ class ProjectComponent extends Component
                 'profile_photo_path' => "nullable|image|mimes:jpg,png,jpeg|max:2048",//2mb
                 // location
             ]);
-
-
-            $this->page += 1;
-        } 
-        elseif($this->page == 2)
+            $this->newPage += 1;
+        } elseif($this->newPage == 2)
         {
-            $this->validate([
-                // 'start_date' => 'required|date|',
-                // 'end_date' => 'nullable|string|min:2|max:255',
-                // 'details' => 'required|unique:users,code',
-                'status' => 'required|numeric',
-                'is_subcontractual' => 'required',
-            ]);
-
-            $this->page += 1;
-        } 
-        elseif($this->page == 3) 
+            $this->newPage += 1;
+        } elseif($this->newPage == 3) 
         {
             $this->emit('closeNewProjectModal');
 
@@ -145,20 +134,23 @@ class ProjectComponent extends Component
             $this->emit('openNotifModal');
 
             Self::clearNewProjectForm();
-            $this->page = 1;
+            $this->newPage = 1;
 
         }
+        
+        
+        
 
        
     }
 
     public function backPage()
     {
-        if($this->page == 1)
+        if($this->newPage == 1)
         {
             $this->emit('closeNewProjectModal');
         } else {
-            $this->page -= 1;
+            $this->newPage -= 1;
         }
         
     }

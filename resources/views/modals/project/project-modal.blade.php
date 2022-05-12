@@ -1,4 +1,6 @@
 
+
+
 {{-- modal notif hours --}}
 <x-modal-small id="modalNotif" title="Success" wire:ignore.self>
     {{-- modal body --}}
@@ -18,11 +20,10 @@
 
 {{-- modal new project  --}}
 <x-modal-small id="modalNewProject" title="New Project" wire:ignore.self>
-
     {{-- modal body --}}
     <div class="space-y-4 my-4">
         {{-- project information --}}
-        @if($page == 1)
+        @if($newPage == 1)
 
             {{-- image --}}
             <div class="">
@@ -86,7 +87,7 @@
                     <p class="text-red-500 text-xs italic">{{ $message }}</p>
                 @enderror
             </div>
-        @elseif($page == 2)
+        @elseif($newPage == 2)
 
             {{-- start and end date --}}
             <div class="flex justify-between gap-4">
@@ -133,19 +134,19 @@
                     </x-forms.label>
                     <div class="flex flex-col text-sm">
                         <div class="form-check px-2">
-                            <x-forms.radio-box value="1" wire:model="status" name="status" id="status1" wire:model="status"></x-forms.radio-box>
+                            <x-forms.radio-box value="1" wire:model="status" name="status" id="status1"></x-forms.radio-box>
                             <x-forms.radio-box-label for="status1">
                                 On-going
                             </x-forms.radio-box-label>
                         </div>
                         <div class="form-check px-2">
-                            <x-forms.radio-box value="2" wire:model="status" name="status" id="status2" wire:model="status"></x-forms.radio-box>
+                            <x-forms.radio-box value="2" wire:model="status" name="status" id="status2"></x-forms.radio-box>
                             <x-forms.radio-box-label for="status2">
                                 Finished
                             </x-forms.radio-box-label>
                         </div>
                         <div class="form-check px-2">
-                            <x-forms.radio-box value="3" wire:model="status" name="status" id="status3" wire:model="status"></x-forms.radio-box>
+                            <x-forms.radio-box value="3" wire:model="status" name="status" id="status3"></x-forms.radio-box>
                             <x-forms.radio-box-label for="status3">
                                 Upcoming
                             </x-forms.radio-box-label>
@@ -170,7 +171,7 @@
             </div>
 
             
-        @elseif($page == 3)
+        @elseif($newPage == 3)
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
                 <div class="w-full">
                     <x-forms.search-input placeholder="search name or date" name="search_user"/>
@@ -202,7 +203,7 @@
                                     <td class="px-2 md:px-4 py-3 w-6">
                                         <div class="form-check">
                                             <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
-                                            type="checkbox" value="{{ $user->id }}" wire:model="selected_users">
+                                            type="checkbox" value="{{ $user->id }}" wire:model.defer="selected_users">
                                         </div>
                                     </td>
                                 </tr>
@@ -218,7 +219,7 @@
     {{-- modal footer --}}
         <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
             <x-forms.button-rounded-md-secondary wire:click="backPage" >
-                {{ $page == 1 ? 'Cancel':'Back' }}
+                {{ $newPage == 1 ? 'Cancel':'Back' }}
             </x-forms.button-rounded-md-secondary>
             <x-forms.button-rounded-md-primary wire:click="nextPage" wire:loading.attr="disabled">
                 Next

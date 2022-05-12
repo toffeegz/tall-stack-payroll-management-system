@@ -18,7 +18,7 @@
                         </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap" wire:click="hireNewEmployee">
                             <i class="fa-solid fa-plus"></i>
-                            <span class="hidden md:inline-flex">Hire new employee</span>
+                            <span class="hidden md:inline-flex">Add Employee</span>
                         </x-forms.button-rounded-md-primary>
                     </div>
                 </div>

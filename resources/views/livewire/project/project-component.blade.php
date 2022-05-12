@@ -1,4 +1,6 @@
 <div>
+    
+    
     {{-- Because she competes with no one, no one can compete with her. --}}
     <div class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">
@@ -102,10 +104,9 @@
     </div>
 
 
-    @include('scripts.project.project-script')
     @include('modals.project.project-modal')
 </div>
 
 
 
-
+@include('scripts.project.project-script')
