@@ -12,6 +12,10 @@
                         <x-forms.search-input placeholder="search name or code" name="search"/>
                     </div>
                     <div class="space-x-2 flex">
+                        <x-forms.button-rounded-md-secondary class="whitespace-nowrap" wire:click="download">
+                            <i class="fa-solid fa-download"></i>
+                            <span class="hidden md:inline-flex">Download</span>
+                        </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap" onclick="modalObject.openModal('modalNewProject')">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">New Project</span>
@@ -29,9 +33,9 @@
                                 <th class="px-4 py-3">Name</th>
                                 <th class="px-4 py-3 whitespace-nowrap">Start Date</th>
                                 <th class="px-4 py-3 whitespace-nowrap">End Date</th>
-                                <th class="px-4 py-3 text-center">Deployed</th>
+                                <th class="px-4 py-3 text-center hidden md:inline-table">Deployed</th>
                                 <th class="px-4 py-3 text-center">Status</th>
-                                <th class="px-4 py-3">Location</th>
+                                <th class="px-4 py-3 hidden md:inline-table">Location</th>
                                 
                             </tr>
                             </thead>
@@ -59,7 +63,7 @@
                                         <td class="px-4 py-3 text-xs whitespace-nowrap">
                                             {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '-' }}
                                         </td>
-                                        <td class="py-3 px-6 text-center">
+                                        <td class="py-3 px-6 text-center hidden md:inline-table">
                                             <div class="flex items-center justify-center w-28">
                                                 @foreach($project->usersImage(4) as $user)
                                                 <img class="w-8 h-8 object-cover rounded-full border-gray-200 border -m-1"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}"/>
@@ -81,7 +85,7 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-3 text-sm">
+                                        <td class="px-4 py-3 text-sm  hidden md:inline-table">
                                             <p class=" line-clamp-3">{{ $project->location }}</p>
                                         </td>
                                     </tr>
@@ -90,7 +94,7 @@
                         </table>
                     </div>
                 </div>
-                {{ $projects->links() }}
+                {{ $projects->withQueryString()->links() }}
             </div>
 
             

@@ -2375,6 +2375,10 @@ select {
     display: inline-flex;
   }
 
+  .md\:table {
+    display: table;
+  }
+
   .md\:inline-table {
     display: inline-table;
   }

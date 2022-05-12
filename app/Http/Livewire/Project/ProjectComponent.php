@@ -4,14 +4,19 @@ namespace App\Http\Livewire\Project;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use App\Models\Project;
 use App\Models\User;
+use App\Exports\Project\ProjectExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 
 class ProjectComponent extends Component
 {
     use WithFileUploads;
+    use WithPagination;
 
     public $page = 1;
 
@@ -40,7 +45,7 @@ class ProjectComponent extends Component
         ->layout('layouts.app',  ['menu' => 'project']);
     }
 
-    public function getProjectsProperty()
+    public function getProjectsQueryProperty()
     {
         $search = $this->search;
         return Project::query()->where(function ($query) use ($search) {
@@ -49,8 +54,20 @@ class ProjectComponent extends Component
             ->orWhere('location', 'like', '%' . $search . '%')
             ->orWhere('details', 'like', '%' . $search . '%')   ;
         })
-        ->latest()
+        ->latest();
+    }
+
+    public function getProjectsProperty()
+    {
+        return $this->projects_query
         ->paginate($this->perPage);
+    }
+
+    public function download()
+    {
+        $data = $this->projects_query->get();
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Project Export.xlsx';
+        return Excel::download(new ProjectExport($data), $filename);
     }
 
     public function getUsersProperty()
