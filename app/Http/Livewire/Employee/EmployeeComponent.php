@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Employee;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\User;
 use App\Exports\Employee\EmployeeExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -10,6 +11,7 @@ use Carbon\Carbon;
 
 class EmployeeComponent extends Component
 {
+    use WithPagination;
     public $search = "";
     public $perPage = 5;
 
