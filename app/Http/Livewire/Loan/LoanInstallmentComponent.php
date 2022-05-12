@@ -4,6 +4,10 @@ namespace App\Http\Livewire\Loan;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\Loan\LoanInstallmentExport;
+
 use App\Models\User;
 use App\Models\Loan;
 use App\Models\LoanInstallment;
@@ -38,7 +42,7 @@ class LoanInstallmentComponent extends Component
         ->layout('layouts.app',  ['menu' => 'loan-installment']);
     }
 
-    public function getLoanInstallmentsProperty()
+    public function getLoanInstallmentsQueryProperty()
     {
         $search = $this->search;
 
@@ -50,9 +54,21 @@ class LoanInstallmentComponent extends Component
             ->orWhere('users.code', 'like', '%' . $search . '%');
         })
         ->select('loan_installments.*', 'users.id as user_id')
-        ->latest('loan_installments.pay_date')
-        ->paginate($this->perPage);
+        ->latest('loan_installments.pay_date');
     }
+
+    public function getLoanInstallmentsProperty()
+    {
+        return $this->loan_installments_query->paginate(10);
+    }
+
+    public function download()
+    {
+        $data = $this->loan_installments_query->get();
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Loan Installment Export.xlsx';
+        return Excel::download(new LoanInstallmentExport($data), $filename);
+    }
+
     
     public function getUsersProperty()
     {

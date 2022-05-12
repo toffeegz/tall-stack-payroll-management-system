@@ -12,6 +12,12 @@
                         <x-forms.search-input placeholder="search employee" name="search"/>
                     </div>
                     <div class="space-x-2 flex">
+                        <x-forms.button-rounded-md-secondary class="whitespace-nowrap py-3" wire:click="download">
+                            <i class="fa-solid fa-download"></i>
+                            <span class="hidden md:inline-flex">
+                                Download
+                            </span>
+                        </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap"  onclick="modalObject.openModal('modalPayLoan')">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">Pay Loan</span>
