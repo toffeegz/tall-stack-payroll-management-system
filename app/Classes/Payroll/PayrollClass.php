@@ -593,6 +593,8 @@ class PayrollClass {
                             $tax_contributions += $phic_total_ee;
                             
                         // 
+                    } else {
+                        $cutoff_order = $payroll_period->cutoff_order;
                     }
                     
                 // 
