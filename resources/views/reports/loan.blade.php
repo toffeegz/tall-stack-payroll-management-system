@@ -38,6 +38,7 @@
     </tr>
     <tbody>
         @foreach($collection as $loan)
+        @if($loan->user)
             <tr>
                 <td colspan="2">{{ $loan->user->formal_name() }}</td>
                 <td>{{ $loan->user->code }}</td>
@@ -58,6 +59,7 @@
                 <td style="text-align:right;">{{ number_format($loan->installment_amount, 2, '.',',') }}</td>
                 <td colspan="3" style="text-align:left;">{{ $loan->details }}</td>
             </tr>
+        @endif
         @endforeach
     </tbody>
 </table>
