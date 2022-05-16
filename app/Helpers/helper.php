@@ -128,5 +128,13 @@ class Helper
         return $total_amount_to_pay;
     }
 
-    
+    ////////////// // GENERATOR
+
+
+    public function generateCode($value)
+    {
+        $year = Carbon::now()->format('Y');
+        $data = $year . "-" . sprintf('%04d', $value);
+        return $data;
+    }
 }
