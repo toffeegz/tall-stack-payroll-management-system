@@ -54,7 +54,7 @@
                             Loan Balance
                         </p>
                         <p class="text-lg font-semibold text-stone-700 "  >
-                            ₱ {{ $loan_balance }}
+                            ₱ {{ number_format($loan_balance, 2, '.', '') }}
                         </p>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                             Loan With Balance
                         </p>
                         <p class="text-lg font-semibold text-stone-700 "  >
-                            ₱ {{ $total_loan_with_balance }}
+                            ₱ {{ number_format($total_loan_with_balance, 2, '.', '') }}
                         </p>
                     </div>
                 </div>
