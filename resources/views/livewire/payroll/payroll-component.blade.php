@@ -34,7 +34,7 @@
                             <table class="w-full whitespace-no-wrap">
                                 <thead>
                                     <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b rounded-t-md bg-gray-50">
-                                        <th class="px-2 md:px-4 py-3 text-right">Employee</th>
+                                        <th class="px-2 md:px-4 py-3 text-left">Employee</th>
                                         <th class="px-2 md:px-4 py-3 text-right">Gross Pay</th>
                                         <th class="px-2 md:px-4 py-3 text-right">Deductions</th>
                                         <th class="px-2 md:px-4 py-3 text-right">Net Pay</th>
