@@ -16,8 +16,9 @@ class CreateDesignationsTable extends Migration
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
             $table->string('designation_name');
-            $table->integer('department_id');
+            $table->unsignedInteger('department_id');
             $table->float('daily_rate');
+            $table->tinyText('details')->nullable();
             $table->timestamps();
         });
     }
