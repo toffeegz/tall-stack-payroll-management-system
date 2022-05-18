@@ -18,9 +18,9 @@ class CompanyInformationComponent extends Component
     public $phone;
     public $address;
 
-    public $designation, $designation_name, $daily_rate;
+    public $designation, $designation_name, $daily_rate, $designation_details;
 
-    public $department_id, $new_designation_name, $new_daily_rate;
+    public $department_id, $new_designation_name, $new_daily_rate, $new_designation_details;
 
     public $department, $department_name;
 
@@ -77,6 +77,7 @@ class CompanyInformationComponent extends Component
         $this->designation = Designation::find($value);
         $this->designation_name = $this->designation->designation_name;
         $this->daily_rate = $this->designation->daily_rate;
+        $this->designation_details = $this->designation->details;
 
         $this->emit('openEditDesignationModal');    
     }
@@ -90,6 +91,7 @@ class CompanyInformationComponent extends Component
 
         $this->designation->designation_name = $this->designation_name;
         $this->designation->daily_rate = $this->daily_rate;
+        $this->designation->details = $this->designation_details;
         $this->designation->save();
 
         $this->emit('closeEditDesignationModal');    
@@ -123,6 +125,7 @@ class CompanyInformationComponent extends Component
         $designation->department_id = $this->department_id;
         $designation->designation_name = $this->new_designation_name;
         $designation->daily_rate = $this->new_daily_rate;
+        $designation->details = $this->new_designation_details;
         $designation->save();
 
         $this->emit('closeAddDesignationModal');    
