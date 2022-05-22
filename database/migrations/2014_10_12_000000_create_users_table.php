@@ -61,6 +61,8 @@ class CreateUsersTable extends Migration
 
             $table->boolean('is_paid_holidays')->default(false);
             $table->boolean('is_tax_exempted')->default(false);
+            $table->boolean('is_archive')->default(false);
+            $table->boolean('system_access')->default(true);
 
             $table->unsignedTinyInteger('frequency_id')->default(1);
             
