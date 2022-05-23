@@ -15,11 +15,10 @@ class CreateDraftLogsTable extends Migration
     {
         Schema::create('draft_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('code')->unique();
-            $table->string('name');
+            $table->unsignedInteger('code');
+            $table->string('name')->unique();
             $table->json('value');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
