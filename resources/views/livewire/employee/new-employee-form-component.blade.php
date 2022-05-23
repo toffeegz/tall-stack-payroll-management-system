@@ -1,355 +1,398 @@
 <div>
     {{-- The Master doesn't talk, he acts. --}}
-    <div class="h-full overflow-y-auto px-4 md:px-32">
+    <div class="h-full overflow-y-auto px-4 md:px-12 mb-10">
 
-        <div class="flex justify-between mb-4 mt-6 ml-4">
+        <div class="flex justify-between mb-4 mt-6 ml-12 md:ml-0">
             <p class="text-xl font-bold">
                 Add New Employee
             </p>
+            <div class="w-fit inline-flex">
+                <div class=" items-center mr-2 hidden md:flex">
+                    <x-light-forms.label class="whitespace-nowrap">
+                        Saved Draft
+                    </x-light-forms.label>
+                </div>
+                <x-light-forms.select wire:model="selected_draft">
+                    <option value="">- select draft -</option>
+                    @foreach($drafts as $draft)
+                        <option value="{{ $draft->id }}">{{ $draft->name }}</option>
+                    @endforeach 
+                </x-light-forms.select>
+            </div>
         </div>
 
-        <div class=" mb-6 space-x-4 bg-white w-full border border-stone-200 shadow-sm rounded-md  p-4 md:p-6">
-            
-            @if($page == 1)
-                {{-- personal information --}}
-                <div class="">
-                    <div class=" mb-2 ">
-                        <p class="text-lg font-bold">
-                            Personal Information
-                        </p>
+        <div class="space-y-6">
+            {{-- personal_information --}}
+            <div class="space-y-4">
+                <p class="text-sm uppercase font-bold tracking-wide text-stone-700 w-fit px-2 border-b-2 border-red-400">
+                    Personal Information
+                </p>
+
+                {{-- name --}}
+                <div class="grid grid-cols-7 gap-4">
+
+                    {{-- first_name --}}
+                    <div class="col-span-7 md:col-span-2 space-y-1">
+                        <x-light-forms.label>
+                            First Name<span class="text-red-400 ml-1">*</span>
+                        </x-light-forms.label>
+                        <x-light-forms.input type="text" wire:model.defer="first_name"></x-light-forms.input>
                     </div>
 
-                    <div class="space-y-4">
+                    {{-- middle_name --}}
+                    <div class="col-span-7 md:col-span-2 space-y-1">
+                        <x-light-forms.label>
+                            Middle Name
+                        </x-light-forms.label>
+                        <x-light-forms.input type="text" wire:model.defer="middle_name"></x-light-forms.input>
+                    </div>
 
-                        {{-- full name --}}
-                            <div class="grid grid-cols-3 gap-4">
+                    {{-- last_name --}}
+                    <div class="col-span-7 md:col-span-2 space-y-1">
+                        <x-light-forms.label>
+                            Last Name<span class="text-red-400 ml-1">*</span>
+                        </x-light-forms.label>
+                        <x-light-forms.input type="text" wire:model.defer="last_name"></x-light-forms.input>
+                    </div>
 
-                                {{-- last name --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Last Name
-                                    </x-forms.label>
-                                    <x-forms.input type="text" wire:model="last_name"></x-forms.input>
-                                    @error('last_name')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                    {{-- suffix_name --}}
+                    <div class="col-span-7 md:col-span-1 space-y-1">
+                        <x-light-forms.label>
+                            Suffix<span class="text-red-400 ml-1">*</span>
+                        </x-light-forms.label>
+                        <x-light-forms.select wire:model.defer="suffix_name">
+                            <option value="">- -</option>
+                            @foreach(config('company.suffix_name') as $key => $val)
+                                <option value="{{ $key }}">{{ $val }}</option>
+                            @endforeach 
+                        </x-light-forms.select>
+                    </div>
+                </div>
 
-                                {{-- first name --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        First Name
-                                    </x-forms.label>
-                                    <x-forms.input type="text" wire:model="first_name"></x-forms.input>
-                                    @error('first_name')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
 
-                                {{-- middle name --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Middle Name
-                                    </x-forms.label>
-                                    <x-forms.input type="text" wire:model="middle_name"></x-forms.input>
-                                    @error('middle_name')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                {{--  --}}
+                <div class="grid grid-cols-2 gap-4">
+
+                    {{-- profile phone_number email code --}}
+                    <div class="col-span-2 md:col-span-1 flex space-x-4">
+                        
+                        {{-- profile --}}
+                        <div class="w-5/12">
+                            <div>
+                                <x-light-forms.label>
+                                    Image<small class="text-gray-400 text-xs ml-1">(jpg,png)</small>
+                                </x-light-forms.label>
+                                <label class="flex flex-col w-full hover:bg-gray-100">
+                                    <div class="relative flex flex-col items-center justify-center pt-14 pb-1/4">
+                                        <img @if($profile_photo_path) src="{{ $profile_photo_path->temporaryUrl() }}" @endif 
+                                        class="absolute rounded-lg w-full h-full object-cover border-dashed border-2 border-gray-100 inset-0">
+                                        <i class="far fa-image fa-3x text-gray-300 group-hover:text-gray-400"></i>
+                                        <p class="pt-1 text-xs tracking-wider font-semibold text-gray-300 group-hover:text-gray-400">
+                                            Select a photo
+                                        </p>
+                                        <input type="file" class="opacity-0 w-full" accept="image/*" wire:model="profile_photo_path"/>
+                                    </div>
+                                </label>
                             </div>
-                        {{--  --}}
+                        </div>
 
-                        {{--  --}}
-                            <div class="grid grid-cols-3 gap-4">
+                        {{-- email phone code --}}
+                        <div class="w-full space-y-4">
 
-                                {{-- ID --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        ID
-                                    </x-forms.label>
-                                    <x-forms.input type="text" wire:model="code"></x-forms.input>
-                                    @error('code')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                {{-- email --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Email
-                                    </x-forms.label>
-                                    <x-forms.input type="email" wire:model="email"></x-forms.input>
-                                    @error('email')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                {{-- phone number --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Phone Number
-                                    </x-forms.label>
-                                    <x-forms.input type="number" wire:model="phone_number"></x-forms.input>
-                                    @error('phone_number')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                            {{-- email --}}
+                            <div class="space-y-1">
+                                <x-light-forms.label>
+                                    Email<span class="text-red-400 ml-1">*</span>
+                                </x-light-forms.label>
+                                <x-light-forms.input type="email" wire:model.defer="email"></x-light-forms.input>
                             </div>
-                        {{--  --}}
 
-                        {{--  --}}
-                            <div class="grid grid-cols-4 gap-4">
-
+                            {{-- phone_number, nationality --}}
+                            <div class="grid grid-cols-3 gap-4">
+                                {{-- phone_number --}}
+                                <div class="col-span-2 space-y-1">
+                                    <x-light-forms.label>
+                                        Phone Number<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="number" wire:model.defer="phone_number"></x-light-forms.input>
+                                    
+                                </div>
                                 {{-- gender --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Gender
-                                    </x-forms.label>
-                                    <x-forms.select wire:model="gender">
-                                        <option value="">- select gender-</option>
+                                <div class="space-y-1">
+                                    <x-light-forms.label>
+                                        Gender<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model.defer="gender">
+                                        <option value="">- -</option>
                                         @foreach(config('company.gender') as $key => $val)
                                             <option value="{{ $key }}">{{ $val }}</option>
                                         @endforeach 
-                                    </x-forms.select>
-                                    @error('gender')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
+                                    </x-light-forms.select>
                                 </div>
+                            </div>
 
+                            {{-- marital_status, gender --}}
+                            <div class="grid grid-cols-2 gap-4">
                                 {{-- marital_status --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Marital Status
-                                    </x-forms.label>
-                                    <x-forms.select wire:model="marital_status">
+                                <div class="space-y-1">
+                                    <x-light-forms.label>
+                                        Marital Status<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model.defer="marital_status">
                                         <option value="">- select marital status -</option>
                                         @foreach(config('company.marital_status') as $key => $val)
                                             <option value="{{ $key }}">{{ $val }}</option>
                                         @endforeach 
-                                    </x-forms.select>
-                                    @error('marital_status')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
+                                    </x-light-forms.select>
                                 </div>
-
-                                {{-- birth_date --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Birth Date
-                                    </x-forms.label>
-                                    <x-forms.input type="date" wire:model="birth_date"></x-forms.input>
-                                    @error('birth_date')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
                                 {{-- nationality --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Nationality
-                                    </x-forms.label>
-                                    <x-forms.input type="text" wire:model="nationality"></x-forms.input>
-                                    @error('nationality')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
+                                <div class="space-y-1">
+                                    <x-light-forms.label>
+                                        Nationality<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="nationality"></x-light-forms.input>
+                                    
                                 </div>
-                            </div>
-                        {{--  --}}
-
-                        {{-- full name --}}
-                            <div class="grid grid-cols-2 gap-4">
-
-                                {{-- fathers_name --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Father's Name
-                                    </x-forms.label>
-                                    <x-forms.input type="text" wire:model="fathers_name"></x-forms.input>
-                                    @error('fathers_name')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                {{-- mother_name --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Mother's Name
-                                    </x-forms.label>
-                                    <x-forms.input type="text" wire:model="mothers_name"></x-forms.input>
-                                    @error('mothers_name')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        {{--  --}}
-
-                        {{-- full name --}}
-                            <div class="">
-                                <x-forms.label>
-                                    Address
-                                </x-forms.label>
-                                <x-forms.textarea type="text" wire:model="address" rows="2"></x-forms.textarea>
-                                @error('address')
-                                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        {{--  --}}
-                    </div>
-
-                </div>
-            @elseif($page == 2)
-                {{-- employment details --}}
-                <div class="">
-                    <div class=" mb-2 ">
-                        <p class="text-lg font-bold">
-                            Employment Details
-                        </p>
-                    </div>
-
-                    <div class="space-y-4 grid grid-cols-2 gap-4">
-                        <div class="col-span-2 md:col-span-1">
-                            <div class="space-y-4">
-                                {{-- employment_status --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Employment Status
-                                    </x-forms.label>
-                                    <x-forms.select wire:model="employment_status">
-                                        <option value="">- select employment status -</option>
-                                        @foreach(config('company.employment_status') as $key => $val)
-                                            <option value="{{ $key }}">{{ $val }}</option>
-                                        @endforeach 
-                                    </x-forms.select>
-                                    @error('employment_status')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                {{-- hired_date --}}
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="">
-                                        <x-forms.label>
-                                            Hired Date
-                                        </x-forms.label>
-                                        <x-forms.input type="date" wire:model="hired_date"></x-forms.input>
-                                        @error('hired_date')
-                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="">
-                                        <x-forms.label>
-                                            Frequency
-                                        </x-forms.label>
-                                        <x-forms.select wire:model="frequency_id">
-                                            <option value="1">Semi-Monthly</option>
-                                            <option value="2">Weekly</option>
-                                        </x-forms.select>
-                                        @error('frequency_id')
-                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                
-                                {{-- department --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Department
-                                    </x-forms.label>
-                                    <x-forms.select wire:model="department_id">
-                                        <option value="">- select department-</option>
-                                        @foreach($departments as $department)
-                                            <option value="{{ $department->id }}">{{ $department->department_name }}</option>
-                                        @endforeach 
-                                    </x-forms.select>
-                                    @error('department_id')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                {{-- designation --}}
-                                <div class="">
-                                    <x-forms.label>
-                                        Job Title
-                                    </x-forms.label>
-                                    <x-forms.select wire:model="designation_id">
-                                        <option value="">- select job title-</option>
-                                        @foreach($designations as $designation)
-                                            <option value="{{ $designation->id }}">{{ $designation->designation_name }}</option>
-                                        @endforeach 
-                                    </x-forms.select>
-                                    @error('designation_id')
-                                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                
-                                <div class="flex justify-between">
-                                    <div class="space-y-2 w-full">
-                                        <div class="ml-2">
-                                            <x-forms.checkbox wire:model="is_tax_exempted"></x-forms.checkbox>
-                                            <x-forms.checkbox-label>
-                                                Tax Exempted
-                                            </x-forms.checkbox-label>
-                                        </div>
-                                        <div class="ml-2">
-                                            <x-forms.checkbox wire:model="is_paid_holidays"></x-forms.checkbox>
-                                            <x-forms.checkbox-label>
-                                                Paid Holidays
-                                            </x-forms.checkbox-label>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-center w-full">
-                                        <p class="text-stone-700 text-sm font-bold">Daily Rate: ₱{{ number_format($daily_rate, 2, '.', ',') }}</p>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
-                        {{-- image --}}
-                        <div class="col-span-2 md:col-span-1">
-                            <div class="w-full">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-                                    Upload <small class="text-gray-400 ml-2">Image(jpg,png)</small>
-                                </label> 
-                                <label class="flex flex-col w-full hover:bg-gray-100">
-                                    <div class="relative flex flex-col items-center justify-center pt-12 pb-1/4">
+                    </div>
 
-                                        <img @if($profile_photo_path) src="{{ $profile_photo_path->temporaryUrl() }}" @endif 
-                                        class="absolute rounded-lg w-full h-full object-cover border-dashed border-4 border-gray-100 inset-0">
-                                        <i class="far fa-image fa-3x text-gray-300 group-hover:text-gray-400"></i>
-                                        <p class="pt-1 text-sm tracking-wider font-semibold text-gray-300 group-hover:text-gray-400">
-                                            Select a photo
-                                        </p>
-                                        <input type="file" class="opacity-0" accept="image/*" wire:model="profile_photo_path"/>
+                    {{-- birth_date, birth_place, fathers_name, mothers_name --}}
+                    <div class="col-span-2 md:col-span-1 space-y-4">
+                        {{-- birth_date, birth_place --}}
+                        <div class="grid grid-cols-5 gap-4">
+                            {{-- birth_date --}}
+                            <div class="col-span-2 space-y-1">
+                                <x-light-forms.label>
+                                    Birth Date<span class="text-red-400 ml-1">*</span>
+                                </x-light-forms.label>
+                                <x-light-forms.input type="date" wire:model.defer="birth_date"></x-light-forms.input>
+                            </div>
+                            {{-- birth_place --}}
+                            <div class="col-span-3 space-y-1">
+                                <x-light-forms.label>
+                                    Birth Place
+                                </x-light-forms.label>
+                                <x-light-forms.input type="text" wire:model.defer="birth_place"></x-light-forms.input>
+                            </div>
+                        </div>
+                        <div class="flex space-x-4">
+                            {{-- fathers_name, mothers_name --}}
+                            <div class="flex-auto grid grid-cols-2 gap-4">
+                                {{-- fathers_name --}}
+                                <div class="col-span-2 md:col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                    Father's Name
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="fathers_name"></x-light-forms.input>
+                                    
+                                </div>
+                                {{-- mothers_name --}}
+                                <div class="col-span-2 md:col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        Mother's Name
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="mothers_name"></x-light-forms.input>
+                                    
+                                </div>
+                            </div>
+                            <div class="flex-none w-24 space-y-1">
+                                <x-light-forms.label>
+                                    # Dependent
+                                </x-light-forms.label>
+                                <x-light-forms.input type="text" wire:model.defer="number_dependent"></x-light-forms.input>
+                                
+                            </div>
+                        </div>
+                        {{-- address --}}
+                        <div class="space-y-1">
+                            <x-light-forms.label>
+                                Address
+                            </x-light-forms.label>
+                            <x-light-forms.input type="text" wire:model.defer="address"></x-light-forms.input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {{-- employment_details --}}
+            <div class="space-y-4">
+                <p class="text-sm uppercase font-bold tracking-wide text-stone-700 w-fit px-2 border-b-2 border-red-400">
+                    Employment Details
+                </p>
+
+                {{-- department --}}
+                <div class="flex justify-between">
+                    <div class="flex items-center">
+                        <x-light-forms.label class="whitespace-nowrap">
+                            Choose Job Title<span class="text-red-400 ml-1">*</span>
+                        </x-light-forms.label>
+                    </div>
+                    <div class="w-fit inline-flex">
+                        <div class=" items-center mr-2 hidden md:flex">
+                            <x-light-forms.label>
+                                Department
+                            </x-light-forms.label>
+                        </div>
+                        <x-light-forms.select wire:model="department_id">
+                            @foreach($departments as $department)
+                                <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                            @endforeach 
+                        </x-light-forms.select>
+                    </div>
+                </div>
+
+                {{-- job_title --}}
+                <div>
+                    <div class="grid grid-cols-4 grid-flow-row-dense gap-4">
+                        @foreach($designations as $designation)
+                            <div>
+                                <input wire:click="selectDesignation({{ $designation->id }})" class="hidden designationradio" id="designation_{{ $designation->id }}" type="radio" name="radio" onclick="selectDesignation({{$designation->id}})">
+                                <label class="h-full flex p-4 border rounded-lg border-gray-300 hover:border-blue-400 shadow-sm cursor-pointer" for="designation_{{ $designation->id }}">
+                                    <input wire:model="selected_designation"  onclick="selectDesignation({{$designation->id}})" value="{{ $designation->id }}" disabled name="designation" id="radio_designation_{{ $designation->id }}" type="radio" class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
+
+                                    <div class="flex flex-col">
+                                        <span class="text-xs font-bold uppercase">{{ $designation->designation_name }}</span>
+                                        <span class="text-base font-bold mt-2">₱{{ number_format($designation->daily_rate, 2, '.', '') }}/daily</span>
+                                        <span class="text-xs text-stone-500 line-clamp-2">
+                                            {{ $designation->details }}
+                                        </span>
                                     </div>
                                 </label>
                             </div>
-                            @error('profile_photo_path')
-                                <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        @endforeach 
                     </div>
                 </div>
 
-            @else 
+                <div class="grid grid-cols-12 gap-4">
 
-            @endif
+                    {{-- left panel --}}
+                    <div class="col-span-12 md:col-span-5 space-y-4">
+                        {{-- employment_status, hired_date --}}
+                        <div class=" grid grid-cols-3 gap-4">
+                            {{-- employment_status --}}
+                            <div class="col-span-3 md:col-span-2 space-y-1">
+                                <x-light-forms.label>
+                                    Employment Status<span class="text-red-400 ml-1">*</span>
+                                </x-light-forms.label>
+                                <x-light-forms.select wire:model.defer="employment_status">
+                                    <option value="">- -</option>
+                                    @foreach(config('company.employment_status') as $key => $val)
+                                        <option value="{{ $key }}">{{ $val }}</option>
+                                    @endforeach 
+                                </x-light-forms.select>
+                            </div>
+                            {{-- hired_date --}}
+                            <div class="col-span-3 md:col-span-1 space-y-1">
+                                <x-light-forms.label>
+                                    Hired Date<span class="text-red-400 ml-1">*</span>
+                                </x-light-forms.label>
+                                <x-light-forms.input type="date" wire:model.defer="hired_date"></x-light-forms.input>
+                            </div>
+                        </div>
 
-            
-            {{--  --}}
-            <div class="flex justify-between mt-8">
-                <div>
-                @if($page > 1)
-                    <button wire:click="backPage" wire:loading.attr="disabled" class="px-4 py-1.5 text-xs font-semibold leading-5 text-white transition-colors duration-150 bg-stone-500 border border-transparent rounded-full active:bg-stone-600 hover:bg-stone-600 focus:outline-none focus:shadow-outline-purple">
-                        <i class="ml-2 fa-solid fa-arrow-left-long"></i>
-                        Back
-                    </button>
-                @endif
+                        {{-- frequency, code --}}
+                        <div class=" grid grid-cols-5 gap-4">
+                            {{-- employment_status --}}
+                            <div class="col-span-5 md:col-span-2 space-y-2">
+                                <x-light-forms.label>
+                                    Frequency<span class="text-red-400 ml-1">*</span>
+                                </x-light-forms.label>
+                                <div class="space-y-1">
+                                    <div class="form-check px-2">
+                                        <x-forms.radio-box value="1" wire:model="frequency_id" name="frequency" id="frequency1"></x-forms.radio-box>
+                                        <x-light-forms.radio-box-label for="frequency1">
+                                            Semi-Monthly
+                                        </x-light-forms.radio-box-label>
+                                    </div>
+                                    <div class="form-check px-2">
+                                        <x-forms.radio-box value="2" wire:model="frequency_id" name="frequency" id="frequency2"></x-forms.radio-box>
+                                        <x-light-forms.radio-box-label for="frequency2">
+                                            Weekly
+                                        </x-light-forms.radio-box-label>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- code --}}
+                            <div class="col-span-5 md:col-span-3 space-y-1">
+                                <x-light-forms.label>
+                                    Code
+                                </x-light-forms.label>
+                                <input type="text" wire:model="code" {{ $auto_generate_code ? 'disabled':'' }} class="w-full text-sm font-semibold rounded-md border-gray-200 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:bg-stone-100 disabled:text-stone-600">
+                                <div class="ml-2 pt-1 flex">
+                                    <x-forms.checkbox wire:model="auto_generate_code"></x-forms.checkbox>
+                                    
+                                    <x-light-forms.radio-box-label>
+                                        auto generate code
+                                    </x-light-forms.radio-box-label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {{-- right panel --}}
+                    <div class="col-span-12 md:col-span-7 space-y-4">
+
+                        <div class="space-y-1">
+                            <div class="grid grid-cols-3 gap-4">
+                                {{-- sss --}}
+                                <div class="col-span-3 md:col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        SSS {{ $sss_number}}
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="number" wire:model="sss_number"></x-light-forms.input>
+                                </div>
+                                {{-- hdmf --}}
+                                <div class="col-span-3 md:col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        HDMF {{ $hdmf_number}}
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="number" wire:model="hdmf_number"></x-light-forms.input>
+                                </div>
+                                {{-- phic --}}
+                                <div class="col-span-3 md:col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        PHIC {{ $phic_number}}
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="number" wire:model="phic_number"></x-light-forms.input>
+                                </div>
+                            </div>
+                            <div class="ml-2 pt-1 flex">
+                                <x-forms.checkbox wire:model.defer="is_tax_exempted"></x-forms.checkbox>
+                                <x-light-forms.radio-box-label>
+                                    tax exempted
+                                </x-light-forms.radio-box-label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <x-light-forms.label>
+                                Covered under holiday pay
+                            </x-light-forms.label>
+                            <div class="ml-2 pt-2 flex">
+                                <x-forms.checkbox wire:model.defer="is_paid_holidays"></x-forms.checkbox>
+                                <x-light-forms.radio-box-label>
+                                    Yes
+                                </x-light-forms.radio-box-label>
+                            </div>
+
+                    </div>
+
                 </div>
-                <button wire:click="nextPage" wire:loading.attr="disabled" class="px-4 py-1.5 text-xs font-semibold leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-full active:bg-blue-600 hover:bg-blue-600 focus:outline-none focus:shadow-outline-purple">
-                    Proceed
-                    {{-- wire:click="nextPage" --}}
-                    <i class="ml-2 fa-solid fa-arrow-right-long"></i>
-                </button>
+
+                
             </div>
         </div>
 
+        <div class="flex justify-end space-x-2 ">
+            <x-forms.button-rounded-md-secondary wire:click="saveInformations" wire:loading.attr="disabled">
+                Save Informations
+            </x-forms.button-rounded-md-secondary>
+            <x-forms.button-rounded-md-primary wire:click="submit" wire:loading.attr="disabled">
+                Proceed
+            </x-forms.button-rounded-md-primary>
+        </div>
 
     </div>
     @include('scripts.employee.new-employee-form-script')
