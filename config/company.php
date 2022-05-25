@@ -4,11 +4,11 @@ return [
     
 
     'suffix_name' => [
-        0 => 'Sr',
-        1 => 'Jr',
-        2 => 'II',
-        3 => 'III',
-        4 => 'IV',
+        'Sr',
+        'Jr',
+        'II',
+        'III',
+        'IV',
     ],
 
     'gender' => [
