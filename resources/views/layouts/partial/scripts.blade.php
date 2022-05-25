@@ -19,6 +19,13 @@
             },
         }
 
+
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('scrollTop', (el, component) => {
+                window.scrollTo({top: 0, behavior: 'smooth'});;
+            });
+        });
+
     </script>
 
     @yield('page-script')
