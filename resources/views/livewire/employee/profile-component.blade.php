@@ -81,8 +81,8 @@
                     <a wire:click="page('details')" class="{{ $page_name == 'details'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
                         Details
                     </a>
-                    <a wire:click="page('profile')" class="{{ $page_name == 'profile'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
-                        Profile  
+                    <a wire:click="page('personal_information')" class="{{ $page_name == 'personal_information'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
+                        Personal Information  
                     </a>
                     <a wire:click="page('employment')" class="{{ $page_name == 'employment'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
                         Employment
@@ -92,8 +92,8 @@
             
                     @if($page_name == "details")
                         @livewire('employee.profile.details-component', ['user_id'=> $user->id])
-                    @elseif($page_name == "profile")
-                        {{-- @livewire('settings.leave-holiday-component') --}}
+                    @elseif($page_name == "personal_information")
+                        @livewire('employee.profile.personal-information-component', ['user_id'=> $user->id])
                     @elseif($page_name == "employment")
                         {{-- @livewire('settings.tax-contribution-component') --}}
                     @endif
