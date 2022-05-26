@@ -10,7 +10,6 @@
         Livewire.on('closeNotifModal', (el, component) => {
             modalObject.closeModal('modalNotif'); 
         });
-
     });
     // 
     function selectDesignation($value)

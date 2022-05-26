@@ -44,10 +44,8 @@ class NewEmployeeFormComponent extends Component
     public $is_active = false;
 
     public $department_id = 1;
-    public $designation_id = null;
 
-    public $daily_rate = 0; 
-    public $frequency_id;
+    public $frequency_id = 2;
     
     public $is_tax_exempted = false;
     public $is_paid_holidays = false;
@@ -91,7 +89,7 @@ class NewEmployeeFormComponent extends Component
 
     public function updatedDepartmentId()
     {
-        $this->designation_id = null;
+        $this->selected_designation = null;
     }
 
     public function updatedAutoGenerateCode()
@@ -133,35 +131,62 @@ class NewEmployeeFormComponent extends Component
             $this->hired_date = $data['hired_date'];
             $this->is_active = $data['is_active'];
             $this->department_id = $data['department_id'];
-            $this->designation_id = $data['designation_id'];
-            $this->daily_rate = $data['daily_rate'];
             $this->frequency_id = $data['frequency_id'];
             $this->is_tax_exempted = $data['is_tax_exempted'];
             $this->is_paid_holidays = $data['is_paid_holidays'];
             $this->sss_number = $data['sss_number'];
             $this->phic_number = $data['phic_number'];
             $this->hdmf_number = $data['hdmf_number'];
-            $this->profile_photo_path = $data['profile_photo_path'];
             $this->auto_generate_code = $data['auto_generate_code'];
             $this->selected_designation = $data['selected_designation'];
+
+            $designation = Designation::find($this->selected_designation);
+            $this->department_id = $designation->department_id;
+        } 
+        else 
+        { 
+            $this->last_name = "";
+            $this->first_name = "";
+            $this->middle_name = "";
+            $this->suffix_name = "";
+            $this->code = "";
+            $this->email = "";
+            $this->phone_number = "";
+            $this->gender = "";
+            $this->marital_status = "";
+            $this->birth_date = "";
+            $this->birth_place = "";
+            $this->nationality = "";
+            $this->fathers_name = "";
+            $this->mothers_name = "";
+            $this->number_dependent = "";
+            $this->address = "";
+            $this->employment_status = "";
+            $this->hired_date = "";
+            $this->is_active = "";
+            $this->frequency_id = "";
+            $this->is_tax_exempted = "";
+            $this->is_paid_holidays = "";
+            $this->sss_number = "";
+            $this->phic_number = "";
+            $this->hdmf_number = "";
+            $this->profile_photo_path = "";
+            $this->auto_generate_code = true;
+            $this->selected_designation = null;
+
+            Self::updatedAutoGenerateCode();
+
         }
     }
 
     // save informations
     public function saveInformations()
     {
+        Self::scrollTop();
         $this->validate([
             'first_name' =>  'required|',
             'last_name' => 'required|',
         ]);
-
-        $imageFileName = null;
-        if($this->profile_photo_path != null)
-        {
-            $imageFileName = $this->code . $this->profile_photo_path->extension();
-
-            $this->profile_photo_path->storeAs('public/img/users', $imageFileName);
-        }
 
         $data = [
             'last_name' => $this->last_name,
@@ -184,15 +209,12 @@ class NewEmployeeFormComponent extends Component
             'hired_date' => $this->hired_date,
             'is_active' => $this->is_active,
             'department_id' => $this->department_id,
-            'designation_id' => $this->designation_id,
-            'daily_rate' => $this->daily_rate,
             'frequency_id' => $this->frequency_id,
             'is_tax_exempted' => $this->is_tax_exempted,
             'is_paid_holidays' => $this->is_paid_holidays,
             'sss_number' => $this->sss_number,
             'phic_number' => $this->phic_number,
             'hdmf_number' => $this->hdmf_number,
-            'profile_photo_path' => $imageFileName,
             'auto_generate_code' => $this->auto_generate_code,
             'selected_designation' => $this->selected_designation,
         ];
@@ -223,19 +245,40 @@ class NewEmployeeFormComponent extends Component
 
     public function submit()
     {
-        dd($this->selected_designation);
-    }
+        Self::scrollTop();
 
-    public function selectDesignation($value)
-    {
-        $this->selected_designation = $value;
-    }
+        if($this->selected_draft != "" || $this->selected_draft != null)
+        {
+            $draft = DraftLogs::find($this->selected_draft)->delete();
+        }
 
+        $this->validate([
+            'last_name' => 'required|string|min:2|max:255',
+            'first_name' => 'required|string|min:2|max:255',
+            'middle_name' => 'nullable|string|min:2|max:255',
+            'suffix_name' => 'nullable|string|min:2|max:10',
+            'code' => 'required|unique:users,code',
+            'email' => 'required|email',
+            'phone_number' => 'required|numeric',
+            'gender' => 'required|numeric',
+            'marital_status' => 'required|numeric',
+            'birth_date' => 'required|date|before:today',
+            'birth_place' => 'nullable|max:255',
+            'nationality' => 'required|',
+            'fathers_name' => 'nullable',
+            'mothers_name' => 'nullable',
+            'number_dependent' => 'nullable',
+            'address' => 'nullable|max:255',
+            'employment_status' => 'required|numeric',
+            'hired_date' => 'required|date|',
+            'is_active' => 'required|boolean',
+            'is_tax_exempted' => 'required|boolean',
+            'is_paid_holidays' => 'required|boolean',
+            'frequency_id' => 'required|numeric',
+            'profile_photo_path' => "nullable|image|mimes:jpg,png,jpeg|max:2048",//2mb
+            'selected_designation' => 'required|numeric',
+        ]);
 
-
-    // proceed submit insert
-    public function insertUser()
-    {
         $imageFileName = null;
         if($this->profile_photo_path != null)
         {
@@ -243,11 +286,21 @@ class NewEmployeeFormComponent extends Component
 
             $this->profile_photo_path->storeAs('public/img/users', $imageFileName);
         }
+
+        $system_access_db = DraftLogs::where('code', 2)->first();
+        if($system_access_db)
+        {
+            $system_access = json_decode($system_access_db->value, true);
+        } else {
+            $system_access = false;
+        }
+
         $new_user = new User;
         $new_user->password = Hash::make(Str::random(8));
         $new_user->last_name = $this->last_name;
         $new_user->first_name = $this->first_name;
         $new_user->middle_name = $this->middle_name;
+        $new_user->suffix_name = $this->suffix_name;
         $new_user->code = $this->code;
         $new_user->profile_photo_path = $imageFileName;
         $new_user->email = $this->email;
@@ -255,9 +308,11 @@ class NewEmployeeFormComponent extends Component
         $new_user->gender = $this->gender;
         $new_user->marital_status = $this->marital_status;
         $new_user->birth_date = $this->birth_date;
+        $new_user->birth_place = $this->birth_place;
         $new_user->nationality = $this->nationality;
         $new_user->fathers_name = $this->fathers_name;
         $new_user->mothers_name = $this->mothers_name;
+        $new_user->number_dependent = $this->number_dependent;
         $new_user->address = $this->address;
         $new_user->employment_status = $this->employment_status;
         $new_user->hired_date = $this->hired_date;
@@ -265,18 +320,34 @@ class NewEmployeeFormComponent extends Component
         $new_user->sss_number = $this->sss_number;
         $new_user->hdmf_number = $this->hdmf_number;
         $new_user->phic_number = $this->phic_number;
+        $new_user->is_tax_exempted = $this->is_tax_exempted;
+        $new_user->is_paid_holidays = $this->is_paid_holidays;
         $new_user->is_active = true;
+        $new_user->is_archive = false;
+        $new_user->system_access = $system_access;
         $new_user->save();
 
         $new_designation = DB::table('designation_user')->insert([
             'user_id' => $new_user->id,
-            'designation_id' => $this->designation_id,
+            'designation_id' => $this->selected_designation,
             "created_at" => Carbon::now(), # new \Datetime()
             "updated_at" => Carbon::now(),  # new \Datetime()
         ]);
 
+        $this->emit('openNotifModal');
 
-        
+        return redirect()->route('employee');
     }
+
+    public function selectDesignation($value)
+    {
+        $this->selected_designation = $value;
+    }
+
+    public function scrollTop()
+    {
+        $this->emit('scrollTop');
+    }
+
 
 }
