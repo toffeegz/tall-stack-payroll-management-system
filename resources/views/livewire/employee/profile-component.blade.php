@@ -88,6 +88,16 @@
                         Employment
                     </a>
                 </div>
+                <div class="my-6">
+            
+                    @if($page_name == "details")
+                        @livewire('employee.profile.details-component', ['user_id'=> $user->id])
+                    @elseif($page_name == "profile")
+                        {{-- @livewire('settings.leave-holiday-component') --}}
+                    @elseif($page_name == "employment")
+                        {{-- @livewire('settings.tax-contribution-component') --}}
+                    @endif
+                </div>
             </div>
 
         </div>
