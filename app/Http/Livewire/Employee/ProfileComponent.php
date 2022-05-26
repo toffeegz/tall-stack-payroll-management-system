@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\Attendance;
 use Carbon\Carbon;
 
 class ProfileComponent extends Component
@@ -33,6 +34,8 @@ class ProfileComponent extends Component
     public $employment_status = "";
     public $hired_date = "";
     public $is_active = false;
+    public $system_access = false;
+    public $is_archive = false;
 
     public $department_id = "";
     public $designation_id = "";
@@ -45,8 +48,12 @@ class ProfileComponent extends Component
     public $hdmf_number = null;
     public $phic_number = null;
 
+    public $page_name;
+
     public function mount(Request $request)
     {
+        $this->page_name = 'details';
+
         $code = $request->user;
         $this->user = User::where('code', $code)->first();
         if(!$this->user)
@@ -90,13 +97,25 @@ class ProfileComponent extends Component
 
     }
 
+    public function page($value)
+    {
+        $this->page_name = $value;
+    }
+    
     public function render()
     {
         return view('livewire.employee.profile-component',[
             'departments' => $this->departments,
             'designations' => $this->designations,
+            'total_hours_worked' => $this->total_hours_worked,
         ])
         ->layout('layouts.app',  ['menu' => 'employee']);
+    }
+
+    public function getTotalHoursWorkedProperty()
+    {
+        $data = Attendance::where('user_id', $this->user->id)->whereIn('status', [1,2,3])->get();
+        return $data->sum('regular') + $data->sum('overtime');
     }
 
     public function getDepartmentsProperty()

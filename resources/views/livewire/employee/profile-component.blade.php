@@ -1,351 +1,98 @@
 <div>
     {{-- The Master doesn't talk, he acts. --}}
-    <div class="h-full overflow-y-auto px-6 md:px-32">
-
-        {{-- header --}}
-        <div class="ml-12 md:ml-0 mt-20 mb-6 space-x-4">
-            <div class="flex items-center text-sm">
-                <!-- Avatar with inset shadow -->
-                <div class="relative hidden w-20 h-20 mr-3 rounded-full md:block" >
-                    <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}" alt="" loading="lazy" />
-                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" ></div>
-                </div>
-                <div>
-                    <p class="font-semibold text-2xl">{{ $user->informal_name() }}</p>
-                    <p class="text-lg text-stone-600 ">
-                        {{ $user->code }}
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
-        {{-- body --}}
-        <div class=" w-full grid grid-cols-3 gap-4">
-
-            <div class="col-span-3 md:col-span-2">
-                {{-- personal information --}}
-                <div class="py-4">
-                    <div class="flex justify-between mb-2 border-b border-stone-200">
-                        <p class="text-lg font-bold">
-                            Personal Information
-                        </p>
-                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalPersonalInformation')">
-                            <i class="fa-solid fa-xs fa-pen"></i>
-                            <span class="text-xs font-semibold">edit</span>
-                        </a>
-                    </div>
-                    <div class="space-y-2">
-                        {{-- name --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Full Name
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->informal_name() }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- id --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    ID
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->code }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- email --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Email
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->email }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- phone --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Phone Number
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->phone_number }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- gender --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Gender
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ config('company.gender.'.$user->gender) }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- marital status --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Marital Status
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ config('company.marital_status.'.$user->marital_status) }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- birthdate --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Birth date
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ Carbon\Carbon::parse($user->birth_date)->format('dS M, Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- address --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Address
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->address }}
-                                </p>
-                            </div>
+    <div class="h-full overflow-y-auto px-6 ">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6">
+            
+            {{-- left panel --}}
+            <div class="md:col-span-4 space-y-6 md:border-r md:border-r-stone-200 h-screen p-6"> 
+                <div clas="">
+                    <div class="flex justify-center mb-2">
+                        <div class="relative hidden w-36 h-36 rounded-full md:block p-1 border border-stone-200" >
+                            <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}" alt="" loading="lazy" />
+                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" ></div>
                         </div>
                     </div>
-                </div>
-                {{--  --}}
+                    <div class="tracking-wide mb-6">
+                        <div class="text-center text-base font-bold  text-stone-900 ">
+                            {{ $user->informal_name() }}
+                        </div>
+                        <div class="text-center text-sm text-stone-500 font-semibold " >
+                            {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A'  }}
+                        </div>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex space-x-4">
+                            <i class="fa-solid fa-at text-green-500"></i>
+                            <span class="text-sm text-stone-500">{{ $user->email }}</span>
+                        </div>
+                        <div class="flex space-x-4" >
+                            <i class="fa-solid fa-phone text-blue-500"></i>
+                            <span class="text-sm text-stone-500">{{ $user->phone_number }}</span>
+                        </div>
+                    </div>
 
-                {{-- Employment details --}}
-                <div class="py-4">
-                    <div class="flex justify-between mb-2 border-b border-stone-200">
-                        <p class="text-lg font-bold">
-                            Employment Details
-                        </p>
-                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalEmploymentDetails')">
-                            <i class="fa-solid fa-xs fa-pen"></i>
-                            <span class="text-xs font-semibold">edit</span>
-                        </a>
-                    </div>
-                    <div class="space-y-2">
-                        {{-- employment status --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Employment Status
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ config('company.employment_status.'.$user->employment_status) }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- hired date --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Hired date
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ Carbon\Carbon::parse($user->hired_date)->format('dS M, Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- active --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Active
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->is_active ? 'Yes':'No' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{--  --}}
+                    <hr class="my-6">
 
-                {{-- compensation --}}
-                <div class="py-4">
-                    <div class="flex justify-between mb-2 border-b border-stone-200">
-                        <p class="text-lg font-bold">
-                            Compensation
-                        </p>
-                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalCompensation')">
-                            <i class="fa-solid fa-xs fa-pen"></i>
-                            <span class="text-xs font-semibold">edit</span>
-                        </a>
-                    </div>
-                    <div class="space-y-2">
-                        {{-- department --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Department
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->department->department_name : '-'  }}
-                                </p>
-                            </div>
+                    <div clas="">
+                        <div class="text-sm mb-4">
+                            <div class="text-stone-500 mb-2">Worked Since</div>
+                            <div class="text-stone-800 ml-4 font-semibold">{{ Carbon\Carbon::parse($user->hired_date)->format('M, Y') }}</div>
                         </div>
-                        {{-- designation / job title --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Job Title
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A'  }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- daily rate --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Daily Rate
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    ₱{{ $user->latestDesignation() ? number_format($user->latestDesignation()->daily_rate, 2, '.', ',') : '-'  }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- is paid holidays--}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Paid Holidays
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->is_paid_holidays ? 'Yes' :'No' }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- is tax exempted --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Tax Exempted
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->is_tax_exempted ? 'Yes' :'No' }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- sss --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    SSS Number
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->sss_number }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- hdmf --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    HDMF Number
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->hdmf_number }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- phic --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    PHIC Number
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->phic_number }}
-                                </p>
-                            </div>
+                        <div class="text-sm mb-4">
+                            <div class="text-stone-500 mb-2">Total Hours Worked</div>
+                            <div class="text-stone-800 ml-4 font-semibold">{{ $total_hours_worked }}hrs</div>
                         </div>
                     </div>
+
+                    <hr class="my-6">
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <div class="text-sm font-semibold text-stone-500">
+                                <i class="fa-solid fa-user-check mr-2"></i>
+                                Active
+                            </div>
+                            @livewire('components.toggle-button', ['model' => $user, 'field' => 'is_active'])
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <div class="text-sm font-semibold text-stone-500">
+                                <i class="fa-solid fa-desktop mr-2"></i>
+                                System Access
+                            </div>
+                            @livewire('components.toggle-button', ['model' => $user, 'field' => 'system_access'])
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <div class="text-sm font-semibold text-stone-500">
+                                <i class="fa-solid fa-box-archive mr-2"></i>
+                                Archive
+                            </div>
+                            @livewire('components.toggle-button', ['model' => $user, 'field' => 'is_archive'])
+                        </div>
+                    </div>
+
+
                 </div>
 
-                {{--  --}}
             </div>
 
             {{-- right panel --}}
-            <div class="col-span-3 md:col-span-1">
-
+            <div class="md:col-span-8 space-y-6"> 
+                <div class="py-6 flex space-x-6 text-sm font-bold text-stone-500  tracking-wide">
+                    <a wire:click="page('details')" class="{{ $page_name == 'details'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
+                        Details
+                    </a>
+                    <a wire:click="page('profile')" class="{{ $page_name == 'profile'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
+                        Profile  
+                    </a>
+                    <a wire:click="page('employment')" class="{{ $page_name == 'employment'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
+                        Employment
+                    </a>
+                </div>
             </div>
 
         </div>
+
+
     </div>
 
     {{--  --}}
