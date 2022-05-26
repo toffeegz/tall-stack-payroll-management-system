@@ -7,7 +7,7 @@
             <div class="md:col-span-4 space-y-6 md:border-r md:border-r-stone-200 h-screen p-6"> 
                 <div clas="">
                     <div class="flex justify-center mb-2">
-                        <div class="relative hidden w-36 h-36 rounded-full md:block p-1 border border-stone-200" >
+                        <div class="relative  w-36 h-36 rounded-full block p-1 border border-stone-200" >
                             <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}" alt="" loading="lazy" />
                             <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" ></div>
                         </div>
