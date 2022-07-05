@@ -85,7 +85,7 @@ class Helper
 
     // COMPANY INFORMATION
     
-    public function getCompanyInformation()
+    public static function getCompanyInformation()
     {
         return CompanyInformation::find(1);
     }
@@ -131,7 +131,7 @@ class Helper
     ////////////// // GENERATOR
 
 
-    public function generateCode($value)
+    public static function generateCode($value)
     {
         $year = Carbon::now()->format('Y');
         $data = $year . "-" . sprintf('%04d', $value);
