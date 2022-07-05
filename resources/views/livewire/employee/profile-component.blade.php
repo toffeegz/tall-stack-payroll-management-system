@@ -66,7 +66,7 @@
                                 <i class="fa-solid fa-box-archive mr-2"></i>
                                 Archive
                             </div>
-                            @livewire('components.toggle-button', ['model' => $user, 'field' => 'is_archive'])
+                            {{-- @livewire('components.toggle-button', ['model' => $user, 'field' => 'is_archive']) --}}
                         </div>
                     </div>
 
