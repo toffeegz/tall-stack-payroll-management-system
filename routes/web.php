@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::group(['namespace' => 'Employee'], function() {
                 Route::get('employee', EmployeeComponent::class)->name('employee');
                 Route::get('employee/profile', ProfileComponent::class)->name('employee.profile');
+                Route::get('employee/archive-profile', ProfileComponent::class)->name('employee_archive.profile');
                 Route::get('employee/hire-new-employee', NewEmployeeFormComponent::class)->name('employee.hire');
             });
 

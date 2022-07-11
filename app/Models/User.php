@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Timekeeper;
 use App\Models\Attendance;
@@ -22,6 +23,7 @@ use App\Models\Leave;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
     use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
 

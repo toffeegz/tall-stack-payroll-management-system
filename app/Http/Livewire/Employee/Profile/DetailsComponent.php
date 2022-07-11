@@ -25,7 +25,7 @@ class DetailsComponent extends Component
 
     public function getUserProperty()
     {
-        return User::find($this->user_id);
+        return User::where('id', $this->user_id)->withTrashed()->first();
     }
 
     public function getUpcomingProjectsProperty()

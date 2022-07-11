@@ -55,7 +55,8 @@ class ProfileComponent extends Component
         $this->page_name = 'details';
 
         $code = $request->user;
-        $this->user = User::where('code', $code)->first();
+        $this->user = User::where('code', $code)->withTrashed()->first();
+        // $this->user = User::where('code', $code)->withTrashed()->first();
         if(!$this->user)
         {
             return abort(404);
@@ -77,6 +78,11 @@ class ProfileComponent extends Component
             $this->employment_status = $this->user->employment_status;
             $this->hired_date = $this->user->hired_date;
             $this->is_active = $this->user->is_active;
+
+            if($this->user->deleted_at) 
+            {
+                $this->is_archive = true;
+            }
 
             if($this->user->latestDesignation())
             {
@@ -216,4 +222,14 @@ class ProfileComponent extends Component
         $this->emit('closeCompensationModal');
     }
 
+    public function updatedisArchive($val)
+    {
+        if($val == true) {
+            $this->user->delete();
+            return redirect()->to('/employee');
+        } else {
+            $this->user->deleted_at = null;
+            $this->user->save();
+        }
+    }
 }
