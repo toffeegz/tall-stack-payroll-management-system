@@ -100,7 +100,7 @@
                     @elseif($page_name == "personal_information")
                         @livewire('employee.profile.personal-information-component', ['user_id'=> $user->id])
                     @elseif($page_name == "employment")
-                        {{-- @livewire('settings.tax-contribution-component') --}}
+                        @livewire('employee.profile.employment-component', ['user_id'=> $user->id])
                     @endif
                 </div>
             </div>
