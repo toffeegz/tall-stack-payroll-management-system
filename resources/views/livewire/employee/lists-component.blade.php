@@ -80,12 +80,6 @@
         {{ $users->links() }}
     </div>
 
-
-    
-    {{-- MODALS --}}
-
-        @include('scripts.employee.employee-script')
-        @include('modals.employee.employee-modal')
 </div>
 
 

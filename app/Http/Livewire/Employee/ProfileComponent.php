@@ -49,6 +49,7 @@ class ProfileComponent extends Component
     public $phic_number = null;
 
     public $page_name;
+    public $selected_input_employment;
 
     public function mount(Request $request)
     {

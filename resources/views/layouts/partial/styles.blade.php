@@ -18,13 +18,13 @@
 
 <script src="{{ asset('js/init-alpine.js') }}"></script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" />
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" /> --}}
 
 <style>
     [x-cloak] { display: none !important; }
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
 <script src="{{ asset('js/charts-lines.js') }}" defer></script>
-<script src="{{ asset('js/charts-pie.js') }}" defer></script>
+<script src="{{ asset('js/charts-pie.js') }}" defer></script> --}}
 @yield('page-style')

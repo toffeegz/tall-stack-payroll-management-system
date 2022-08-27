@@ -25,7 +25,7 @@
                 Employment Status:
             </div>
             <div class="col-span-3 text-stone-900 text-sm font-semibold">
-                <a href="" class="hover:text-blue-500">Full-Time Contract</a>
+                <a href="#" wire:click="openModal('employment_status')" class="hover:text-blue-500">Full-Time Contract</a>
             </div>
         </div>
 
@@ -123,4 +123,12 @@
         </div>
 
     </div>
+
+    @push('scripts')
+    <script>
+        // Your JS here.
+        console.log('testing');
+    </script>
+    @endpush
 </div>
+

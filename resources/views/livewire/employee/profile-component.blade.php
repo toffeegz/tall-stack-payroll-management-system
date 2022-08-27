@@ -110,7 +110,9 @@
 
     </div>
 
-    {{--  --}}
-    @include('scripts.employee.profile-script')
-    @include('modals.employee.profile-modal')
+
+    {{-- script --}}
+    @include('scripts.employee.profile-script')  
+    {{-- modal --}}
+    @include('modals.employee.profile-modal') 
 </div>

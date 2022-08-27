@@ -4,11 +4,11 @@
 
     document.addEventListener('livewire:load', function () {
 
-        Livewire.on('openPersonalInformationModal', (el, component) => {
-            modalObject.openModal('modalPersonalInformation'); 
+        Livewire.on('openInputEmploymentModal', (el, component) => {
+            modalObject.openModal('modalInputEmployment'); 
         });
-        Livewire.on('closePersonalInformationModal', (el, component) => {
-            modalObject.closeModal('modalPersonalInformation'); 
+        Livewire.on('closeInputEmploymentModal', (el, component) => {
+            modalObject.closeModal('modalInputEmployment'); 
         });
 
     });

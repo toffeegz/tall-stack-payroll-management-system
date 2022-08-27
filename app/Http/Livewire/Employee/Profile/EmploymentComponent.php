@@ -27,6 +27,8 @@ class EmploymentComponent extends Component
     public $user_id;
     public $user;
 
+    public $selected_input_employment;
+
     public function render()
     {
         return view('livewire.employee.profile.employment-component');
@@ -50,5 +52,11 @@ class EmploymentComponent extends Component
         $this->mothers_name = $this->user->mothers_name;
         $this->number_dependent = $this->user->number_dependent;
         $this->address = $this->user->address;
+    }
+
+    public function openModal($value)
+    {
+        $this->selected_input_employment = $value;
+        $this->emit('openInputEmploymentModal');
     }
 }
