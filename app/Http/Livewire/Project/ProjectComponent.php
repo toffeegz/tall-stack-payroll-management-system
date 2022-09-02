@@ -97,7 +97,7 @@ class ProjectComponent extends Component
             $this->validate([
                 'name' => 'required|string|min:2|max:255',
                 'code' => 'required|unique:projects,code',
-                'profile_photo_path' => "nullable|image|mimes:jpg,png,jpeg|max:2048",//2mb
+                'profile_photo_path' => "required|image|mimes:jpg,png,jpeg|max:2048",//2mb
                 // location
             ]);
             $this->newPage += 1;
