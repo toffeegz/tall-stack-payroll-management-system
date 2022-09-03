@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\User\EmploymentRequest;
+use App\Http\Requests\User\PersonalInformationRequest;
+
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Designation;
@@ -14,6 +17,7 @@ use Carbon\Carbon;
 class ProfileComponent extends Component
 {
     public $user;
+    protected $rules = null;
 
     // personal information
     public $last_name = "";
@@ -108,6 +112,11 @@ class ProfileComponent extends Component
         $this->daily_rate = Designation::find($value)->value('daily_rate');
     }  
 
+    public function updatedDepartmentId($value)
+    {
+        $this->designations = Designation::where('department_id', $value)->get();
+    }
+
     public function updatedisArchive($val)
     {
         if($val == true) {
@@ -122,6 +131,9 @@ class ProfileComponent extends Component
     // update
     public function updatePersonalInformation()
     {
+        $this->rules = (new PersonalInformationRequest)->rules($this->user->id);
+        $this->validate();
+
         $this->user->first_name = $this->first_name;
         $this->user->middle_name = $this->middle_name;
         $this->user->last_name = $this->last_name;
@@ -141,6 +153,26 @@ class ProfileComponent extends Component
 
         $this->loadUser();
 
+        $this->emit('openNotifModal');
+    }
+
+    public function updateEmploymentDetails()
+    {
+        $this->rules = (new EmploymentRequest)->rules();
+        $this->validate();
+        $this->user->employment_status = $this->employment_status;
+        $this->user->hired_date = $this->hired_date;
+        $this->user->sss_number = $this->sss_number;
+        $this->user->phic_number = $this->phic_number;
+        $this->user->hdmf_number = $this->hdmf_number;
+        $this->user->is_tax_exempted = $this->is_tax_exempted;
+        $this->user->is_paid_holidays = $this->is_paid_holidays;
+
+        $this->user->save();
+
+        $this->user->designations()->attach([$this->designation_id]);
+
+        $this->loadUser();
         $this->emit('openNotifModal');
     }
 
@@ -177,6 +209,7 @@ class ProfileComponent extends Component
         {
             $this->designation_id = $this->user->latestDesignation()->id;
             $this->department_id = $this->user->latestDesignation()->department->id;
+            $this->daily_rate = $this->user->latestDesignation()->daily_rate;
         }
 
         $this->is_tax_exempted = $this->user->is_tax_exempted;
