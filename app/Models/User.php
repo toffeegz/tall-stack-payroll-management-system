@@ -57,6 +57,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function scopeFilter($query, array $filters)
+    {
+        $search = $filters['search'] ?? false;
+        $query->when($filters['search'] ?? false, 
+            function($query) use($search) {
+                $query->where(function($query) use($search) {
+                    $query->where('last_name', 'ilike', '%' . $search . '%')
+                        ->orWhere('first_name', 'ilike', '%' . $search . '%')
+                        ->orWhere('middle_name', 'ilike', '%' . $search . '%')
+                        ->orWhere('email', 'ilike', '%' . $search . '%');
+                });
+            }
+        );
+        
+    }
+
     public function formal_name()
     {
         return $this->last_name . ", " . $this->first_name . " " . ($this->middle_name ? $this->middle_name[0] : '');
