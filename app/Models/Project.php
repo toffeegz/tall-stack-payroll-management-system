@@ -41,6 +41,21 @@ class Project extends Model
         return $this->belongsToMany(Timekeeper::class, 'timekeepers', 'project_id', 'id');
     }
 
+    public function ongoing()
+    {
+        return $this->where('status', 1);
+    }
+
+    public function completed()
+    {
+        return $this->where('status', 2);
+    }
+
+    public function upcoming()
+    {
+        return $this->where('status', 3);
+    }
+
     // scope
     public function scopeSearch($query, $value) {
         return $query
