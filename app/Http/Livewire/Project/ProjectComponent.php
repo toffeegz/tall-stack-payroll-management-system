@@ -27,6 +27,7 @@ class ProjectComponent extends Component
     public $profile_photo_path;
     public $name;
     public $code;
+    public $auto_generate_code = true;
     public $location = null;
     public $start_date = null;
     public $end_date = null;
@@ -43,6 +44,11 @@ class ProjectComponent extends Component
             'users' => $this->users,
         ])
         ->layout('layouts.app',  ['menu' => 'project']);
+    }
+
+    public function mount()
+    {
+        Self::updatedAutoGenerateCode();
     }
 
     public function getProjectsQueryProperty()
@@ -166,5 +172,13 @@ class ProjectComponent extends Component
         $this->details = "";
         $this->status = 2;
         $this->is_subcontractual = false;
+    }
+
+    public function updatedAutoGenerateCode()
+    {
+        $latest_project = Project::orderBy('code', 'desc')->first();
+        $latest_code = $latest_project->code;
+        $last_digits = substr($latest_code, 6) + 1;
+        $this->code = Carbon::now()->format('Y') . "-" . sprintf('%04d', $last_digits);
     }
 }

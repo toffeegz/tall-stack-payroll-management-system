@@ -50,29 +50,30 @@
             </div>
             
 
-            {{-- name and code --}}
-            <div class="grid grid-cols-3 gap-4">
-                {{-- name --}}
-                <div class="col-span-3 md:col-span-2">
-                    <x-forms.label>
-                        Name
-                    </x-forms.label>
-                    <x-forms.input type="text" class="w-full" wire:model="name">
-                    </x-forms.input>
-                    @error('name')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-                {{-- code --}}
-                <div class="col-span-3 md:col-span-1">
-                    <x-forms.label>
-                        Code
-                    </x-forms.label>
-                    <x-forms.input type="text"  class="w-full" wire:model="code">
-                    </x-forms.input>
-                    @error('code')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
+            {{-- name --}}
+            <div class="">
+                <x-forms.label>
+                    Name
+                </x-forms.label>
+                <x-forms.input type="text" class="w-full" wire:model="name">
+                </x-forms.input>
+                @error('name')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- code --}}
+            <div class="col-span-5 md:col-span-3 space-y-1">
+                <x-light-forms.label>
+                    Code
+                </x-light-forms.label>
+                <input type="text" wire:model="code" {{ $auto_generate_code ? 'disabled':'' }} class="w-full text-sm rounded-md shadow-sm border-gray-300 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:bg-gray-100">
+                <div class="ml-2 pt-1 flex">
+                    <x-forms.checkbox wire:model="auto_generate_code"></x-forms.checkbox>
+                    
+                    <x-light-forms.radio-box-label>
+                        auto generate code
+                    </x-light-forms.radio-box-label>
                 </div>
             </div>
 
