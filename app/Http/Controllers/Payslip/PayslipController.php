@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Http\Controllers\Payslip;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Repositories\Payslip\PayslipRepositoryInterface;
+
+class PayslipController extends Controller
+{
+    private $modelRepo;
+    public function __construct(
+        PayslipRepositoryInterface $modelRepo,
+    ) {
+        $this->modelRepo = $modelRepo;
+    }
+
+    public function show($id)
+    {
+        return $this->modelRepo->show($id);
+    }
+}
