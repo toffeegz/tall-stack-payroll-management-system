@@ -12,6 +12,8 @@ class Schedule extends Model
     use HasFactory;
     use SoftDeletes;
 
+    const DEFAULT = 1;
+
     public function users()
     {
         return $this->belongsToMany(User::class);
