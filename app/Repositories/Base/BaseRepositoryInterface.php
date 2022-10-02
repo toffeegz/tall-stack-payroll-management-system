@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Base;
 
-interface BaseRepository 
+interface BaseRepositoryInterface
 {
     public function items(array $search, array $relations);
     public function show(string $id, $with = []);
