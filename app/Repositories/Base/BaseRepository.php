@@ -55,6 +55,19 @@ abstract class BaseRepository implements BaseRepositoryInterface
         }
     }
 
+    public function updateOrCreate(array $references, array $params)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $this->model->updateOrCreate($references, $params);
+            DB::commit();
+            return $data;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
     public function secureDelete(string $id, array $relations)
     {
         DB::beginTransaction();
