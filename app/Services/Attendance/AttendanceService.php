@@ -37,12 +37,12 @@ class AttendanceService implements AttendanceServiceInterface
         $get_hours = $this->getHoursAttendance($date, $time_in, $time_out);
         $get_status = $this->getAttendanceStatus($date, $get_hours['late']);
 
-        $data = [
+        $result = $this->modelRepository->updateOrCreate([
             'user_id' => $user->id,
-            'user_name' => $user->formal_name(),
             'date' => $date,
-            'time_in' => $time_in,
-            'time_out' => $time_out,
+        ], [
+            'time_in' => Carbon::parse($time_in)->format('h:i'),
+            'time_out' => Carbon::parse($time_out)->format('h:i'),
             'regular' => $get_hours['regular'],
             'late' => $get_hours['late'],
             'undertime' => $get_hours['undertime'],
@@ -50,19 +50,16 @@ class AttendanceService implements AttendanceServiceInterface
             'night_differential' => $get_hours['night_differential'],
             'status' => $get_status,
             'project_id' => $project->id,
-        ];
+        ]);
 
-        $result = $this->modelRepository->updateOrCreate([
-            'user_id' => $user->id,
-            'date' => $date,
-        ], $data);
+        return $result;
     }
 
     public function getHoursAttendance($date_attendance, $time_in_attendance, $time_out_attendance)
     {
         $current_date = Carbon::now();
         $schedule = $this->scheduleRepository->show(Schedule::DEFAULT);
-
+        
         $late = 0;
         $undertime = 0;
         $overtime = 0;
