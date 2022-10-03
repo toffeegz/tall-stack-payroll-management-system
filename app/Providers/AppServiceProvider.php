@@ -5,7 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Attendance\AttendanceService;
 use App\Services\Attendance\AttendanceServiceInterface;
-
+use App\Services\PayrollPeriod\PayrollPeriodService;
+use App\Services\PayrollPeriod\PayrollPeriodServiceInterface;
+use App\Services\User\UserService;
+use App\Services\User\UserServiceInterface;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -16,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(AttendanceServiceInterface::class, AttendanceService::class);
+        $this->app->bind(PayrollPeriodServiceInterface::class, PayrollPeriodService::class);
+        $this->app->bind(UserServiceInterface::class, UserService::class);
     }
 
     /**
