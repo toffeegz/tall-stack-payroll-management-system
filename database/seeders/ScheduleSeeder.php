@@ -29,11 +29,13 @@ class ScheduleSeeder extends Seeder
     public function workingDays()
     {
         return [
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
+            'sunday' => false,
+            'monday' => true,
+            'tuesday' => true,
+            'wednesday' => true,
+            'thursday' => true,
+            'friday' => true,
+            'saturday' => false,
         ];
     }
 }
