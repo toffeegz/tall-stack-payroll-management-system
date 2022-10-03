@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
+use App\Services\Attendance\AttendanceServiceInterface;
+use App\Repositories\Attendance\AttendanceRepositoryInterface;
+
 use App\Imports\AttendanceImport;
 use App\Exports\Attendance\AttendanceExport;
 
@@ -67,8 +70,18 @@ class AttendanceComponent extends Component
     public $added_count = 0;
     public $updated_count = 0;
 
+    private AttendanceServiceInterface $modelService;
+    private AttendanceRepositoryInterface $modelRepository;
 
-    public function render()
+    public function boot(
+        AttendanceServiceInterface $service,
+        AttendanceRepositoryInterface $repository
+    ) {
+        $this->modelService = $service;
+        $this->modelRepository = $repository;
+    }
+
+    public function render() 
     {
         return view('livewire.attendance.attendance-component',[
             'attendances' => $this->attendances,
@@ -79,8 +92,9 @@ class AttendanceComponent extends Component
         ->layout('layouts.app',  ['menu' => 'attendance']);
     }
 
-    public function mount()
+    public function mount() 
     {
+        
         if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('timekeeper'))
         {
             $this->hide = false;
@@ -455,26 +469,14 @@ class AttendanceComponent extends Component
                 'time_out_add_attendance' => 'required',
             ]);
 
-            $get_hours = Self::getHoursAttendance($this->date_add_attendance, $this->time_in_add_attendance, $this->time_out_add_attendance);
-            $get_status = Self::getAttendanceStatus($this->date_add_attendance, $get_hours['late']);
+            $result = $this->modelService->store(
+                Auth::user()->id, 
+                $this->selected_project_add_attendance, 
+                $this->date_add_attendance,
+                $this->time_in_add_attendance,
+                $this->time_out_add_attendance
+            );
 
-            $data = [
-                'user_id' => Auth::user()->id,
-                'user_name' => Auth::user()->formal_name(),
-                'date' => $this->date_add_attendance,
-                'time_in' => $this->time_in_add_attendance,
-                'time_out' => $this->time_out_add_attendance,
-                'regular' => $get_hours['regular'],
-                'late' => $get_hours['late'],
-                'undertime' => $get_hours['undertime'],
-                'overtime' => $get_hours['overtime'],
-                'night_differential' => $get_hours['night_differential'],
-                'status' => $get_status,
-                'project_id' => $this->selected_project_add_attendance,
-            ];
-
-            Self::insertAttendance($data);
-            
         } 
         else 
         {
@@ -504,37 +506,15 @@ class AttendanceComponent extends Component
                 ]);
             }
 
-            
-
-            $get_hours = Self::getHoursAttendance($this->date_add_attendance, $this->time_in_add_attendance, $this->time_out_add_attendance);
-            $get_status = Self::getAttendanceStatus($this->date_add_attendance, $get_hours['late']);
-
             foreach($this->selected_users_add_attendance as $user_id)
             {
-                $user_name = "";
-                $user = User::find($user_id);
-                if($user)
-                {
-                    $user_name = $user->informal_name();
-                }
-                
-
-                $data = [
-                    'user_name' => $user_name,
-                    'user_id' => $user_id,
-                    'date' => $this->date_add_attendance,
-                    'time_in' => $this->time_in_add_attendance,
-                    'time_out' => $this->time_out_add_attendance,
-                    'regular' => $get_hours['regular'],
-                    'late' => $get_hours['late'],
-                    'undertime' => $get_hours['undertime'],
-                    'overtime' => $get_hours['overtime'],
-                    'night_differential' => $get_hours['night_differential'],
-                    'status' => $get_status,
-                    'project_id' => $this->selected_project_add_attendance,
-                ];
-    
-                Self::insertAttendance($data);
+                $result = $this->modelService->store(
+                    $user_id,
+                    $this->selected_project_add_attendance, 
+                    $this->date_add_attendance,
+                    $this->time_in_add_attendance,
+                    $this->time_out_add_attendance
+                );
             }
         }
         
