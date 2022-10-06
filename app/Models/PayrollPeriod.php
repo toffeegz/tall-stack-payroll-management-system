@@ -13,6 +13,9 @@ class PayrollPeriod extends Model
     use HasFactory;
     use SoftDeletes;
 
+    const FREQUENCY_BIMONTHLY = 1;
+    const FREQUENCY_WEEKLY = 2;
+
     protected $fillable = [
         'period_start',
         'period_end',
