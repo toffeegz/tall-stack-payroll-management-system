@@ -16,7 +16,15 @@ class FileService implements FileServiceInterface
 
     public function download($folderName, $fileName)
     {
-        $file = $this->basePath . $folderName . '/'. $fileName;
-        return Storage::download($file);
+        $path = $this->basePath . $folderName ."/" . $fileName;
+        return Storage::disk('local')->download($path);
+    }
+
+    public function upload($folderName, $fileName, $file)
+    {
+        $fileName = $fileName . "." . $file->getClientOriginalExtension();
+        $folderName = $this->basePath . $folderName;
+        $result = Storage::disk('local')->putFileAs($folderName, $file, $fileName);
+        return $result;
     }
 }
