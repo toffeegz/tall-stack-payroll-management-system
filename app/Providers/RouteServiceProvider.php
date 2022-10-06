@@ -51,6 +51,12 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware(['auth:sanctum'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/payroll/payroll.php'));
+
+            Route::prefix('/backend/api')
+                ->middleware(['api'])
+                // ->middleware(['auth:sanctum'])
+                ->namespace($this->namespace)
+                ->group(base_path('routes/attendance/attendance.php'));
         });
     }
 
