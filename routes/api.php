@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
-
+use App\Http\Controllers\Api\HelperController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,4 +27,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
         return $data;
     });
 });
+
+Route::get('/generate-payroll-period', [HelperController::class, 'generatePayrollPeriod']);
 
