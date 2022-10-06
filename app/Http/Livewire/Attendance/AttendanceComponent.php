@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 use App\Services\Attendance\AttendanceServiceInterface;
+use App\Services\Utils\FileServiceInterface;
 use App\Repositories\Attendance\AttendanceRepositoryInterface;
 
 use App\Imports\AttendanceImport;
@@ -71,13 +72,16 @@ class AttendanceComponent extends Component
     public $updated_count = 0;
 
     private AttendanceServiceInterface $modelService;
+    private FileServiceInterface $fileService;
     private AttendanceRepositoryInterface $modelRepository;
 
     public function boot(
         AttendanceServiceInterface $service,
+        FileServiceInterface $fileService,
         AttendanceRepositoryInterface $repository
     ) {
         $this->modelService = $service;
+        $this->fileService = $fileService;
         $this->modelRepository = $repository;
     }
 
@@ -181,10 +185,9 @@ class AttendanceComponent extends Component
 
     public function downloadTemplate()
     {
-        $path = storage_path().'/'.'app/public/files/attendance-template.xlsx';
-        // if (file_exists($path)) {
-            return Response::download($path);
-        // }
+        $folderName = 'templates';
+        $fileName = 'attendance-template.xlsx';
+        return $this->fileService->download($folderName, $fileName);
     }
 
     public function importPage($page)
