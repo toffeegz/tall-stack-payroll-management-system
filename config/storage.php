@@ -1,3 +1,4 @@
 <?php
-
-    $base_path = 'app/public/develop/';
+return [
+    'base_path' => 'develop/',
+];
