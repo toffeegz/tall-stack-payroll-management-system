@@ -51,6 +51,19 @@ class Helper
         return $dates;
     }
 
+    public static function getRangeMonthBetweenDates($period_start, $period_end)
+    {
+        $start_date = Carbon::createFromFormat('Y-m-d', $period_start);
+        $end_date = Carbon::createFromFormat('Y-m-d', $period_end);
+
+        $dateRange = CarbonPeriod::create($start_date, '1 month', $end_date);
+        $dates = [];
+        foreach ($dateRange as $date) {
+            $dates[] = $date;
+        }
+        return $dates;
+    }
+
     public static function isDateWorkingDay($date)
     {
         // return boolean
@@ -137,4 +150,6 @@ class Helper
         $data = $year . "-" . sprintf('%04d', $value);
         return $data;
     }
+
+    
 }
