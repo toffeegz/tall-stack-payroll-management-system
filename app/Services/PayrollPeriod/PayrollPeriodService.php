@@ -25,35 +25,40 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
         $year = $now->format('Y');
 
         if(PayrollPeriod::all()->count() == 0) {
-            $start_date = $now->copy()->subMonth();
+            $payout_date = $now->copy()->subMonth();
+            $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $now->copy()->subMonth()->format('Y-m-d') . ' 00:00:00');
             $cutoff_start = 1;
         } else {
             $previous_record = PayrollPeriod::latest('payout_date')->first();
-            $start_date = Carbon::parse($previous_record->payout_date)->addMonth();
+            $payout_date_previous_record = Carbon::parse($previous_record->payout_date);
+            if($previous_record->cutoff_order == 1) {
+                $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $payout_date_previous_record->copy()->endOfMonth()->format('Y-m-d') . ' 00:00:00');
+            } elseif($previous_record->cutoff_order == 2) {
+                $payout_date_previous_record = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($previous_record->payout_date)->format('Y-m-') . '01 00:00:00');
+                $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $payout_date_previous_record->copy()->addMonth()->format('Y-m-') . '15 00:00:00');
+            }
             $cutoff_start = $previous_record->cutoff_order == 2 ? 1:2;
         }
 
-        $datePeriods = Helper::getRangeMonthBetweenDates($start_date->format('Y-m-d'), $now->format('Y-m-d'));
-       
-        $first_compare_date = Carbon::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-') . '10 00:00:00');
-        $last_compare_date = Carbon::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-') . '25 00:00:00');
-        $is_first = $now >= $first_compare_date ? true:false; 
-        $is_last = $now >= $last_compare_date ? true:false; 
+        $cutoff_end = 0;
+        if($now->format('d') >= 25) {
+            $cutoff_end = 2;
+        } elseif($now->format('d') >= 10) {
+            $cutoff_end = 1;
+        }
 
-        $lists = [];
-        foreach($datePeriods as $date) {
-            echo $date->format('Y-m-d') . '/n';
-            if($date->format('Y-m') == $now->format('Y-m')) {
-                if($is_first == true) {
-                    $lists[] = $this->bmCutoff(1, $date->format('Y'), $date->format('m'));
-                } 
-                if($is_last == true) {
-                    $lists[] = $this->bmCutoff(2, $date->format('Y'), $date->format('m'));
-                }
-            } else {
-                $lists[] = $this->bmCutoff(1, $date->format('Y'), $date->format('m'));
-                $lists[] = $this->bmCutoff(2, $date->format('Y'), $date->format('m'));
-            }
+        $period_months = $this->bmMonthPeriods($payout_date, $now, $cutoff_start, $cutoff_end);
+        $period_dates = [];
+        foreach($period_months as $period)
+        {
+            $period_dates[] = $this->bmCutoff($period['cutoff_order'], $period['year'], $period['month']);
+        }
+        
+        
+        // store
+        foreach($period_dates as $period_date)
+        {
+            $this->store($period_date);
         }
         
     }
@@ -87,6 +92,46 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
         return $params;
     }
 
+    public function bmCutoffArray($cutoff_order, $date)
+    {
+        return [
+            'cutoff_order' => $cutoff_order,
+            'year' => $date->format('Y'),
+            'month' => $date->format('m'),
+        ];
+    }
+
+    public function bmMonthPeriods($payout_date, $now, $cutoff_start, $cutoff_end)
+    {
+        $period_dates = [];
+        $period_months = Helper::getRangeMonthBetweenDates($payout_date->format('Y-m-') . '01', $now->format('Y-m-d'));
+        
+        foreach($period_months as $month)
+        {
+            if($payout_date->format('Y-m') == $month->format('Y-m')) {
+                if($cutoff_start == 1) {
+                    $period_dates[] = $this->bmCutoffArray(1, $month);
+                    $period_dates[] = $this->bmCutoffArray(2, $month);
+                } elseif($cutoff_start == 2) {
+                    $period_dates[] = $this->bmCutoffArray(2, $month);
+                }
+                
+            } elseif($now->format('Y-m') == $month->format('Y-m')) {
+                if($cutoff_end == 1) {
+                    $period_dates[] = $this->bmCutoffArray(1, $month);
+                } elseif($cutoff_end == 2) {
+                    $period_dates[] = $this->bmCutoffArray(1, $month);
+                    $period_dates[] = $this->bmCutoffArray(2, $month);
+                }
+            } else {
+                $period_dates[] = $this->bmCutoffArray(1, $month);
+                $period_dates[] = $this->bmCutoffArray(2, $month);
+            }
+        }
+
+        return $period_dates;
+    }
+
     public function store(array $params)
     {
         return $this->modelRepository->updateOrCreate([
@@ -96,5 +141,4 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
             'period_end' => $params['period_end'],
         ], $params);
     }
-    
 }
