@@ -4,7 +4,11 @@ namespace App\Services\PayrollPeriod;
 
 use App\Repositories\PayrollPeriod\PayrollPeriodRepositoryInterface;
 use App\Services\PayrollPeriod\PayrollPeriodServiceInterface;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\GeneratedPayrollPeriod;
 use App\Models\PayrollPeriod;
+use App\Models\User;
+use App\Models\Role;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Helper;
@@ -58,7 +62,7 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
 
         
         $rows = 0;
-
+        $message = "Created Bi-Monthly Periods with a payout date:";
 
         if($cutoff_start != 0)
         {
@@ -82,7 +86,15 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
             foreach($period_dates as $period_date)
             {
                 $rows++;
-                $this->store($period_date);
+                // $this->store($period_date);
+                $message = $message . "," . $period_date['payout_date'];
+            }
+        }
+
+        if($rows > 0) {
+            $admins = Role::find(Role::ADMINISTRATOR_ID)->users;
+            foreach($admins as $admin) {
+                Mail::to($admin->email)->send(new GeneratedPayrollPeriod($message));
             }
         }
         return "PayrollPeriodService created bi-monthly:" . $rows;
