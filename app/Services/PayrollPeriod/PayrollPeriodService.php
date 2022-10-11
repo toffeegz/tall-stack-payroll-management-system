@@ -24,12 +24,9 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
         $now = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now()->format('Y-m-d') . ' 00:00:00');
         $year = $now->format('Y');
 
-        if(PayrollPeriod::all()->count() == 0) {
-            $payout_date = $now->copy()->subMonth();
-            $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $now->copy()->subMonth()->format('Y-m-d') . ' 00:00:00');
-            $cutoff_start = 1;
-        } else {
-            $previous_record = PayrollPeriod::latest('payout_date')->first();
+        $previous_record = PayrollPeriod::whereMonth('payout_date', Carbon::now()->month)->first();
+
+        if($previous_record) {
             $payout_date_previous_record = Carbon::parse($previous_record->payout_date);
             if($previous_record->cutoff_order == 1) {
                 $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $payout_date_previous_record->copy()->endOfMonth()->format('Y-m-d') . ' 00:00:00');
@@ -38,29 +35,57 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
                 $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $payout_date_previous_record->copy()->addMonth()->format('Y-m-') . '15 00:00:00');
             }
             $cutoff_start = $previous_record->cutoff_order == 2 ? 1:2;
+
+            $previous_record_period_end = Carbon::parse($previous_record->period_end);
+
+            if($previous_record_period_end->format('Y-m') == $now->format('Y-m')) {
+                if($previous_record->cutoff_order == 2) {
+                    $cutoff_start = 0;
+                } elseif($previous_record->cutoff_order == 1) {
+                    if($now->format('d') < 25) {
+                        $cutoff_start = 0;
+                    }
+                }
+            } elseif($previous_record_period_end > Carbon::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-') . $previous_record_period_end->format('d') . ' 00:00:00')) {
+                $cutoff_start = 0;
+            }
+
+        } else {
+            $payout_date = $now->copy()->subMonth();
+            $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $now->copy()->subMonth()->format('Y-m-d') . ' 00:00:00');
+            $cutoff_start = 1;
         }
 
-        $cutoff_end = 0;
-        if($now->format('d') >= 25) {
-            $cutoff_end = 2;
-        } elseif($now->format('d') >= 10) {
-            $cutoff_end = 1;
-        }
+        
+        $rows = 0;
 
-        $period_months = $this->bmMonthPeriods($payout_date, $now, $cutoff_start, $cutoff_end);
-        $period_dates = [];
-        foreach($period_months as $period)
+
+        if($cutoff_start != 0)
         {
-            $period_dates[] = $this->bmCutoff($period['cutoff_order'], $period['year'], $period['month']);
+            $cutoff_end = 0;
+            
+            if($now->format('d') >= 25) {
+                $cutoff_end = 2;
+            } elseif($now->format('d') >= 10) {
+                $cutoff_end = 1;
+            }
+
+            $period_months = $this->bmMonthPeriods($payout_date, $now, $cutoff_start, $cutoff_end);
+            $period_dates = [];
+            foreach($period_months as $period)
+            {
+                $period_dates[] = $this->bmCutoff($period['cutoff_order'], $period['year'], $period['month']);
+            }
+            
+            
+            // store
+            foreach($period_dates as $period_date)
+            {
+                $rows++;
+                $this->store($period_date);
+            }
         }
-        
-        
-        // store
-        foreach($period_dates as $period_date)
-        {
-            $this->store($period_date);
-        }
-        
+        return "PayrollPeriodService created bi-monthly:" . $rows;
     }
 
     public function bmCutoff($cutoff_order, $year, $month)
