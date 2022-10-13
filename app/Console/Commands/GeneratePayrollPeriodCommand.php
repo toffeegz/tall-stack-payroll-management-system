@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 use App\Jobs\PayrollPeriod\GenerateBiMonthlyJob;
 use App\Jobs\PayrollPeriod\GenerateWeeklyJob;
+use Illuminate\Support\Facades\Log;
 
 class GeneratePayrollPeriodCommand extends Command
 {
@@ -40,9 +41,11 @@ class GeneratePayrollPeriodCommand extends Command
      */
     public function handle()
     {
+        Log::info('Generate Payroll Period Command started');
         Bus::chain([
             new GenerateBiMonthlyJob,
             // new GenerateWeeklyJob,
         ])->dispatch();
+        Log::info('Generate Payroll Period Command ended');
     }
 }
