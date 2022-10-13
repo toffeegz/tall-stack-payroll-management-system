@@ -59,7 +59,10 @@ class GenerateBiMonthlyJob implements ShouldQueue
         $now = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now()->format('Y-m-d') . ' 00:00:00');
         $year = $now->format('Y');
 
-        $previous_record = PayrollPeriod::whereDate('period_end', '<', Carbon::now())->latest('period_end')->first();
+        $previous_record = PayrollPeriod::whereDate('period_end', '<', Carbon::now())
+        ->where('frequency_id', PayrollPeriod::FREQUENCY_BIMONTHLY)
+        ->latest('period_end')
+        ->first();
 
         if($previous_record) {
             $payout_date_previous_record = Carbon::parse($previous_record->payout_date);
