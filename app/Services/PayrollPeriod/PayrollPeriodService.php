@@ -12,6 +12,7 @@ use App\Models\Role;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Helper;
+use Illuminate\Support\Facades\Log;
 
 class PayrollPeriodService implements PayrollPeriodServiceInterface
 {
@@ -28,7 +29,7 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
         $now = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now()->format('Y-m-d') . ' 00:00:00');
         $year = $now->format('Y');
 
-        $previous_record = PayrollPeriod::whereMonth('payout_date', Carbon::now()->month)->first();
+        $previous_record = PayrollPeriod::whereDate('period_end', '<', Carbon::now())->latest('period_end')->first();
 
         if($previous_record) {
             $payout_date_previous_record = Carbon::parse($previous_record->payout_date);
@@ -53,7 +54,6 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
             } elseif($previous_record_period_end > Carbon::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-') . $previous_record_period_end->format('d') . ' 00:00:00')) {
                 $cutoff_start = 0;
             }
-
         } else {
             $payout_date = $now->copy()->subMonth();
             $payout_date = Carbon::createFromFormat('Y-m-d H:i:s', $now->copy()->subMonth()->format('Y-m-d') . ' 00:00:00');
@@ -86,7 +86,7 @@ class PayrollPeriodService implements PayrollPeriodServiceInterface
             foreach($period_dates as $period_date)
             {
                 $rows++;
-                // $this->store($period_date);
+                $this->store($period_date);
                 $message = $message . "," . $period_date['payout_date'];
             }
         }
