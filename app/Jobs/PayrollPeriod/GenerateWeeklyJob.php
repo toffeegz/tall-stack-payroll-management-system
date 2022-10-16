@@ -83,15 +83,19 @@ class GenerateWeeklyJob implements ShouldQueue
         $last_period = $initial_last_period->copy()->subDays(3);
 
         $this->weeklyPeriod($first_period, $last_period);
+       
     }
 
     public function weeklyPeriod($first_period, $last_period)
     {
+        $payout_dates = [];
+        $rows = 0;
         while($first_period < $last_period) {
+            $rows++;
             $payout_date = $first_period->copy()->addWeek()->addDays(8);
             $period_start = $first_period->copy()->addWeek();
             $period_end = $first_period->copy()->addWeek()->addDays(6);
-            $this->modelRepository->firstOrCreate([
+            $this->modelRepository->updateOrCreate([
                 'period_start' => $period_start->format('Y-m-d'),
                 'period_end' => $period_end->format('Y-m-d'),
                 'payout_date' => $payout_date->format('Y-m-d'),
@@ -100,7 +104,13 @@ class GenerateWeeklyJob implements ShouldQueue
                 'year' => $payout_date->format('Y'),
                 'cutoff_order' => $period_end->weekNumberInMonth,
             ]);
+            $payout_dates[] = $payout_date->format('Y-m-d');
             $first_period->addWeek();
         }
+
+        if($rows > 0) {
+            $this->modelService->mailToAdmin(PayrollPeriod::FREQUENCY_WEEKLY, $payout_dates);
+        }
+        
     }
 }

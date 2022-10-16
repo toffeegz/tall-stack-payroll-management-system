@@ -44,7 +44,7 @@ class GeneratePayrollPeriodCommand extends Command
         Log::info('Generate Payroll Period Command started');
         Bus::chain([
             new GenerateBiMonthlyJob,
-            // new GenerateWeeklyJob,
+            new GenerateWeeklyJob,
         ])->dispatch();
         Log::info('Generate Payroll Period Command ended');
     }

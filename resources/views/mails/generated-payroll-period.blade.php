@@ -80,6 +80,13 @@
             max-width: 100%;
         }
 
+        .dates {
+            font-size: 14px;
+            line-height: .5em;
+            color:rgb(9, 73, 133);
+            text-align: left;
+        }
+
         /* Layout */
 
         .wrapper {
@@ -263,12 +270,11 @@
             border-right: 18px solid #e53e3e;
             border-top: 8px solid #e53e3e;
         }
-
         /* Utilities */
-
         .break-all {
             word-break: break-all;
         }
+        
     </style>
 </head>
 
@@ -297,6 +303,9 @@
                             <tr>
                                 <td class="content-cell">
                                     <p>{{ $message_body }}</p>
+                                    @foreach($dates as $date)
+                                        <p class="dates">{{ $date }}</p></br>
+                                    @endforeach
                                 </td>
                             </tr>
                             <tr>

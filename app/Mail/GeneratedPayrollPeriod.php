@@ -17,9 +17,11 @@ class GeneratedPayrollPeriod extends Mailable
      * @return void
      */
     private $message;
-    public function __construct($message)
+    private $dates;
+    public function __construct($message, $dates)
     {
         $this->message = $message;
+        $this->dates = $dates;
     }
 
     /**
@@ -31,6 +33,6 @@ class GeneratedPayrollPeriod extends Mailable
     {
         return $this->subject("Generated Payroll Period")
             ->view('mails.generated-payroll-period')
-            ->with(['message_body' => $this->message]);
+            ->with(['message_body' => $this->message, 'dates' => $this->dates]);
     }
 }

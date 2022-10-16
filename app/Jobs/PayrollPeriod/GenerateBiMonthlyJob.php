@@ -58,6 +58,7 @@ class GenerateBiMonthlyJob implements ShouldQueue
     {
         $now = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now()->format('Y-m-d') . ' 00:00:00');
         $year = $now->format('Y');
+        $payout_dates = [];
 
         $previous_record = PayrollPeriod::whereDate('period_end', '<', Carbon::now())
         ->where('frequency_id', PayrollPeriod::FREQUENCY_BIMONTHLY)
@@ -126,16 +127,12 @@ class GenerateBiMonthlyJob implements ShouldQueue
                     'period_end' => $params['period_end'],
                 ];
                 $this->modelRepository->updateOrCreate($reference_params, $params);
-                $message = $message . "," . $params['payout_date'];
+                $payout_dates[] = $params['payout_date'];
             }
         }
 
         if($rows > 0) {
-            $admins = Role::find(Role::ADMINISTRATOR_ID)->users;
-            foreach($admins as $admin) {
-                Mail::to($admin->email)->send(new GeneratedPayrollPeriod($message));
-            }
-            Log::info('Mail has been sent successfully to admins');
+            $this->modelService->mailToAdmin(PayrollPeriod::FREQUENCY_BIMONTHLY, $payout_dates);
         }
         return "Created Bi-Monthly:" . $rows;
     }
@@ -164,7 +161,6 @@ class GenerateBiMonthlyJob implements ShouldQueue
             'period_end' => $period_end->format('Y-m-d'),
             'payout_date' => $payout_date->format('Y-m-d'),
             'cutoff_order' => $cutoff_order,
-            'is_payroll_generated' => false,
         ];
         return $params;
     }
