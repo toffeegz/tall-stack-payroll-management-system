@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('generate:payroll-period')->dailyAt('19:20');
+        // generate payroll period everyday at 10 am
+        $schedule->command('generate:payroll-period')->dailyAt('10:00');
     }
 
     /**
