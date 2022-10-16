@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('period_end')->nullable();
             $table->date('payout_date')->nullable();
             $table->tinyInteger('cutoff_order')->nullable()->unsigned();
-            $table->boolean('is_payroll_generated')->nullable();
+            $table->boolean('is_payroll_generated')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
