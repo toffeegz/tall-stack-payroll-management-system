@@ -50,49 +50,57 @@ class GenerateWeeklyJob implements ShouldQueue
         $this->modelRepository = $modelRepository;
         Log::info('Generate Weekly Payroll Period started');
         $results = $this->generateWeekly();
-        Log::info($results);
         Log::info('Generate Weekly Payroll Period ended');
     }
 
+    // WEEKLY
+    // period start at friday
+    // period ends at thursday
+    // payout date at saturday
+    
     public function generateWeekly()
     {
-        $now = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now()->format('Y-m-d') . ' 00:00:00');
-        $year = $now->format('Y');
+        $today = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now()->format('Y-m-d') . ' 00:00:00');
 
-        $previous_record = PayrollPeriod::whereDate('period_end', '<', Carbon::now())
+        $previous_record = PayrollPeriod::whereDate('period_end', '<', $today)
         ->where('frequency_id', PayrollPeriod::FREQUENCY_WEEKLY)
         ->latest('period_end')
         ->first();
 
-        $today = new Carbon();
-        if($today->dayOfWeek == Carbon::THURSDAY || $today->dayOfWeek == Carbon::FRIDAY || $today->dayOfWeek == Carbon::SATURDAY)
-        {
-            $last_period_start = Carbon::FRIDAY;
-        } else {
-            $last_period_start = Carbon::FRIDAY;
-            $last_period_start = $last_period_start->copy()->subWeek();
-        }
-
-        $continue = true;
         if($previous_record) {
-            $cutoff_start = $previous_record->cutoff_order == 2 ? 1:2;
-            $first_period_start = Carbon::parse($previous_record->period_start)->next('FRIDAY'); 
-            if($first_period_start->copy()->addWeek() == $last_period_start || $first_period_start > $today) {
-                $continue = false;
-            }
+            $initial_first_period = Carbon::parse($previous_record->period_start)->addWeek()->startOfWeek();
         } else {
-            $first_period_start = $now->copy()->subMonth();
-            $first_period_start = new Carbon('first FRIDAY of ' . $first_period_start->format('F') . ' ' . $first_period_start->format('Y'));
+            $initial_first_period = $today->copy()->subMonth()->startOfWeek();
         }
 
-        if($continue == true)
-        {
-            Log::info('continue nmn daw');
-            
-            Log::info('Date From:' . $first_period_start->format('Y-m-d'));
-            Log::info('Date To:' . $last_period_start->format('Y-m-d'));
+        if($today->dayOfWeek == Carbon::THURSDAY || $today->dayOfWeek == Carbon::FRIDAY || $today->dayOfWeek == Carbon::SATURDAY || $today->dayOfWeek == Carbon::SUNDAY){
+            $initial_last_period = $today->copy()->startOfWeek();
+        } else {
+            $initial_last_period = $today->copy()->subWeek()->startOfWeek();
         }
 
-        
+        $first_period = $initial_first_period->copy()->subDays(3);
+        $last_period = $initial_last_period->copy()->subDays(3);
+
+        $this->weeklyPeriod($first_period, $last_period);
+    }
+
+    public function weeklyPeriod($first_period, $last_period)
+    {
+        while($first_period < $last_period) {
+            $payout_date = $first_period->copy()->addWeek()->addDays(8);
+            $period_start = $first_period->copy()->addWeek();
+            $period_end = $first_period->copy()->addWeek()->addDays(6);
+            $this->modelRepository->firstOrCreate([
+                'period_start' => $period_start->format('Y-m-d'),
+                'period_end' => $period_end->format('Y-m-d'),
+                'payout_date' => $payout_date->format('Y-m-d'),
+            ], [
+                'frequency_id' => PayrollPeriod::FREQUENCY_WEEKLY,
+                'year' => $payout_date->format('Y'),
+                'cutoff_order' => $period_end->weekNumberInMonth,
+            ]);
+            $first_period->addWeek();
+        }
     }
 }
