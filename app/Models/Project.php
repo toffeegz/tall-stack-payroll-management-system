@@ -16,6 +16,10 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
+    const ONGOING = 1;
+    const FINISHED = 2;
+    const UPCOMING = 3;
+
     public function loans()
     {
         return $this->hasMany(Loan::class);
