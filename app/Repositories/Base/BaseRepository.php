@@ -68,6 +68,19 @@ abstract class BaseRepository implements BaseRepositoryInterface
         }
     }
 
+    public function firstOrCreate(array $references, array $params)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $this->model->firstOrCreate($references, $params);
+            DB::commit();
+            return $data;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
     public function secureDelete(string $id, array $relations)
     {
         DB::beginTransaction();
