@@ -7,6 +7,8 @@ use App\Services\Attendance\AttendanceService;
 use App\Services\Attendance\AttendanceServiceInterface;
 use App\Services\PayrollPeriod\PayrollPeriodService;
 use App\Services\PayrollPeriod\PayrollPeriodServiceInterface;
+use App\Services\Project\ProjectService;
+use App\Services\Project\ProjectServiceInterface;
 use App\Services\User\UserService;
 use App\Services\User\UserServiceInterface;
 use App\Services\Utils\FileService;
@@ -22,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(AttendanceServiceInterface::class, AttendanceService::class);
         $this->app->bind(PayrollPeriodServiceInterface::class, PayrollPeriodService::class);
+        $this->app->bind(ProjectServiceInterface::class, ProjectService::class);
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(FileServiceInterface::class, FileService::class);
     }
