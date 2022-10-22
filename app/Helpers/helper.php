@@ -151,5 +151,11 @@ class Helper
         return $data;
     }
 
+    public static function randomWithChance($chance)
+    {
+        // chance in percentage
+        $random = round(mt_rand(1, (1 / $chance) * 100));
+        return $random == 1 ? true:false;
+    }
     
 }
