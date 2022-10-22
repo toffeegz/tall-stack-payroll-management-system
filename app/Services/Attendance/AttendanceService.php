@@ -31,11 +31,20 @@ class AttendanceService implements AttendanceServiceInterface
 
     public function store($user_id, $project_id, $date, $time_in, $time_out)
     {
+        $is_admin = false;
+        // if(Auth::user()->hasRole('administrator')) {
+        //     $is_admin = true;
+        // }
+
         $user = $this->userRepository->show($user_id);
-        $project = $this->projectRepository->show($project_id);
+        $selected_project_id = null;
+        if($project_id) {
+            $project = $this->projectRepository->show($project_id);
+            $selected_project_id = $project->id;
+        }
 
         $get_hours = $this->getHoursAttendance($date, $time_in, $time_out);
-        $get_status = $this->getAttendanceStatus($date, $get_hours['late']);
+        $get_status = $this->getAttendanceStatus($date, $get_hours['late'], $is_admin);
 
         $result = $this->modelRepository->updateOrCreate([
             'user_id' => $user->id,
@@ -49,7 +58,7 @@ class AttendanceService implements AttendanceServiceInterface
             'overtime' => $get_hours['overtime'],
             'night_differential' => $get_hours['night_differential'],
             'status' => $get_status,
-            'project_id' => $project->id,
+            'project_id' => $selected_project_id,
         ]);
 
         return $result;
@@ -184,12 +193,12 @@ class AttendanceService implements AttendanceServiceInterface
         ];
     }
 
-    public function getAttendanceStatus($date, $late_hours)
+    public function getAttendanceStatus($date, $late_hours, $is_admin)
     {
         $date = Carbon::parse($date);
         $is_date_working_day = Helper::isDateWorkingDay($date);
         $status = 0;
-        if(Auth::user()->hasRole('administrator'))
+        if($is_admin == true)
         {
             
             if($is_date_working_day == true)
