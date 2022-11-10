@@ -108,8 +108,7 @@ Gezryl Beato Gallego (toffeegz) is a Full Stack Developer based in Philippines.
 - Bootstrap
 - JQuery and Ajax
 
+## Visit my Profile
 - [LinkedIn](https://www.linkedin.com/in/gezryl-clariz-beato-078312139/)
 - [Github](https://github.com/toffeegz)
 - [Facebook](https://www.facebook.com/toffeegz/)
-- [Instagram](https://www.instagram.com/toffeegz_/)
-- [Twitter](https://twitter.com/toffeegz_)
