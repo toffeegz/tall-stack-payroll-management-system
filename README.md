@@ -39,6 +39,9 @@ Specifically, it aims to include the following modules:
 4.	short-term loan report, and
 5.	employee details report.
 
+## Features
+- Auto-generate of Payroll Period Bi-Monthly and Weekly with send email list of generated payout dates to Administrator.
+- Email payslip to employee
 
 ## Installation
 
