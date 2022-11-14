@@ -29,7 +29,7 @@ class CreateAttendancesTable extends Migration
             $table->string('task')->nullable();
             $table->unsignedInteger('category')->nullable();
             $table->unsignedInteger('sub_category')->nullable();
-            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('created_by')->nullable()->comment('NULL = generated');
             $table->dateTime('date_approved')->nullable();
             $table->timestamps();
             $table->softDeletes();
