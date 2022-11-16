@@ -13,6 +13,7 @@ use App\Models\Attendance;
 use Carbon\Carbon;
 
 use Livewire\WithPagination;
+use App\Services\Payslip\PayslipServiceInterface;
 
 
 class PayrollComponent extends Component
@@ -26,6 +27,13 @@ class PayrollComponent extends Component
     public $search;
 
     public $total_pending_attendance;
+
+    private $payslipService;
+    public function boot(
+        PayslipServiceInterface $payslipService,
+    ) {
+        $this->payslipService = $payslipService;
+    }
 
     public function mount()
     {
@@ -98,7 +106,7 @@ class PayrollComponent extends Component
     public function downloadPayslip($value)
     {
         $payslip = Payslip::find($value);
-        $data = PayslipClass::payslipViewDataVariable($payslip);
+        $data = $this->payslipService->payslipViewDataVariable($payslip);
 
         $filename = Carbon::parse($payslip->payout_date)->format('M d Y') . ' Payslip.xlsx';
         return Excel::download(new UserPayslipExport($data), $filename);

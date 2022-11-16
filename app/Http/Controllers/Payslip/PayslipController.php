@@ -17,6 +17,7 @@ class PayslipController extends Controller
 
     public function show($id)
     {
-        return $this->modelRepo->show($id);
+        $result = $this->modelRepo->show($id);
+        return view("blades.payslip.payslip", ["data" => $result]);
     }
 }

@@ -11,6 +11,7 @@ use App\Exports\Report\UserPayslipExport;
 
 use App\Models\Payslip;
 use App\Models\PayrollPeriod;
+use App\Services\Payslip\PayslipServiceInterface;
 
 use Carbon\Carbon;
 
@@ -54,6 +55,13 @@ class PayslipComponent extends Component
     public $undertime_hours = null;
 
     public $deductions = null;
+
+    private $payslipService;
+    public function boot(
+        PayslipServiceInterface $payslipService,
+    ) {
+        $this->payslipService = $payslipService;
+    }
 
     public function mount()
     {
@@ -152,7 +160,7 @@ class PayslipComponent extends Component
     public function downloadPayslip()
     {
         
-        $data = PayslipClass::payslipViewDataVariable($this->selected_payslip);
+        $data = $this->payslipService->payslipViewDataVariable($this->selected_payslip);
         $filename = Carbon::parse($this->selected_payslip->payout_date)->format('M d Y') . ' Payslip.xlsx';
         return Excel::download(new UserPayslipExport($data), $filename);
     }
