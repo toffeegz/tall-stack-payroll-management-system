@@ -34,7 +34,7 @@ class UserFactory extends Factory
             'is_paid_holidays' => rand(0,1),
             'is_tax_exempted' => false,
             'system_access' => true,
-            'frequency_id' => rand(1,2),
+            // 'frequency_id' => rand(1,2),
             'profile_photo_path' => 'sample.jpg',
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
