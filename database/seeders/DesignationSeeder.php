@@ -23,6 +23,20 @@ class DesignationSeeder extends Seeder
                 'details' => 'Oversee the planning and delivery of construction projects. They ensure that work is completed on time and within budget.',
             ],
             [
+                'id' => 2,
+                'designation_name' => 'Human Resource Manager',
+                'department_id' => 2,
+                'daily_rate' => 2000,
+                'details' => 'They oversee the recruiting, interviewing, and hiring of new staff; consult with top executives on strategic planning; and serve as a link between an organizations management and its employees.',
+            ],
+            [
+                'id' => 3,
+                'designation_name' => 'Full Stack Developer',
+                'department_id' => 3,
+                'daily_rate' => 685.8,
+                'details' => 'they provide an end-to-end service, and can be involved in projects that involve databases and building user-facing websites',
+            ],
+            [
                 'id' => 5,
                 'designation_name' => 'Laborer',
                 'department_id' => 1,
@@ -44,18 +58,18 @@ class DesignationSeeder extends Seeder
                 'details' => 'take the lead on construction projects, holding daily meetings with employees, reminding them of safety protocols and resolving problems and conflicts that may arise.',
             ],
             [
-                'id' => 2,
-                'designation_name' => 'Human Resource Manager',
+                'id' => 12,
+                'designation_name' => 'Assistang Human Resource Manager',
                 'department_id' => 2,
-                'daily_rate' => 2000,
+                'daily_rate' => 980,
                 'details' => 'They oversee the recruiting, interviewing, and hiring of new staff; consult with top executives on strategic planning; and serve as a link between an organizations management and its employees.',
             ],
             [
-                'id' => 3,
-                'designation_name' => 'Full Stack Developer',
-                'department_id' => 3,
-                'daily_rate' => 685.8,
-                'details' => 'they provide an end-to-end service, and can be involved in projects that involve databases and building user-facing websites',
+                'id' => 13,
+                'designation_name' => 'Account Manager',
+                'department_id' => 2,
+                'daily_rate' => 1120,
+                'details' => 'They oversee the recruiting, interviewing, and hiring of new staff; consult with top executives on strategic planning; and serve as a link between an organizations management and its employees.',
             ],
         ];
 

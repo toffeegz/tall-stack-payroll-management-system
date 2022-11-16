@@ -21,12 +21,12 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user = [
-            'email' => 'admin@app.com',
+            'email' => 'gezrylclarizg@gmail.com',
             'password' => Hash::make('password'),
             'last_name' => 'Gallego',
             'first_name' => 'Gezryl',
             'middle_name' => 'Beato',
-            'code' => '2022-0001',
+            'code' => '2022-0003',
             'phone_number' => '0975935907',
             'birth_date' => '1999-05-27',
             'birth_place' => 'Binan, Laguna',
@@ -42,29 +42,6 @@ class UserSeeder extends Seeder
             'is_tax_exempted' => false,
             'frequency_id' => 1,
         ];
-
-        // $user = [
-        //     'email' => 'gabriellegallego@gmail.com',
-        //     'password' => Hash::make('password'),
-        //     'last_name' => 'Testing',
-        //     'first_name' => 'Test',
-        //     'middle_name' => 'Test',
-        //     'code' => '2022-0003',
-        //     'phone_number' => '0975935907',
-        //     'birth_date' => '1999-05-27',
-        //     'birth_place' => 'Binan, Laguna',
-        //     'fathers_name' => 'Fernando Gallego',
-        //     'mothers_name' => 'Rosalinda Beato',
-        //     'gender' => 1,
-        //     'marital_status' => 1,
-        //     'nationality' => 'Filipino',
-        //     'address' => 'Gma, Cavite',
-        //     'employment_status' => 1,
-        //     'is_active' => true,
-        //     'is_paid_holidays' => true,
-        //     'is_tax_exempted' => false,
-        //     'frequency_id' => 1,
-        // ];
 
         $user = User::create($user);
         $user->attachRole(Role::ADMINISTRATOR_ID);
