@@ -12,10 +12,13 @@ use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Project\ProjectRepositoryInterface;
 use App\Repositories\Schedule\ScheduleRepositoryInterface;
 use App\Models\Schedule;
+use App\Models\PayrollPeriod;
+use App\Models\User;
 
 class AttendanceService implements AttendanceServiceInterface
 {
     private AttendanceRepositoryInterface $modelRepository;
+    public $helper;
 
     public function __construct(
         AttendanceRepositoryInterface $modelRepository,
@@ -27,16 +30,17 @@ class AttendanceService implements AttendanceServiceInterface
         $this->userRepository = $userRepository;
         $this->projectRepository = $projectRepository;
         $this->scheduleRepository = $scheduleRepository;
+        $this->helper = new Helper;
     }
 
     public function store($user_id, $project_id, $date, $time_in, $time_out)
     {
-        $is_admin = false;
-        if(Auth::user()->hasRole('administrator')) {
-            $is_admin = true;
-        }
+        // $is_admin = false;
+        // if(Auth::user()->hasRole('administrator')) {
+        //     $is_admin = true;
+        // }
         // is_admin true if data generated
-        // $is_admin = true;
+        $is_admin = true;
 
         $user = $this->userRepository->show($user_id);
         $selected_project_id = null;
@@ -222,5 +226,82 @@ class AttendanceService implements AttendanceServiceInterface
             $status = 4; // PENDING 
         }
         return $status;
+    }
+
+
+
+    // DATA GENERATOR
+    public function generateData($user_counts, $payroll_period_counts, $frequency)
+    {
+        // schedule
+        $default_schedule = Schedule::find(Schedule::DEFAULT);
+        $time_in = $default_schedule->time_in;
+        $time_out = $default_schedule->time_out;
+        
+        // users
+        $users = User::where('frequency_id', $frequency)
+        ->whereNull('deleted_at')
+        ->take($user_counts)
+        ->get();
+
+        // payroll periods
+        $payroll_periods = PayrollPeriod::where('frequency_id', $frequency)
+        ->whereNull('deleted_at')
+        ->where('is_payroll_generated', false)
+        ->latest('payout_date')
+        ->take($payroll_period_counts)
+        ->get();
+
+
+        $working_days = [];
+        foreach($payroll_periods as $payroll_period) {
+            $period_start = $payroll_period->period_start;
+            $period_end = $payroll_period->period_end;
+
+            $date_ranges = $this->helper->getRangeBetweenDatesStr($period_start, $period_end);
+            
+            foreach($date_ranges as $date) {
+                $is_working_day = $this->helper->isDateWorkingDay(Carbon::parse($date));
+
+                foreach($users as $user)
+                {
+                    $time_in = $default_schedule->time_in;
+                    $time_out = $default_schedule->time_out;
+
+                    $absent_chance = $this->helper->randomWithChance($chance = 3);
+                    $late_chance = $this->helper->randomWithChance($chance = 5);
+                    $overtime_chance = $this->helper->randomWithChance($chance = 40);
+                    $dayoff_ot_chance = $this->helper->randomWithChance($chance = 10);
+
+                    $is_present = true;
+            
+                    if($is_working_day == true) {
+                        if($absent_chance == true) {
+                            $is_present = false;
+                        } else {
+                            if($late_chance == true) {
+                                $late_minutes = rand(5,75);
+                                $time_in = Carbon::createFromFormat('H:i:s', $time_in)->addMinutes($late_minutes)->format('H:i:s');
+                            }
+                            if($overtime_chance == true) {
+                                $overtime_minutes = rand(5, 120);
+                                $time_out = Carbon::createFromFormat('H:i:s', $time_out)->addMinutes($overtime_minutes)->format('H:i:s');
+                            }
+                        }
+                    } else {
+                        $is_present = false;
+                        if($dayoff_ot_chance == true) {
+                            $is_present = true;
+                        }
+                    }
+
+                    if($is_present == true) {
+                        $result = $this->store($user->id, null, $date, $time_in, $time_out);
+                    }
+                }
+
+            }
+        }
+
     }
 }
