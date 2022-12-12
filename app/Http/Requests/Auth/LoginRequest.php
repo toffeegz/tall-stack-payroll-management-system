@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class LoginRequest extends FormRequest
 {
@@ -45,9 +47,28 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $user = User::where('email', request()->get('email'))->whereNull('deleted_at')->get()->first();
+
+        if(!$user) {
             RateLimiter::hit($this->throttleKey());
 
+            throw ValidationException::withMessages([
+                'email' => "No email found.",
+            ]);
+        } elseif($user && $user->system_access == false) {
+            RateLimiter::hit($this->throttleKey());
+            throw ValidationException::withMessages([
+                'system_access_failed' => trans('auth.system_access_failed'),
+            ]);
+        }
+        // elseif(Hash::check(request()->get('password'), $user->password)) {
+        //     RateLimiter::hit($this->throttleKey());
+        //     throw ValidationException::withMessages([
+        //         'password' => trans('auth.password'),
+        //     ]);
+        // } 
+        elseif (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);

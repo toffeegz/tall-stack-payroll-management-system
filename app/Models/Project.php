@@ -27,7 +27,7 @@ class Project extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'project_user');
+        return $this->belongsToMany(User::class, 'project_user')->withTimestamps();
     }
 
     public function usersImage($count)
@@ -42,7 +42,7 @@ class Project extends Model
 
     public function timekeepers()
     {
-        return $this->belongsToMany(Timekeeper::class, 'timekeepers', 'project_id', 'id');
+        return $this->belongsToMany(Timekeeper::class, 'timekeepers', 'project_id', 'id')->withTimestamps();
     }
 
     public function ongoing()

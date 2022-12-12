@@ -27,9 +27,9 @@ class EmploymentRequest extends FormRequest
             'employment_status' => ['required', 'numeric'],
             'hired_date' => ['required', 'date'],
             'designation_id' => ['required', 'numeric'],
-            'sss_number' => ['required'],
-            'hdmf_number' => ['required'],
-            'phic_number' => ['required'],
+            // 'sss_number' => ['required'],
+            // 'hdmf_number' => ['required'],
+            // 'phic_number' => ['required'],
             'is_tax_exempted' => ['required', 'boolean'],
             'is_paid_holidays' => ['required', 'boolean'],
         ];

@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             'last_name' => 'Gallego',
             'first_name' => 'Gezryl',
             'middle_name' => 'Beato',
-            'code' => '2022-0003',
+            'code' => '2022-0001',
             'phone_number' => '0975935907',
             'birth_date' => '1999-05-27',
             'birth_place' => 'Binan, Laguna',

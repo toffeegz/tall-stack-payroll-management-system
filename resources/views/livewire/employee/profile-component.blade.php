@@ -50,13 +50,13 @@
                     <hr class="my-6">
 
                     <div>
-                        <div class="flex justify-between mb-2">
+                        {{-- <div class="flex justify-between mb-2">
                             <div class="text-sm font-semibold text-stone-500">
                                 <i class="fa-solid fa-user-check mr-2"></i>
                                 Active
                             </div>
                             @livewire('components.toggle-button', ['model' => $user, 'field' => 'is_active'])
-                        </div>
+                        </div> --}}
                         <div class="flex justify-between mb-2">
                             <div class="text-sm font-semibold text-stone-500">
                                 <i class="fa-solid fa-desktop mr-2"></i>
@@ -358,7 +358,7 @@
                                 {{-- employment_status --}}
                                 <div class="col-span-1 space-y-1">
                                     <x-light-forms.label>
-                                        SSS Number<span class="text-red-400 ml-1">*</span>
+                                        SSS Number {{--<span class="text-red-400 ml-1">*</span>--}}
                                     </x-light-forms.label>
                                     <x-light-forms.input type="text" wire:model="sss_number"></x-light-forms.input>
                                 </div>
@@ -366,7 +366,7 @@
                                 {{-- hdmf_number --}}
                                 <div class="col-span-1 space-y-1">
                                     <x-light-forms.label>
-                                        HDMF Number<span class="text-red-400 ml-1">*</span>
+                                        HDMF Number {{--<span class="text-red-400 ml-1">*</span>--}}
                                     </x-light-forms.label>
                                     <x-light-forms.input type="text" wire:model="hdmf_number"></x-light-forms.input>
                                 </div>
@@ -374,7 +374,7 @@
                                 {{-- phic_number --}}
                                 <div class="col-span-1 space-y-1">
                                     <x-light-forms.label>
-                                        PHIC Number<span class="text-red-400 ml-1">*</span>
+                                        PHIC Number {{--<span class="text-red-400 ml-1">*</span>--}}
                                     </x-light-forms.label>
                                     <x-light-forms.input type="text" wire:model="phic_number"></x-light-forms.input>
                                 </div>

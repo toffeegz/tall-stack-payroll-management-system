@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'system_access'])->group(function () {
     Route::group(['namespace' => 'App\Http\Livewire'], function() {
         Route::get('/', function () {
             if(Auth::user()->hasRole('administrator')) {

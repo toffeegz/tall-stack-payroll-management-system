@@ -22,7 +22,7 @@ class ProjectComponent extends Component
 
     public $search = "";
     public $search_user = "";
-    public $perPage = 5;
+    public $perPage = 10;
 
     public $profile_photo_path;
     public $name;

@@ -45,14 +45,14 @@ class AttendanceComponent extends Component
     public $next_page_attendance = false;
 
     // add attendance modal
-    public array $selected_users_add_attendance = [];
+    public $selected_users_add_attendance = [];
     public $selected_project_add_attendance = "";
     public $date_add_attendance;
     public $time_in_add_attendance;
     public $time_out_add_attendance;
 
     // approve attendance modal
-    public array $selected_attendance_approve_attendance = [];
+    public $selected_attendance_approve_attendance = [];
     public $search_name_or_date_approve_attendance = "";
     public $selected_status_approve_attendance = 1;
 
@@ -67,7 +67,7 @@ class AttendanceComponent extends Component
 
     public $hide = true;
     
-    public array $logs = [];
+    public $logs = [];
     public $added_count = 0;
     public $updated_count = 0;
 
@@ -217,7 +217,7 @@ class AttendanceComponent extends Component
             $time_out = Date::excelToDateTimeObject($value['time_out']);
             $user_code = $value['employee_id'];
             $project_code = $value['project_code'];
-            $task = $value['task'];
+            // $task = $value['task'];
 
             $date = Carbon::parse($date);
 
@@ -376,7 +376,7 @@ class AttendanceComponent extends Component
         $data = collect([]);
         if(Auth::user()->hasRole('administrator'))
         {
-            $data = User::where('is_active', true)
+            $data = User::where('deleted_at', true)
             ->where(function ($query) use ($search) {
                 return $query->where('last_name', 'like', '%' . $search . '%')
                 ->orWhere('first_name', 'like', '%' . $search . '%')
@@ -386,14 +386,14 @@ class AttendanceComponent extends Component
         }
         elseif(Auth::user()->hasRole('timekeeper'))
         {
-            $project = Self::getTimekeepersLatestProject();
+            $project = Auth::user()->project();
 
             if($project)
             {
                 $user_ids = $project->users->pluck('id');
 
-                $data = User::where('is_active', true)
-                ->whereIn('id', [$user_ids])
+                $data = User::where('deleted_at', true)
+                ->whereIn('id', $user_ids)
                 ->where(function ($query) use ($search) {
                     return $query->where('last_name', 'like', '%' . $search . '%')
                     ->orWhere('first_name', 'like', '%' . $search . '%')

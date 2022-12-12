@@ -28,6 +28,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->model->with($with)->withTrashed()->findOrFail($id);
     }
 
+    public function showWithoutTrashed(string $id, $with = [])
+    {
+        return $this->model->with($with)->findOrFail($id);
+    }
+
     public function update(array $params, string $id)
     {
         DB::beginTransaction();

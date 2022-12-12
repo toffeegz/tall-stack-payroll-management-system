@@ -139,7 +139,6 @@ class NewEmployeeFormComponent extends Component
             $this->hdmf_number = $data['hdmf_number'];
             $this->auto_generate_code = $data['auto_generate_code'];
             $this->selected_designation = $data['selected_designation'];
-
             $designation = Designation::find($this->selected_designation);
             $this->department_id = $designation->department_id;
         } 
@@ -323,7 +322,6 @@ class NewEmployeeFormComponent extends Component
         $new_user->is_tax_exempted = $this->is_tax_exempted;
         $new_user->is_paid_holidays = $this->is_paid_holidays;
         $new_user->is_active = true;
-        $new_user->is_archive = false;
         $new_user->system_access = $system_access;
         $new_user->save();
 

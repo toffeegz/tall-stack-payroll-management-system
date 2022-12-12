@@ -83,7 +83,6 @@ class User extends Authenticatable
         return $this->first_name . " " . ($this->middle_name ? $this->middle_name[0] : '') . ". " . $this->last_name;
     }
 
-
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
@@ -98,6 +97,11 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_user');
+    }
+
+    public function project()
+    {
+        return $this->projects()->latest('updated_at')->first();
     }
 
     public function designations()

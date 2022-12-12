@@ -77,8 +77,8 @@
                     {{-- suffix_name --}}
                     <div class="col-span-7 md:col-span-1 space-y-1">
                         <x-light-forms.label>
-                            Suffix<span class="text-red-400 ml-1">*</span>
-                        </x-light-forms.label>
+                            Suffix {{--<span class="text-red-400 ml-1">*</span>--}}
+                        </x-light-forms.label> 
                         <x-light-forms.select wire:model.defer="suffix_name">
                             <option value="">- -</option>
                             @foreach(config('company.suffix_name') as $val)

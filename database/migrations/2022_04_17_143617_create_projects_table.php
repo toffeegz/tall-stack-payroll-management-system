@@ -23,7 +23,7 @@ class CreateProjectsTable extends Migration
             $table->longText('details')->nullable();
             $table->unsignedTinyInteger('status')->comment('1-ongoing, 2-finished, 3-upcoming');
             $table->boolean('is_subcontractual')->default(false);
-            $table->string('profile_photo_path');
+            $table->string('profile_photo_path')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

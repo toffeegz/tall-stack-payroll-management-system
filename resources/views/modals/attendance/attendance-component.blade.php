@@ -405,11 +405,11 @@
             @if($notif_message == 'not import')
                 @if($hide == false)
                 <div class="space-y-4 mt-4">
-                    <div>
+                    {{--<div>
                         <p class="font-semibold text-sm text-stone-600">
                             {{ $updated_count }} updated and {{ $added_count }} added succesfully.
                         </p>
-                    </div>
+                    </div>--}}
                     <div class="pb-4 flex justify-between space-x-4">
                         @if(array_key_exists('Added', $logs))
                         <div class="w-full">
