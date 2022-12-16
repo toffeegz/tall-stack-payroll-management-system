@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             CompanyInformationSeeder::class,
             DepartmentSeeder::class,
             DesignationSeeder::class,
-            DraftLogsSeeder::class,
+            // DraftLogsSeeder::class,
             EarningSeeder::class,
             GrossTypeSeeder::class,
             HDMFContributionRateSeeder::class,
