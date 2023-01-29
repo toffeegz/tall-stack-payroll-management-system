@@ -218,7 +218,7 @@
                             </div>
                             <div class="flex-none w-24 space-y-1">
                                 <x-light-forms.label>
-                                    # Dependent
+                                    #Dependent<span class="text-red-400 ml-1">*</span>
                                 </x-light-forms.label>
                                 <x-light-forms.input type="text" wire:model.defer="number_dependent"></x-light-forms.input>
                                 

@@ -185,6 +185,7 @@ class NewEmployeeFormComponent extends Component
         $this->validate([
             'first_name' =>  'required|',
             'last_name' => 'required|',
+            'number_dependent' => 'required'
         ]);
 
         $data = [
