@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use App\Services\Attendance\AttendanceServiceInterface;
 use App\Services\Utils\FileServiceInterface;
 use App\Repositories\Attendance\AttendanceRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
 
 use App\Imports\AttendanceImport;
 use App\Exports\Attendance\AttendanceExport;
@@ -74,15 +75,18 @@ class AttendanceComponent extends Component
     private AttendanceServiceInterface $modelService;
     private FileServiceInterface $fileService;
     private AttendanceRepositoryInterface $modelRepository;
+    private UserRepositoryInterface $userRepository;
 
     public function boot(
         AttendanceServiceInterface $service,
         FileServiceInterface $fileService,
-        AttendanceRepositoryInterface $repository
+        AttendanceRepositoryInterface $modelRepository,
+        UserRepositoryInterface $userRepository,
     ) {
         $this->modelService = $service;
         $this->fileService = $fileService;
-        $this->modelRepository = $repository;
+        $this->modelRepository = $modelRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function render() 
@@ -372,49 +376,7 @@ class AttendanceComponent extends Component
 
     public function getUsersProperty()
     {
-        $search = $this->search_add;
-        $data = collect([]);
-        if(Auth::user()->hasRole('administrator'))
-        {
-            $data = User::where('deleted_at', true)
-            ->where(function ($query) use ($search) {
-                return $query->where('last_name', 'like', '%' . $search . '%')
-                ->orWhere('first_name', 'like', '%' . $search . '%')
-                ->orWhere('code', 'like', '%' . $search . '%');
-            })
-            ->get();
-        }
-        elseif(Auth::user()->hasRole('timekeeper'))
-        {
-            $project = Auth::user()->project();
-
-            if($project)
-            {
-                $user_ids = $project->users->pluck('id');
-
-                $data = User::where('deleted_at', true)
-                ->whereIn('id', $user_ids)
-                ->where(function ($query) use ($search) {
-                    return $query->where('last_name', 'like', '%' . $search . '%')
-                    ->orWhere('first_name', 'like', '%' . $search . '%')
-                    ->orWhere('code', 'like', '%' . $search . '%');
-                })
-                ->get();
-            } 
-            else 
-            {
-                // $this->hide = true;
-                $data = User::where('is_active', true)
-                ->where('id', Auth::user()->id)
-                ->where(function ($query) use ($search) {
-                    return $query->where('last_name', 'like', '%' . $search . '%')
-                    ->orWhere('first_name', 'like', '%' . $search . '%')
-                    ->orWhere('code', 'like', '%' . $search . '%');
-                })
-                ->get();
-            }
-        }
-        return $data;
+        return $this->userRepository->getUsersByAuthUserRole($this->search_add, $relations = [], $paginate = 10, $sortByColumn = 'created_at', $sortBy = 'DESC');
     }
 
     public function getProjectsProperty()
@@ -443,16 +405,17 @@ class AttendanceComponent extends Component
     public function getPendingAttendancesProperty()
     {
         $search = $this->search_name_or_date_approve_attendance;
-        return Attendance::leftJoin('users', 'attendances.user_id', '=', 'users.id')
-        ->where(function ($query) use ($search) {
-            return $query->where('users.last_name', 'like', '%' . $search . '%')
-            ->orWhere('users.first_name', 'like', '%' . $search . '%')
-            ->orWhere('users.code', 'like', '%' . $search . '%')
-            ->orWhere('attendances.date', 'like', '%' . $search . '%');
-        })
-        ->select('attendances.id', 'users.last_name', 'users.first_name', 'users.code', 'attendances.date', 'users.profile_photo_path')
-        ->where('attendances.status', 4)
-        ->paginate(10);
+        // return Attendance::leftJoin('users', 'attendances.user_id', '=', 'users.id')
+        // ->where(function ($query) use ($search) {
+        //     return $query->where('users.last_name', 'like', '%' . $search . '%')
+        //     ->orWhere('users.first_name', 'like', '%' . $search . '%')
+        //     ->orWhere('users.code', 'like', '%' . $search . '%')
+        //     ->orWhere('attendances.date', 'like', '%' . $search . '%');
+        // })
+        // ->select('attendances.id', 'users.last_name', 'users.first_name', 'users.code', 'attendances.date', 'users.profile_photo_path')
+        // ->where('attendances.status', 4)
+        // ->paginate(10);
+        return $this->modelRepository->getPendingForModal($this->search_name_or_date_approve_attendance, [], $paginate = 10, $sortByColumn = 'created_at', $sortBy = 'DESC');
     }
 
 

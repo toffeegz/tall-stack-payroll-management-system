@@ -35,12 +35,12 @@ class AttendanceService implements AttendanceServiceInterface
 
     public function store($user_id, $project_id, $date, $time_in, $time_out)
     {
-        // $is_admin = false;
-        // if(Auth::user()->hasRole('administrator')) {
-        //     $is_admin = true;
-        // }
+        $is_admin = false;
+        if(Auth::user()->hasRole('administrator')) {
+            $is_admin = true;
+        }
         // is_admin true if data generated
-        $is_admin = true;
+        // $is_admin = true;
 
         $user = $this->userRepository->show($user_id);
         $selected_project_id = null;

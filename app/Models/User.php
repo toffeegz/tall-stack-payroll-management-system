@@ -63,14 +63,14 @@ class User extends Authenticatable
         $query->when($filters['search'] ?? false, 
             function($query) use($search) {
                 $query->where(function($query) use($search) {
-                    $query->where('last_name', 'ilike', '%' . $search . '%')
-                        ->orWhere('first_name', 'ilike', '%' . $search . '%')
-                        ->orWhere('middle_name', 'ilike', '%' . $search . '%')
-                        ->orWhere('email', 'ilike', '%' . $search . '%');
+                    $query->where('last_name', 'like', '%' . $search . '%')
+                        ->orWhere('first_name', 'like', '%' . $search . '%')
+                        ->orWhere('middle_name', 'like', '%' . $search . '%')
+                        ->orWhere('code', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%');
                 });
             }
         );
-        
     }
 
     public function formal_name()

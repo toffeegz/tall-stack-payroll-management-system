@@ -10,11 +10,13 @@ trait CreatedBy
     public static function bootCreatedBy()
     {
         static::saving(function ($model) {
-            $created_by = null;
-            if (Auth::check()) {
-                $created_by = Auth::user()->id;
+            if(!$model->created_by) {
+                $created_by = null;
+                if (Auth::check()) {
+                    $created_by = Auth::user()->id;
+                }
+                $model->created_by = $created_by;
             }
-            $model->created_by = $created_by;
         });
     }
 }

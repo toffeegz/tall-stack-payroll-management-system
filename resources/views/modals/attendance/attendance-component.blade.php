@@ -114,7 +114,7 @@
             @endif
         </div>
         <div class="flex space-x-2">
-            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalEmployees')">
+            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalAddAttendance')">
                 Cancel
             </x-forms.button-rounded-md-secondary>
             @if(count($selected_users_add_attendance) != 0 && $hide ==  false) 
