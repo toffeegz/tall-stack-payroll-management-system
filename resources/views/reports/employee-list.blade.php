@@ -87,9 +87,11 @@
                 @endforeach
             @else
                 @foreach($collection as $projects)
+                    @if($projects->users->count() > 0)
                     <tr>
                         <td colspan="26" style="border:1px solid #000; font-size:12pt; font-weight: bold; ">Project: {{ $projects->name }}</td>
                     </tr>
+                    @endif
                     @foreach($projects->users as $user)
                         <tr>
                             <td colspan="1">{{ $user->code }}</td>
