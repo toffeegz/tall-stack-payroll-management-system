@@ -404,17 +404,6 @@ class AttendanceComponent extends Component
 
     public function getPendingAttendancesProperty()
     {
-        $search = $this->search_name_or_date_approve_attendance;
-        // return Attendance::leftJoin('users', 'attendances.user_id', '=', 'users.id')
-        // ->where(function ($query) use ($search) {
-        //     return $query->where('users.last_name', 'like', '%' . $search . '%')
-        //     ->orWhere('users.first_name', 'like', '%' . $search . '%')
-        //     ->orWhere('users.code', 'like', '%' . $search . '%')
-        //     ->orWhere('attendances.date', 'like', '%' . $search . '%');
-        // })
-        // ->select('attendances.id', 'users.last_name', 'users.first_name', 'users.code', 'attendances.date', 'users.profile_photo_path')
-        // ->where('attendances.status', 4)
-        // ->paginate(10);
         return $this->modelRepository->getPendingForModal($this->search_name_or_date_approve_attendance, [], $paginate = 10, $sortByColumn = 'created_at', $sortBy = 'DESC');
     }
 
