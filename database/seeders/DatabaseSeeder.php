@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             EarningSeeder::class,
             GrossTypeSeeder::class,
             HDMFContributionRateSeeder::class,
-            // LeaveSeeder::class,
             LeaveTypeSeeder::class,
+            LeaveSeeder::class,
             PayrollPeriodSeeder::class,
             PHICContributionRateSeeder::class,
             ProjectSeeder::class,
@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             SSSContributionModelSeeder::class,
             SSSContributionRateSeeder::class,
             UserSeeder::class,
+            LoanSeeder::class,
         ]);
     }
 }
