@@ -37,4 +37,10 @@ return [
         '3' => 'Above a Day',
     ],
 
+    'loan_status' => [
+        1 => 'Pending',
+        2 => 'Approved',
+        3 => 'Disapproved'
+    ]
+
 ];
