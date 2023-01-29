@@ -133,19 +133,15 @@ class AttendanceComponent extends Component
         {
             $date = Carbon::createFromFormat('m/d/Y', $value['date']);
             $date_str = $date->format('Y-m-d');
-            $updated_hours = Self::getHoursAttendance($date_str, $value['time_in'], $value['time_out']);
+            $updated_hours = $this->modelService->getHoursAttendance($date_str, $value['time_in'], $value['time_out']);
 
-            if(Auth::user()->hasRole('administrator')) {
-                $status = Self::getAttendanceStatus($date_str, $updated_hours['late']);
-            } else {
-                $status = 4;
-            }
+            $status = $this->modelService->getAttendanceStatus($date_str, $updated_hours['late'], Auth::user()->hasRole('administrator') ? true:false);
 
             $user = User::where('code', $value['employee_id'])->first();
             $project = Project::where('code', $value['project_code'])->first();
             $data = new Attendance;
             $data->user_id = $user->id;
-            $data->project_id = $project->id;
+            $data->project_id = $project ? $project->id : null;
             $data->date = $date;
             $data->time_in = $value['time_in'];
             $data->time_out = $value['time_out'];
@@ -157,19 +153,35 @@ class AttendanceComponent extends Component
             $data->night_differential = $updated_hours['night_differential'];
             $data->status = $status;
 
-            $data->created_by = Auth::user()->id;
             $data->save();
         }
 
         foreach($this->import_update  as $value)
         {
+            $date = Carbon::createFromFormat('m/d/Y', $value['date']);
+            $date_str = $date->format('Y-m-d');
+            $updated_hours = $this->modelService->getHoursAttendance($date_str, $value['time_in'], $value['time_out']);
+
+            $status = $this->modelService->getAttendanceStatus($date_str, $updated_hours['late'], Auth::user()->hasRole('administrator') ? true:false);
+            
+
             $user = User::where('code', $value['employee_id'])->first();
             $project = Project::where('code', $value['project_code'])->first();
-            $data = Attendance::firstOrNew(['user_id' => $user->id, 'project_id' => $project->id]);
+            if($project) {
+                $data = Attendance::firstOrNew(['user_id' => $user->id, 'project_id' => $project->id]);
+            } else {
+                $data = new Attendance;
+            }
+            $data->user_id = $user->id;
             $data->date = Carbon::createFromFormat('m/d/Y', $value['date']);
             $data->time_in = $value['time_in'];
             $data->time_out = $value['time_out'];
-            $data->created_by = Auth::user()->id;
+            $data->regular = $updated_hours['regular'];
+            $data->late = $updated_hours['late'];
+            $data->undertime = $updated_hours['undertime'];
+            $data->overtime = $updated_hours['overtime'];
+            $data->night_differential = $updated_hours['night_differential'];
+            $data->status = $status;
             $data->save();
         }
 
@@ -215,62 +227,64 @@ class AttendanceComponent extends Component
 
         foreach($data[0] as $key => $value)
         {
-            $key = $key + 2;
-            $date = Date::excelToDateTimeObject($value['date']);
-            $time_in = Date::excelToDateTimeObject($value['time_in']);
-            $time_out = Date::excelToDateTimeObject($value['time_out']);
-            $user_code = $value['employee_id'];
-            $project_code = $value['project_code'];
-            // $task = $value['task'];
+            if($value['date'] != '' && $value['time_in'] != '' && $value['time_out'] != '') {
+                $key = $key + 2;
+                $date = Date::excelToDateTimeObject($value['date']);
+                $time_in = Date::excelToDateTimeObject($value['time_in']);
+                $time_out = Date::excelToDateTimeObject($value['time_out']);
+                $user_code = $value['employee_id'];
+                $project_code = $value['project_code'];
+                // $task = $value['task'];
 
-            $date = Carbon::parse($date);
+                $date = Carbon::parse($date);
 
-            $isFutureDate = $date->gt(Carbon::now());
+                $isFutureDate = $date->gt(Carbon::now());
 
-            $valid_until = Carbon::now()->subYears(3);
+                $valid_until = Carbon::now()->subYears(3);
 
-            $valid_date = $date->gt($valid_until);
+                $valid_date = $date->gt($valid_until);
 
-            $row[$key] = [
-                'employee_id' => $user_code,
-                'date' => $date->format('m/d/Y'),
-                'time_in' => $time_in->format('H:i'),
-                'time_out' => $time_out->format('H:i'),
-                'project_code' => $project_code,
-            ];
+                $row[$key] = [
+                    'employee_id' => $user_code,
+                    'date' => $date->format('m/d/Y'),
+                    'time_in' => $time_in->format('H:i'),
+                    'time_out' => $time_out->format('H:i'),
+                    'project_code' => $project_code,
+                ];
 
-            // ignore
-            // user not exist, project not exist, date invalid, 
-            
-            $user = User::where('code', $user_code)->first();
-            $project = Project::where('code', $project_code)->first();
-
-            if(!$user || !$project || $valid_date == false) {
                 // ignore
-                $str = [];
-                if(!$user) {
-                    $str[] = 'Employee ID not exist';
-                }
-                if(!$project) {
-                    $str[] = 'Project Code not exist';
-                }
-                if($valid_date == false) {
-                    $str[] = 'Date must be 3 years above';
-                }
-                $ignore_row[$key] = $row[$key];
+                // user not exist, project not exist, date invalid, 
+                
+                $user = User::where('code', $user_code)->first();
+                $project = $project_code === '' || $project_code === null ? '' : Project::where('code', $project_code)->first();
 
-                $ignore_row[$key]['status'] = $str;
-            } else {
-                // update and create
-                $attendance = Attendance::where('user_id', $user->id)
-                ->where('date', $date)
-                ->first();
+                if(!$user || $project === null || $valid_date == false) {
+                    // ignore
+                    $str = [];
+                    if(!$user) {
+                        $str[] = 'Employee ID not exist';
+                    }
+                    if(!$project) {
+                        $str[] = 'Project Code not exist';
+                    }
+                    if($valid_date == false) {
+                        $str[] = 'Date must be 3 years above';
+                    }
+                    $ignore_row[$key] = $row[$key];
 
-                if($attendance)
-                {
-                    $update_row[$key] = $row[$key];
+                    $ignore_row[$key]['status'] = $str;
                 } else {
-                    $create_row[$key] = $row[$key];
+                    // update and create
+                    $attendance = Attendance::where('user_id', $user->id)
+                    ->where('date', $date)
+                    ->first();
+
+                    if($attendance)
+                    {
+                        $update_row[$key] = $row[$key];
+                    } else {
+                        $create_row[$key] = $row[$key];
+                    }
                 }
             }
         }
@@ -486,11 +500,7 @@ class AttendanceComponent extends Component
 
             $update_attendance = Attendance::find($attendance_id);
             $date = $update_attendance->date;
-
-            if($this->selected_status_approve_attendance != 5)
-            {
-                $status = Self::getAttendanceStatus($date, $update_attendance->late);
-            }
+            $status = $this->modelService->getAttendanceStatus($date,$update_attendance->late, Auth::user()->hasRole('administrator') ? true:false);
 
             $update_attendance->status = $status;
             $update_attendance->save();
@@ -502,7 +512,7 @@ class AttendanceComponent extends Component
     {
         $update_attendance = Attendance::find($this->selected_details_id);
 
-        $updated_hours = Self::getHoursAttendance($this->selected_details_date, $this->selected_details_time_in, $this->selected_details_time_out);
+        $updated_hours = $this->modelService->getHoursAttendance($this->selected_details_date, $this->selected_details_time_in, $this->selected_details_time_out);
         $update_attendance->regular = $updated_hours['regular'];
         $update_attendance->late = $updated_hours['late'];
         $update_attendance->undertime = $updated_hours['undertime'];
@@ -514,7 +524,7 @@ class AttendanceComponent extends Component
             if($status == 1)
             {
                 $date = $this->selected_details_date;
-                $status = Self::getAttendanceStatus($date, $updated_hours['late']);
+                $status = $this->modelService->getAttendanceStatus($date, $updated_hours['late']);
             }
         } else {
             $status = 4;
@@ -844,35 +854,6 @@ class AttendanceComponent extends Component
             'overtime' => $overtime,
             'night_differential' => $night_differential,
         ];
-    }
-
-    public function getAttendanceStatus($date, $late_hours)
-    {
-        $date = Carbon::parse($date);
-        $is_date_working_day = Helper::isDateWorkingDay($date);
-        $status = 0;
-        if(Auth::user()->hasRole('administrator'))
-        {
-            
-            if($is_date_working_day == true)
-            {
-                $status = 1; // PRESENT
-
-                if($late_hours > 0)
-                {
-                    $status = 2;  // LATE
-                }
-            } 
-            else 
-            {
-                $status = 3; // RESTDAY 
-            }
-        }
-        else
-        {
-            $status = 4; // PENDING 
-        }
-        return $status;
     }
 
     // INSERT
