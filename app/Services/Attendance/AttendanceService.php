@@ -56,8 +56,8 @@ class AttendanceService implements AttendanceServiceInterface
             'user_id' => $user->id,
             'date' => $date,
         ], [
-            'time_in' => Carbon::parse($time_in)->format('h:i'),
-            'time_out' => Carbon::parse($time_out)->format('h:i'),
+            'time_in' => Carbon::parse($time_in),
+            'time_out' => Carbon::parse($time_out),
             'regular' => $get_hours['regular'],
             'late' => $get_hours['late'],
             'undertime' => $get_hours['undertime'],
