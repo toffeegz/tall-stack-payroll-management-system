@@ -42,25 +42,18 @@ class LoanComponent extends Component
 
     public function mount()
     {
-        $this->pending_request = Loan::where('user_id', Auth::user()->id)
-        ->where('status', 1)
-        ->first();
-
-        $this->total_balance = $this->modelRepository->getBalanceByUser(Auth::user()->id);
+        $auth_id = Auth::user()->id;
+        $this->pending_request = $this->modelRepository->getLatestPendingLoanRequestByUser($auth_id);
+        $this->total_balance = $this->modelRepository->getBalanceByUser($auth_id);
 
         if($this->total_balance != 0)
         {
-            $this->total_amount_to_pay = $this->modelRepository->getAmountToPayByUser(Auth::user()->id);
-            $this->total_paid = $this->modelRepository->getPaidByUser(Auth::user()->id);
-            $this->paid_percentage = $this->modelRepository->getPaidPercentageByUser(Auth::user()->id);
+            $this->total_amount_to_pay = $this->modelRepository->getAmountToPayByUser($auth_id);
+            $this->total_paid = $this->modelRepository->getPaidByUser($auth_id);
+            $this->paid_percentage = $this->modelRepository->getPaidPercentageByUser($auth_id);
         }
-        
 
-        $this->existing_loan = Loan::where('user_id', Auth::user()->id)
-        ->where('status', 2)
-        ->where('balance', '!=', 0)
-        ->first();
-
+        $this->existing_loan = $this->modelRepository->getLoansWithBalanceByUser($auth_id);
         Self::getInstallmentAmountValue();
 
     }
