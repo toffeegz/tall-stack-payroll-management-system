@@ -107,7 +107,7 @@
                                             </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y "  >
-                                                @foreach($import_create as $key => $value)
+                                                @foreach($import_update as $key => $value)
                                                 <tr class="text-stone-700 text-xs">
                                                     <td class="px-4 py-1">
                                                         {{ $key }}
