@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         // INITIAL ADMINISTRATOR
+            $new_code = '2022-0001';
             $user = [
                 'email' => 'gezrylclarizg@gmail.com',
                 'email_verified_at' => \Carbon\Carbon::now(),
@@ -30,7 +31,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Gallego',
                 'first_name' => 'Gezryl',
                 'middle_name' => 'Beato',
-                'code' => '2022-0001',
+                'code' => $new_code,
                 'phone_number' => '0975935907',
                 'birth_date' => '1999-05-27',
                 'birth_place' => 'Binan, Laguna',
@@ -45,6 +46,7 @@ class UserSeeder extends Seeder
                 'is_paid_holidays' => true,
                 'is_tax_exempted' => false,
                 'frequency_id' => 1,
+                'profile_photo_path' => $new_code . ".png",
             ];
 
             $user = User::create($user);

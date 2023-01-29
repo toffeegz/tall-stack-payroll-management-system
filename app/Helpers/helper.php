@@ -146,7 +146,8 @@ class Helper
 
     public static function generateCode($value)
     {
-        $year = Carbon::now()->format('Y');
+        // $year = Carbon::now()->format('Y');
+        $year = '2022';
         $data = $year . "-" . sprintf('%04d', $value);
         return $data;
     }
