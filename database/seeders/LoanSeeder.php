@@ -38,18 +38,6 @@ class LoanSeeder extends Seeder
             'Vacation expenses',
         ];
 
-        $notes = [
-            'Paid via Cash',
-            'Paid via Gcash',
-            'Paid by Salary',
-            'Advance Pay',
-            'Handed by CoWorker',
-            'Handed by Timekeeper',
-            'Paid via BDO',
-            'Installment with a balance',
-            '',
-        ];
-
         $loans = [];
         for($i = 1; $i <= $loan_total; $i++) {
             $amount = rand(2000,12000);
@@ -57,13 +45,13 @@ class LoanSeeder extends Seeder
             $installment_period = rand(1,6);
             $created_at = $date_approved->subDays(rand(2,3));
             $installment_amount = $amount / $installment_period;
-            $status = Loan::PENDING;
+            $status = 1;
             $approved = Helper::randomWithChance(90);
 
             if($approved === true) {
-                $status = Loan::APPROVED;
+                $status = 2;
             } else {
-                $status = Loan::DISAPPROVED;
+                $status = 3;
             }
 
             
@@ -89,7 +77,7 @@ class LoanSeeder extends Seeder
         Loan::insert($loans);
 
         $loan_installments = [];
-        $approved_loans = Loan::where('status', Loan::APPROVED)->whereNull('deleted_at')->get();
+        $approved_loans = Loan::where('status', 2)->whereNull('deleted_at')->get();
         foreach($approved_loans as $approved_loan) {
             
 
@@ -106,7 +94,7 @@ class LoanSeeder extends Seeder
                     'user_id' => $approved_loan->user_id,
                     'amount' => $approved_loan->installment_amount,
                     'pay_date' => $pay_date,
-                    'notes' => $notes[rand(0,8)],
+                    'notes' => '',
                     'created_at' => $pay_date,
                     'updated_at' => $pay_date,
                 ];
