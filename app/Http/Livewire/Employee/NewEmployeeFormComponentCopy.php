@@ -13,7 +13,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class NewEmployeeFormComponent extends Component
+class NewEmployeeFormComponentCopy extends Component
 {
     use WithFileUploads;
     public $page = 1;
