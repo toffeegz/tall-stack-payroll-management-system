@@ -20,15 +20,16 @@ class LoanRepository extends BaseRepository implements LoanRepositoryInterface
         parent::__construct($model);
     }
 
-    public function getTotalAmountToPay()
+    public function getLatestPendingLoanRequestByUser(string $id)
     {
-
+        return $this->model->where('user_id', $id)->where('status', Loan::PENDING)->first();
     }
 
     public function getLoansWithBalanceByUser(string $id)
     {
         return $this->model->where('user_id', $id)
         ->where('balance', '!=', 0)
+        ->where('status',Loan::APPROVED)
         ->get();
     }
 
