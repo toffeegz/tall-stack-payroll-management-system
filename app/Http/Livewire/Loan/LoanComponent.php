@@ -12,7 +12,7 @@ use App\Exports\Loan\RequestHistoryExport;
 
 use App\Models\LoanInstallment;
 use App\Models\Loan;
-
+use App\Repositories\Loan\LoanRepositoryInterface;
 
 use Carbon\Carbon;
 
@@ -23,8 +23,9 @@ class LoanComponent extends Component
     public $perPage = 5;
 
     public $pending_request;
-    public $total_balance;
-    public $total_amount_to_pay;
+    public $total_balance = 0;
+    public $total_amount_to_pay = 0;
+    public $total_paid = 0;
     public $paid_percentage;
 
     public $amount = 3000;
@@ -32,22 +33,26 @@ class LoanComponent extends Component
     public $install_period = 2;
     public $details = "";
 
+    protected $modelRepository;
+    public function boot(
+        LoanRepositoryInterface $modelRepository
+    ) {
+        $this->modelRepository = $modelRepository;
+    }
+
     public function mount()
     {
         $this->pending_request = Loan::where('user_id', Auth::user()->id)
         ->where('status', 1)
         ->first();
 
-        $loans_with_balance = Loan::where('user_id', Auth::user()->id)
-        ->where('status', 2)->get();
-
-        $this->total_balance = $loans_with_balance->sum('balance');
+        $this->total_balance = $this->modelRepository->getBalanceByUser(Auth::user()->id);
 
         if($this->total_balance != 0)
         {
-            $this->total_amount_to_pay = $loans_with_balance->sum('total_amount_to_pay');
-
-            $this->paid_percentage = round($this->total_balance / $this->total_amount_to_pay * 100);
+            $this->total_amount_to_pay = $this->modelRepository->getAmountToPayByUser(Auth::user()->id);
+            $this->total_paid = $this->modelRepository->getPaidByUser(Auth::user()->id);
+            $this->paid_percentage = $this->modelRepository->getPaidPercentageByUser(Auth::user()->id);
         }
         
 
