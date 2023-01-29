@@ -11,6 +11,8 @@ use Livewire\WithFileUploads;
 use App\Models\Project;
 use App\Models\Timekeeper;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\RoleUser;
 
 class ProjectDetailsComponent extends Component
 {
@@ -178,6 +180,8 @@ class ProjectDetailsComponent extends Component
 
     public function removeCurrentTimekeeper()
     {
+        $remove_timekeeper = User::find($this->current_timekeeper->user_id);
+        $remove_timekeeper->detachRole('timekeeper');
         $this->current_timekeeper->delete();
         $this->current_timekeeper = null;
     }
