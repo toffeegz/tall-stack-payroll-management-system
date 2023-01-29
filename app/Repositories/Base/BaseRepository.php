@@ -14,13 +14,13 @@ abstract class BaseRepository implements BaseRepositoryInterface
         $this->model = $model;
     }
 
-    public function items(array $search, array $relations)
+    public function items(array $search, array $relations, $paginate = 10, $sortByColumn = 'created_at', $sortBy = 'DESC')
     {
         if($relations) {
             $this->model = $this->model->with($relations);
         }
 
-        return $this->model->filter($search)->orderBy($sortByColumn, $sortBy)->paginate(request('limit') ?? 10);
+        return $this->model->filter($search)->orderBy($sortByColumn, $sortBy)->paginate($paginate);
     }
 
     public function show(string $id, $with = [])

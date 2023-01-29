@@ -4,7 +4,7 @@ namespace App\Repositories\Base;
 
 interface BaseRepositoryInterface
 {
-    public function items(array $search, array $relations);
+    public function items(array $search, array $relations, $paginate = 10, $sortByColumn = 'created_at', $sortBy = 'DESC');
     public function show(string $id, $with = []);
     public function update(array $params, string $id);
     public function create(array $params);
