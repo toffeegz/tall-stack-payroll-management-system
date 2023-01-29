@@ -37,6 +37,7 @@ class PersonalInformationRequest extends FormRequest
             'fathers_name' => ['nullable', 'string'],
             'mothers_name' => ['nullable', 'string'],
             'address' => ['nullable', 'string'],
+            'number_dependent' => ['required', 'numeric'],
         ];
     }
 }
