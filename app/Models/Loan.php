@@ -14,6 +14,10 @@ class Loan extends Model
     use HasFactory;
     use SoftDeletes;
 
+    CONST PENDING = 1;
+    CONST APPROVED = 2;
+    CONST DISAPPROVED = 3;
+
     public function user()
     {
         return $this->belongsTo(User::class);
