@@ -73,6 +73,23 @@ Run to compile assets (mix)
 
     npm run dev
 
+Check database/seeders/DatabaseSeeder.php 
+Users are also generated, you can uncomment it and modify the administrator info,
+Modify the CompanyInformationSeeder class
+Then Run
+
+    php artisan db:seed
+
+Set Email credentials in .env file
+    MAIL_MAILER=smtp
+    MAIL_HOST=smtp.gmail.com
+    MAIL_PORT=587
+    MAIL_USERNAME=
+    MAIL_PASSWORD=
+    MAIL_ENCRYPTION=tls
+    MAIL_FROM_ADDRESS=
+    MAIL_FROM_NAME="${APP_NAME}"
+
 Start the local development server
 
     php artisan serve
