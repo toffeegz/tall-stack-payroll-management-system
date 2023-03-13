@@ -16,6 +16,10 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
+    const ONGOING = 1;
+    const FINISHED = 2;
+    const UPCOMING = 3;
+
     public function loans()
     {
         return $this->hasMany(Loan::class);
@@ -23,7 +27,7 @@ class Project extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'project_user');
+        return $this->belongsToMany(User::class, 'project_user')->withTimestamps();
     }
 
     public function usersImage($count)
@@ -38,7 +42,22 @@ class Project extends Model
 
     public function timekeepers()
     {
-        return $this->belongsToMany(Timekeeper::class, 'timekeepers', 'project_id', 'id');
+        return $this->belongsToMany(Timekeeper::class, 'timekeepers', 'project_id', 'id')->withTimestamps();
+    }
+
+    public function ongoing()
+    {
+        return $this->where('status', 1);
+    }
+
+    public function completed()
+    {
+        return $this->where('status', 2);
+    }
+
+    public function upcoming()
+    {
+        return $this->where('status', 3);
     }
 
     // scope

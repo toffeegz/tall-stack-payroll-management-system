@@ -29,7 +29,7 @@
     @foreach($data as $value)
         <tr>
             <td colspan="5" style="text-align:left; word-wrap: break-word;">{{ $value->notes }}</td>
-            <td colspan="2" style="text-align: center;">{{ $value->pay_date ? Carbon\Carbon::parse($value->pay_date)->format('m/d/Y') : '' }}</td>
+            <td colspan="2" style="text-align: center;">{{ $value->pay_date ? Carbon\Carbon::parse($value->pay_date)->format('m/d/Y') : '-' }}</td>
             <td style="text-align:right;">{{ number_format($value->amount, 2, '.',',') }}</td>
         </tr>
     @endforeach

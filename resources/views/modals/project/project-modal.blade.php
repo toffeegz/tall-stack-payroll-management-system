@@ -1,4 +1,6 @@
 
+
+
 {{-- modal notif hours --}}
 <x-modal-small id="modalNotif" title="Success" wire:ignore.self>
     {{-- modal body --}}
@@ -17,12 +19,11 @@
 
 
 {{-- modal new project  --}}
-<x-modal-small id="modalNewProject" title="New Project" wire:ignore.self>
-
+<x-modal-medium id="modalNewProject" title="New Project" wire:ignore.self>
     {{-- modal body --}}
     <div class="space-y-4 my-4">
         {{-- project information --}}
-        @if($page == 1)
+        @if($newPage == 1)
 
             {{-- image --}}
             <div class="">
@@ -49,29 +50,30 @@
             </div>
             
 
-            {{-- name and code --}}
-            <div class="grid grid-cols-3 gap-4">
-                {{-- name --}}
-                <div class="col-span-3 md:col-span-2">
-                    <x-forms.label>
-                        Name
-                    </x-forms.label>
-                    <x-forms.input type="text" class="w-full" wire:model="name">
-                    </x-forms.input>
-                    @error('name')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-                {{-- code --}}
-                <div class="col-span-3 md:col-span-1">
-                    <x-forms.label>
-                        Code
-                    </x-forms.label>
-                    <x-forms.input type="text"  class="w-full" wire:model="code">
-                    </x-forms.input>
-                    @error('code')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
+            {{-- name --}}
+            <div class="">
+                <x-forms.label>
+                    Name
+                </x-forms.label>
+                <x-forms.input type="text" class="w-full" wire:model="name">
+                </x-forms.input>
+                @error('name')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- code --}}
+            <div class="col-span-5 md:col-span-3 space-y-1">
+                <x-light-forms.label>
+                    Code
+                </x-light-forms.label>
+                <input type="text" wire:model="code" {{ $auto_generate_code ? 'disabled':'' }} class="w-full text-sm rounded-md shadow-sm border-gray-300 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:bg-gray-100">
+                <div class="ml-2 pt-1 flex">
+                    <x-forms.checkbox wire:model="auto_generate_code"></x-forms.checkbox>
+                    
+                    <x-light-forms.radio-box-label>
+                        auto generate code
+                    </x-light-forms.radio-box-label>
                 </div>
             </div>
 
@@ -86,7 +88,7 @@
                     <p class="text-red-500 text-xs italic">{{ $message }}</p>
                 @enderror
             </div>
-        @elseif($page == 2)
+        @elseif($newPage == 2)
 
             {{-- start and end date --}}
             <div class="flex justify-between gap-4">
@@ -133,19 +135,19 @@
                     </x-forms.label>
                     <div class="flex flex-col text-sm">
                         <div class="form-check px-2">
-                            <x-forms.radio-box value="1" wire:model="status" name="status" id="status1" wire:model="status"></x-forms.radio-box>
+                            <x-forms.radio-box value="1" wire:model="status" name="status" id="status1"></x-forms.radio-box>
                             <x-forms.radio-box-label for="status1">
                                 On-going
                             </x-forms.radio-box-label>
                         </div>
                         <div class="form-check px-2">
-                            <x-forms.radio-box value="2" wire:model="status" name="status" id="status2" wire:model="status"></x-forms.radio-box>
+                            <x-forms.radio-box value="2" wire:model="status" name="status" id="status2"></x-forms.radio-box>
                             <x-forms.radio-box-label for="status2">
                                 Finished
                             </x-forms.radio-box-label>
                         </div>
                         <div class="form-check px-2">
-                            <x-forms.radio-box value="3" wire:model="status" name="status" id="status3" wire:model="status"></x-forms.radio-box>
+                            <x-forms.radio-box value="3" wire:model="status" name="status" id="status3"></x-forms.radio-box>
                             <x-forms.radio-box-label for="status3">
                                 Upcoming
                             </x-forms.radio-box-label>
@@ -170,7 +172,7 @@
             </div>
 
             
-        @elseif($page == 3)
+        @elseif($newPage == 3)
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
                 <div class="w-full">
                     <x-forms.search-input placeholder="search name or date" name="search_user"/>
@@ -186,23 +188,38 @@
                     @endif 
                     
                     <table class="w-full whitespace-no-wrap">
+                        <thead class="border-b-2">
+                            <tr>
+                                <td class="text-stone-500 font-semibold text-xs px-4">Employee</td>
+                                <td class="text-stone-500 font-semibold text-xs px-4">Designation</td>
+                                <td colspan="2" class="text-stone-500 font-semibold text-xs text-center">Project</td>
+                                <td></td>
+                            </tr>
+                        </thead>
                         <tbody class="bg-white divide-y">
+                            
                             @foreach($users as $user)
                                 <tr class="text-stone-700 ">
                                     <td class="px-2 md:px-4 py-3 flex space-x-2">
-                                        <img src="{{ asset('storage/img/users/'.($user->profile_photo_path ? $user->profile_photo_path : 'default.jpg')) }}" class="rounded-full h-9 w-9 object-cover"/>
+                                        {{-- <img src="{{ asset('storage/img/users/'.($user->profile_photo_path ? $user->profile_photo_path : 'default.jpg')) }}" class="rounded-full h-9 w-9 object-cover"/> --}}
                                         <div class="">
                                             <p class="text-stone-900 font-bold text-sm">{{ $user->first_name . " " . $user->last_name }}</p>
                                             <p class="text-stone-500 font-semibold text-xs">{{ $user->code }}</p>
                                         </div>
                                     </td>
                                     <td class="px-4 py-3 text-xs font-semibold text-stone-700">
-                                        {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : '' }}
+                                        {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A' }}
+                                    </td>
+                                    <td class="px-4 py-3 text-xs font-bold text-green-500">
+                                        {{ $user->projects->where('status', 1)->count() }} <!-- ongoing -->
+                                    </td>
+                                    <td class="px-4 py-3 text-xs font-bold text-blue-500">
+                                        {{ $user->projects->where('status', 3)->count() }}  <!-- upcoming -->
                                     </td>
                                     <td class="px-2 md:px-4 py-3 w-6">
                                         <div class="form-check">
                                             <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
-                                            type="checkbox" value="{{ $user->id }}" wire:model="selected_users">
+                                            type="checkbox" value="{{ $user->id }}" wire:model.defer="selected_users">
                                         </div>
                                     </td>
                                 </tr>
@@ -216,14 +233,22 @@
     </div>
     {{-- end modal body --}}
     {{-- modal footer --}}
-        <div class="w-full py-4 flex justify-end space-x-2 border-t border-stone-200">
-            <x-forms.button-rounded-md-secondary wire:click="backPage" >
-                {{ $page == 1 ? 'Cancel':'Back' }}
-            </x-forms.button-rounded-md-secondary>
-            <x-forms.button-rounded-md-primary wire:click="nextPage" wire:loading.attr="disabled">
-                Next
-            </x-forms.button-rounded-md-primary>
+        <div class="w-full py-4 flex justify-between space-x-2 border-t border-stone-200">
+            <div>
+                @if($newPage == 3)
+                <p class="font-semibold text-xs text-stone-700"><i class="fas fa-circle text-green-500 mr-2"></i>ongoing project</p>
+                <p class="font-semibold text-xs text-stone-700"><i class="fas fa-circle text-blue-500 mr-2"></i>upcoming project</p>
+                @endif
+            </div>
+            <div class="flex justify-end space-x-2">
+                <x-forms.button-rounded-md-secondary wire:click="backPage" >
+                    {{ $newPage == 1 ? 'Cancel':'Back' }}
+                </x-forms.button-rounded-md-secondary>
+                <x-forms.button-rounded-md-primary wire:click="nextPage" wire:loading.attr="disabled">
+                    Next
+                </x-forms.button-rounded-md-primary>
+            </div>
         </div>
     {{-- end modal footer --}}
-</x-modal-small>
+</x-modal-medium>
 {{--  --}}

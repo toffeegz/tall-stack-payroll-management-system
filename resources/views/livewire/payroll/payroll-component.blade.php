@@ -34,20 +34,21 @@
                             <table class="w-full whitespace-no-wrap">
                                 <thead>
                                     <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b rounded-t-md bg-gray-50">
-                                        <th class="px-2 md:px-4 py-3 text-right">Employee</th>
-                                        <th class="px-2 md:px-4 py-3 text-right">Gross Pay</th>
-                                        <th class="px-2 md:px-4 py-3 text-right">Deductions</th>
+                                        <th class="px-2 md:px-4 py-3 text-left">Employee</th>
+                                        {{-- <th class="px-2 md:px-4 py-3 text-right">Gross Pay</th>
+                                        <th class="px-2 md:px-4 py-3 text-right">Deductions</th> --}}
                                         <th class="px-2 md:px-4 py-3 text-right">Net Pay</th>
                                         <th class="px-2 md:px-4 py-3 text-right">Pay Date</th>
+                                        <th class="px-2 md:px-4 py-3 text-right"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y">
                                     @foreach($payslips as $payslip)
-                                        <tr class="cursor-pointer" wire:click="downloadPayslip({{ $payslip->id }})">
+                                        <tr>
                                             <td class="px-2 md:px-4 py-3 align-top">
                                                 <p class=" text-xs text-stone-700 font-bold">{{ $payslip->user->formal_name() }}</p>
                                             </td>
-                                            <td class="px-2 md:px-4 py-3 align-top">
+                                            {{-- <td class="px-2 md:px-4 py-3 align-top">
                                                 <p class=" text-xs text-right text-stone-600 font-bold">
                                                     ₱{{ number_format($payslip->gross_pay, 2, '.', ',') }}
                                                 </p>
@@ -56,7 +57,7 @@
                                                 <p class=" text-xs text-right text-stone-600 font-bold">
                                                     ₱{{ number_format($payslip->deductions, 2, '.', ',') }}
                                                 </p>
-                                            </td>
+                                            </td> --}}
                                             <td class="px-2 md:px-4 py-3 align-top">
                                                 <p class=" text-xs text-right text-stone-600 font-bold">
                                                     ₱{{ number_format($payslip->net_pay, 2, '.', ',') }}
@@ -65,6 +66,11 @@
                                             <td class="px-2 md:px-4 py-3 align-top">
                                                 <p class=" text-xs text-right text-stone-600 font-bold">
                                                     {{ Carbon\Carbon::parse($payslip->payroll_period->payout_date)->format('M d, Y') }}
+                                                </p>
+                                            </td>
+                                            <td class="px-2 md:px-4 py-3 align-top">
+                                                <p class=" text-xs text-right text-stone-600 font-bold cursor-pointer" wire:click="downloadPayslip({{ $payslip->id }})">
+                                                    <i class="fa-solid fa-download"></i>
                                                 </p>
                                             </td>
                                         </tr>

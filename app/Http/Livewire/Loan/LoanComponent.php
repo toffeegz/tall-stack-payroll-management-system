@@ -12,7 +12,7 @@ use App\Exports\Loan\RequestHistoryExport;
 
 use App\Models\LoanInstallment;
 use App\Models\Loan;
-
+use App\Repositories\Loan\LoanRepositoryInterface;
 
 use Carbon\Carbon;
 
@@ -23,8 +23,9 @@ class LoanComponent extends Component
     public $perPage = 5;
 
     public $pending_request;
-    public $total_balance;
-    public $total_amount_to_pay;
+    public $total_balance = 0;
+    public $total_amount_to_pay = 0;
+    public $total_paid = 0;
     public $paid_percentage;
 
     public $amount = 3000;
@@ -32,30 +33,27 @@ class LoanComponent extends Component
     public $install_period = 2;
     public $details = "";
 
+    protected $modelRepository;
+    public function boot(
+        LoanRepositoryInterface $modelRepository
+    ) {
+        $this->modelRepository = $modelRepository;
+    }
+
     public function mount()
     {
-        $this->pending_request = Loan::where('user_id', Auth::user()->id)
-        ->where('status', 1)
-        ->first();
-
-        $loans_with_balance = Loan::where('user_id', Auth::user()->id)
-        ->where('status', 2)->get();
-
-        $this->total_balance = $loans_with_balance->sum('balance');
+        $auth_id = Auth::user()->id;
+        $this->pending_request = $this->modelRepository->getLatestPendingLoanRequestByUser($auth_id);
+        $this->total_balance = $this->modelRepository->getBalanceByUser($auth_id);
 
         if($this->total_balance != 0)
         {
-            $this->total_amount_to_pay = $loans_with_balance->sum('total_amount_to_pay');
-
-            $this->paid_percentage = round($this->total_balance / $this->total_amount_to_pay * 100);
+            $this->total_amount_to_pay = $this->modelRepository->getAmountToPayByUser($auth_id);
+            $this->total_paid = $this->modelRepository->getPaidByUser($auth_id);
+            $this->paid_percentage = $this->modelRepository->getPaidPercentageByUser($auth_id);
         }
-        
 
-        $this->existing_loan = Loan::where('user_id', Auth::user()->id)
-        ->where('status', 2)
-        ->where('balance', '!=', 0)
-        ->first();
-
+        $this->existing_loan = $this->modelRepository->getLoansWithBalanceByUser($auth_id);
         Self::getInstallmentAmountValue();
 
     }

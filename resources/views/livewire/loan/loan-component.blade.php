@@ -74,7 +74,7 @@
                     @endif
 
                     {{-- eligible to request --}}
-                    @if(!$existing_loan && !$pending_request)
+                    @if($existing_loan->count() == 0 && !$pending_request)
                         <div class="space-y-4 bg-purple-700 p-8 rounded-xl border border-stone-200 ">
                             
                             <div class="flex justify-between">

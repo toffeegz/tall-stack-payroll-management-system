@@ -1,10 +1,10 @@
 <?php
 
-namespace App\View\Components\forms;
+namespace App\View\Components\LightForms;
 
 use Illuminate\View\Component;
 
-class ButtonRoundeMdSuccess extends Component
+class Input extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class ButtonRoundeMdSuccess extends Component
      */
     public function render()
     {
-        return view('components.forms.button-rounde-md-success');
+        return view('components.light-forms.input');
     }
 }

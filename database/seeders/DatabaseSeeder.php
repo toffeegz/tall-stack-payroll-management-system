@@ -14,5 +14,25 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        $this->call([
+            CompanyInformationSeeder::class,
+            DepartmentSeeder::class,
+            DesignationSeeder::class,
+            // DraftLogsSeeder::class,
+            EarningSeeder::class,
+            GrossTypeSeeder::class,
+            HDMFContributionRateSeeder::class,
+            LeaveTypeSeeder::class,
+            LeaveSeeder::class,
+            PayrollPeriodSeeder::class,
+            PHICContributionRateSeeder::class,
+            ProjectSeeder::class,
+            RoleSeeder::class,
+            ScheduleSeeder::class,
+            SSSContributionModelSeeder::class,
+            SSSContributionRateSeeder::class,
+            UserSeeder::class,
+            LoanSeeder::class,
+        ]);
     }
 }

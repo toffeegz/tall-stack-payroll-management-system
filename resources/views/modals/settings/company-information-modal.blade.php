@@ -116,6 +116,16 @@
             @enderror
         </div>
 
+        {{-- details --}}
+        <div>
+            <x-forms.label>
+                Details
+            </x-forms.label>
+            <x-forms.input wire:model="designation_details" type="text"></x-forms.input>
+            @error('designation_details')
+                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+            @enderror
+        </div>
 
     </div>
     {{-- end modal body --}}
@@ -161,6 +171,17 @@
             </x-forms.label>
             <x-forms.input wire:model="new_daily_rate" type="number"></x-forms.input>
             @error('new_daily_rate')
+                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+            @enderror
+        </div>
+
+        {{-- details --}}
+        <div>
+            <x-forms.label>
+                Details
+            </x-forms.label>
+            <x-forms.input wire:model="new_designation_details" type="text"></x-forms.input>
+            @error('new_designation_details')
                 <p class="text-red-500 text-xs italic">{{ $message }}</p>
             @enderror
         </div>

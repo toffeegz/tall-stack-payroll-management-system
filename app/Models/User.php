@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Timekeeper;
 use App\Models\Attendance;
@@ -22,6 +23,7 @@ use App\Models\Leave;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
     use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -55,6 +57,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function scopeFilter($query, array $filters)
+    {
+        $search = $filters['search'] ?? false;
+        $query->when($filters['search'] ?? false, 
+            function($query) use($search) {
+                $query->where(function($query) use($search) {
+                    $query->where('last_name', 'like', '%' . $search . '%')
+                        ->orWhere('first_name', 'like', '%' . $search . '%')
+                        ->orWhere('middle_name', 'like', '%' . $search . '%')
+                        ->orWhere('code', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%');
+                });
+            }
+        );
+    }
+
     public function formal_name()
     {
         return $this->last_name . ", " . $this->first_name . " " . ($this->middle_name ? $this->middle_name[0] : '');
@@ -64,7 +82,6 @@ class User extends Authenticatable
     {
         return $this->first_name . " " . ($this->middle_name ? $this->middle_name[0] : '') . ". " . $this->last_name;
     }
-
 
     public function attendances()
     {
@@ -80,6 +97,11 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_user');
+    }
+
+    public function project()
+    {
+        return $this->projects()->latest('updated_at')->first();
     }
 
     public function designations()

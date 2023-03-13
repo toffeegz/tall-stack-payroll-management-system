@@ -44,7 +44,7 @@
                                     @if(Auth::user()->hasRole('administrator'))
                                     <th class="px-4 py-3">Name</th>
                                     @endif
-                                    <th class="px-4 py-3">{{ !Auth::user()->hasRole('administrator') ? 'Start':'' }} Date</th>
+                                    <th class="px-4 py-3">{{ !Auth::user()->hasRole('administrator') ? 'Start':'-' }} Date</th>
                                     @if(!Auth::user()->hasRole('administrator'))
                                         <th class="px-4 py-3">End Date</th>
                                         <th class="px-4 py-3">Duration</th>
@@ -75,11 +75,11 @@
                                             </td>
                                             @endif
                                             <td class="px-4 py-3 text-xs font-semibold">
-                                                {{ $leave->start_date ? Carbon\Carbon::parse($leave->start_date)->format('d/m/Y') : '' }}
+                                                {{ $leave->start_date ? Carbon\Carbon::parse($leave->start_date)->format('d/m/Y') : '-' }}
                                             </td>
                                             @if(!Auth::user()->hasRole('administrator'))
                                             <td class="px-4 py-3 text-xs font-semibold">
-                                                {{ $leave->end_date ? Carbon\Carbon::parse($leave->end_date)->format('d/m/Y') : '' }}
+                                                {{ $leave->end_date ? Carbon\Carbon::parse($leave->end_date)->format('d/m/Y') : '-' }}
                                             </td>
                                             <td class="px-4 py-3 text-sm font-semibold">
                                                 {{ $leave->hours_duration }}hrs

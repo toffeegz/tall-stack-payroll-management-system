@@ -1,4 +1,4 @@
-    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
 
         const modalObject = {
@@ -19,4 +19,14 @@
             },
         }
 
+
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('scrollTop', (el, component) => {
+                window.scrollTo({top: 0, behavior: 'smooth'});;
+            });
+        });
+
     </script>
+
+    @yield('page-script')
+    

@@ -4,6 +4,10 @@ namespace App\Http\Livewire\Loan;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\Loan\LoanInstallmentExport;
+
 use App\Models\User;
 use App\Models\Loan;
 use App\Models\LoanInstallment;
@@ -38,7 +42,7 @@ class LoanInstallmentComponent extends Component
         ->layout('layouts.app',  ['menu' => 'loan-installment']);
     }
 
-    public function getLoanInstallmentsProperty()
+    public function getLoanInstallmentsQueryProperty()
     {
         $search = $this->search;
 
@@ -50,9 +54,21 @@ class LoanInstallmentComponent extends Component
             ->orWhere('users.code', 'like', '%' . $search . '%');
         })
         ->select('loan_installments.*', 'users.id as user_id')
-        ->latest('loan_installments.updated_at')
-        ->paginate($this->perPage);
+        ->latest('loan_installments.pay_date');
     }
+
+    public function getLoanInstallmentsProperty()
+    {
+        return $this->loan_installments_query->paginate(10);
+    }
+
+    public function download()
+    {
+        $data = $this->loan_installments_query->get();
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Loan Installment Export.xlsx';
+        return Excel::download(new LoanInstallmentExport($data), $filename);
+    }
+
     
     public function getUsersProperty()
     {
@@ -69,7 +85,7 @@ class LoanInstallmentComponent extends Component
         {
             $user_found = User::find($value);
             if($user_found){
-                $this->loan_balance = $user_found->loans->sum('balance');
+                $this->loan_balance = $user_found->loans->where('status',2)->sum('balance');
             }
             
         }
@@ -79,7 +95,6 @@ class LoanInstallmentComponent extends Component
     {
         $this->validate([
             'user_id' => 'required|numeric|min:0|not_in:0',
-            'amount' => 'required|numeric|min:0|not_in:0',
             'pay_date' => 'required|date|before:tomorrow',
         ]);
 
@@ -89,36 +104,91 @@ class LoanInstallmentComponent extends Component
         ->where('balance', '!=', 0)
         ->get();
 
-        $change = $this->amount;
 
-        foreach($loans_with_balance as $loan)
-        {
-            if($change != 0) 
+        if($loans_with_balance->sum('balance') >= 0) {
+            $this->validate([
+                'amount' => 'required|numeric|min:0|not_in:0',
+            ]);
+        } else {
+            $this->validate([
+                'amount' => 'required|numeric|max:0',
+            ]);
+        }
+
+        
+
+        if($this->amount > 0) {
+            $change = $this->amount;
+
+            foreach($loans_with_balance as $loan)
             {
-                $loan_balance = $loan->balance;
-                $amount = $change;
-                if($change == $loan_balance)
+                if($change >= 0) 
                 {
-                    $change = 0;
-                } elseif($change > $loan_balance)
+                    $loan_balance = $loan->balance;
+                    $amount = $change;
+                    if($change == $loan_balance)
+                    {
+                        $change = 0;
+                    } else
+                    {
+                        $change = $change - $loan_balance;
+                    } 
+
+                    
+                    $loan_balance = $loan_balance - $amount; 
+                    $loan->balance = $loan_balance;
+                    if($loan->balance <= 0) {
+                        $loan->pay_next = 0;
+                    }
+                    $loan->save();
+
+                    $new_loan_installment = new LoanInstallment;
+                    $new_loan_installment->loan_id = $loan->id;
+                    $new_loan_installment->user_id = $this->user_id;
+                    $new_loan_installment->amount = $amount;
+                    $new_loan_installment->pay_date = $this->pay_date;
+                    $new_loan_installment->notes = $this->notes;
+                    $new_loan_installment->save();
+                } else {
+                    break;
+                }
+            }
+
+        } elseif ($this->amount < 0) {
+            $change = $this->amount;
+
+            foreach($loans_with_balance as $loan)
+            {
+                if($change < 0) 
                 {
-                    $change = $change - $loan_balance;
-                } 
+                    $loan_balance = $loan->balance;
+                    $amount = $change;
+                    if($change == $loan_balance)
+                    {
+                        $change = 0;
+                    } else
+                    {
+                        $change = $change - $loan_balance;
+                    } 
 
-                
-                $loan_balance = $loan_balance - $amount; 
-                $loan->balance = $loan_balance;
-                $loan->save();
+                    
+                    $loan_balance = $loan_balance - $amount; 
+                    $loan->balance = $loan_balance;
+                    if($loan->balance <= 0) {
+                        $loan->pay_next = 0;
+                    }
+                    $loan->save();
 
-                $new_loan_installment = new LoanInstallment;
-                $new_loan_installment->loan_id = $loan->id;
-                $new_loan_installment->user_id = $this->user_id;
-                $new_loan_installment->amount = $amount;
-                $new_loan_installment->pay_date = $this->pay_date;
-                $new_loan_installment->notes = $this->notes;
-                $new_loan_installment->save();
-            } else {
-                break;
+                    $new_loan_installment = new LoanInstallment;
+                    $new_loan_installment->loan_id = $loan->id;
+                    $new_loan_installment->user_id = $this->user_id;
+                    $new_loan_installment->amount = $amount;
+                    $new_loan_installment->pay_date = $this->pay_date;
+                    $new_loan_installment->notes = $this->notes;
+                    $new_loan_installment->save();
+                } else {
+                    break;
+                }
             }
         }
 
@@ -147,8 +217,9 @@ class LoanInstallmentComponent extends Component
 
     public function updateLoanDetails()
     {
-        $amount_paid = $this->selected_loan->amount;
-        $balance = $this->selected_loan->loan->balance + $amount_paid;
+        $amount_paid_before = $this->selected_loan->amount;
+        $balance_before_pay = $this->selected_loan->loan->balance + $amount_paid_before;
+        $balance = $balance_before_pay - $this->amount;
         
         $this->selected_loan->loan->balance = $balance;
         $this->selected_loan->loan->save();

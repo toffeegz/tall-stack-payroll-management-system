@@ -12,6 +12,12 @@
                         <x-forms.search-input placeholder="search employee" name="search"/>
                     </div>
                     <div class="space-x-2 flex">
+                        <x-forms.button-rounded-md-secondary class="whitespace-nowrap py-3" wire:click="download">
+                            <i class="fa-solid fa-download"></i>
+                            <span class="hidden md:inline-flex">
+                                Download
+                            </span>
+                        </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap"  onclick="modalObject.openModal('modalPayLoan')">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">Pay Loan</span>
@@ -40,7 +46,10 @@
                                             <div class="flex items-center text-sm">
                                                 <!-- Avatar with inset shadow -->
                                                 <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" >
-                                                    <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $loan_installment->user->profile_photo_path) }}" alt="" loading="lazy" />
+                                                    <?php 
+                                                        $profile_photo_path = $loan_installment->user->profile_photo_path ? $loan_installment->user->profile_photo_path : 'sample.png';
+                                                    ?>
+                                                    <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $profile_photo_path) }}" alt="" loading="lazy" />
                                                     <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" ></div>
                                                 </div>
                                                 <div>
@@ -55,7 +64,7 @@
                                             <p class="line-clamp-2 ">{{ $loan_installment->notes }}</p>
                                         </td>
                                         <td class="px-4 py-3 text-xs font-semibold whitespace-nowrap">
-                                            {{ $loan_installment->pay_date ? Carbon\Carbon::parse($loan_installment->pay_date)->format('M d, Y') : '' }}
+                                            {{ $loan_installment->pay_date ? Carbon\Carbon::parse($loan_installment->pay_date)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold">
                                             ₱{{ number_format($loan_installment->amount, 2, '.', ',') }}

@@ -9,8 +9,8 @@
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
 
                 <!-- Card -->
-                <div class="flex items-center p-4 bg-orange-50 rounded-2xl shadow-xs " >
-                    <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full " >
+                <div class="flex items-center p-4 bg-indigo-50 rounded-2xl shadow-xs " >
+                    <div class="p-3 mr-4 text-indigo-500 bg-indigo-100 rounded-full " >
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
                         </svg>
@@ -26,8 +26,8 @@
                 </div>
 
                 <!-- Card -->
-                <div class="flex items-center p-4 bg-green-50 rounded-2xl shadow-xs " >
-                    <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full " >
+                <div class="flex items-center p-4 bg-orange-50 rounded-2xl shadow-xs " >
+                    <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full " >
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
                         </svg>
@@ -43,8 +43,8 @@
                 </div>
 
                 <!-- Card -->
-                <div class="flex items-center p-4 bg-teal-50 rounded-2xl shadow-xs " >
-                    <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full " >
+                <div class="flex items-center p-4 bg-green-50 rounded-2xl shadow-xs " >
+                    <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full " >
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
                         </svg>
@@ -54,7 +54,7 @@
                             Loan Balance
                         </p>
                         <p class="text-lg font-semibold text-stone-700 "  >
-                            ₱ {{ $loan_balance }}
+                            ₱ {{ number_format($loan_balance, 2, '.', '') }}
                         </p>
                     </div>
                 </div>
@@ -68,10 +68,10 @@
                     </div>
                     <div>
                         <p class="mb-2 text-sm font-medium text-stone-600 " >
-                            On-Leave
+                            Loan With Balance
                         </p>
                         <p class="text-lg font-semibold text-stone-700 "  >
-                            {{ $on_leave_users_count }}
+                            ₱ {{ number_format($total_loan_with_balance, 2, '.', '') }}
                         </p>
                     </div>
                 </div>
@@ -116,6 +116,15 @@
                 </a>
             </div>
 
+
+            <div class="my-6">
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold text-black">
+                        On-Leave Today ({{ $on_leave_users_count }})
+                    </h2>
+                    @livewire('leave.current-on-leave-component')
+                </div>
+            </div>
 
         </div>
     </div>

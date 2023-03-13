@@ -16,12 +16,12 @@
                                 <x-forms.search-input placeholder="search employee" name="search"/>
                             </div>
                             <div class="space-x-2 flex">
-                                @if(count($selected_users_to_remove) != 0)
+                                {{-- @if(count($selected_users_to_remove) != 0) --}}
                                 <x-forms.button-rounded-md-danger onclick="modalObject.openModal('modalRemoveUsers')">
                                     <i class="fa-solid fa-trash"></i>
                                     <span class="hidden md:inline-flex">Remove</span>
                                 </x-forms.button-rounded-md-danger>
-                                @endif
+                                {{-- @endif --}}
                                 <x-forms.button-rounded-md-primary class="whitespace-nowrap" onclick="modalObject.openModal('modalAddUsers')">
                                     <i class="fa-solid fa-plus"></i>
                                     <span class="hidden md:inline-flex">Add Employee</span>
@@ -62,7 +62,7 @@
                                                     </div>
                                                 </td>
                                                 <td class="px-4 py-3 text-xs font-semibold text-stone-700">
-                                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : '' }}
+                                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A' }}
                                                 </td>
                                                 <td class="px-4 py-3 text-sm">
                                                     {{ $user->email }}
@@ -70,7 +70,7 @@
                                                 <td class="px-2 md:px-4 py-3 w-6">
                                                     <div class="form-check">
                                                         <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
-                                                        type="checkbox" value="{{ $user->id }}" wire:model="selected_users_to_remove">
+                                                        type="checkbox" value="{{ $user->id }}" wire:model.defer="selected_users_to_remove">
                                                     </div>
                                                 </td>
                                             </tr>
@@ -157,7 +157,7 @@
                                         </span>
                                     @endif
                                 </button>
-                                <p class="text-xs text-green-500">{{ $project->is_subcontractual == true ? 'Subcontractual' : ''}}</p>
+                                <p class="text-xs text-green-500">{{ $project->is_subcontractual == true ? 'Subcontractual' : '-'}}</p>
                                 
                             </div>
                         </div>

@@ -29,7 +29,7 @@
         <td colspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center;">Phone</td>
         <td colspan="1" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center;">Gender</td>
         <td colspan="1" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap:break-word">Marital Status</td>
-        <td colspan="`" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap:break-word">Number Dependent</td>
+        <td colspan="`" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap:break-word">Dependent</td>
         <td colspan="1" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap:break-word">Nationality</td>
         {{-- <td colspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap:break-word">Address</td> --}}
         <td colspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap:break-word">Employment Status</td>
@@ -87,9 +87,11 @@
                 @endforeach
             @else
                 @foreach($collection as $projects)
+                    @if($projects->users->count() > 0)
                     <tr>
                         <td colspan="26" style="border:1px solid #000; font-size:12pt; font-weight: bold; ">Project: {{ $projects->name }}</td>
                     </tr>
+                    @endif
                     @foreach($projects->users as $user)
                         <tr>
                             <td colspan="1">{{ $user->code }}</td>

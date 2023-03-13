@@ -23,8 +23,8 @@
                         </thead>
                         <tbody class="bg-white divide-y "  >
                             @foreach($leave_types as $leave_type)
-                                <tr class="text-stone-700 cursor-pointer" >
-                                    <td class="px-4 py-3 text-xs whitespace-nowrap">
+                                <tr class="text-stone-700 cursor-pointer">
+                                    <td wire:click="editLeaveTypeModal({{ $leave_type->id }})" class="px-4 py-3 text-xs whitespace-nowrap">
                                         {{ $leave_type->name }}
                                     </td>
                                     <td class="px-4 py-3 text-xs whitespace-nowrap text-center">
@@ -63,8 +63,8 @@
                         </thead>
                         <tbody class="bg-white divide-y "  >
                             @foreach($holidays as $holiday)
-                                <tr class="text-stone-700 cursor-pointer" wire:key="{{$holiday->id}}">
-                                    <td  wire:click="openEditLeaveType({{ $holiday->id }})" class="px-4 py-3 text-xs whitespace-nowrap">
+                                <tr class="text-stone-700 cursor-pointer" wire:click="editHolidayModal({{ $holiday->id }})" wire:key="{{$holiday->id}}">
+                                    <td class="px-4 py-3 text-xs whitespace-nowrap">
                                         {{ $holiday->name }}
                                     </td>
                                     <td class="px-4 py-3 text-xs whitespace-nowrap text-center">

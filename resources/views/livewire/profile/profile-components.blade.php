@@ -220,7 +220,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->department->department_name : ''  }}
+                                    {{ $user->latestDesignation() ? $user->latestDesignation()->department->department_name : '-'  }}
                                 </p>
                             </div>
                         </div>
@@ -234,7 +234,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : ''  }}
+                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A'  }}
                                 </p>
                             </div>
                         </div>
@@ -248,7 +248,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    ₱{{ $user->latestDesignation() ? number_format($user->latestDesignation()->daily_rate, 2, '.', ',') : ''  }}
+                                    ₱{{ $user->latestDesignation() ? number_format($user->latestDesignation()->daily_rate, 2, '.', ',') : '-'  }}
                                 </p>
                             </div>
                         </div>

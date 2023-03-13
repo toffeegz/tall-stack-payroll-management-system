@@ -14,11 +14,6 @@
                 {{-- Table header --}}
                 <div class="flex justify-between my-4 space-x-4">
                     <p class="font-bold">Payslip History</p>
-                    <div>
-                        <button wire:click="downloadPayslip" class="cursor-pointer text-blue-500 text-xs font-semibold">
-                            Download Selected Payslip  <i class="ml-2 fa-solid fa-download"></i>
-                        </button>
-                    </div>
                 </div>
 
                 {{-- table --}}
@@ -232,7 +227,11 @@
                             </tr>
                     </table>
 
-                
+                    <div>
+                        <button wire:click="downloadPayslip" class="cursor-pointer text-blue-500 text-xs font-semibold pt-5">
+                            Download Payslip  <i class="ml-2 fa-solid fa-download"></i>
+                        </button>
+                    </div>
             </div>
             {{--  --}}
             @endif

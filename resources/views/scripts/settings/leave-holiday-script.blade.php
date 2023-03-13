@@ -10,6 +10,13 @@
             modalObject.closeModal('modalAddHoliday'); 
         });
 
+        Livewire.on('openEditHolidayModal', (el, component) => {
+            modalObject.openModal('modalEditHoliday'); 
+        });
+        Livewire.on('closeEditHolidayModal', (el, component) => {
+            modalObject.closeModal('modalEditHoliday'); 
+        });
+
 
 
         Livewire.on('openAddLeaveTypeModal', (el, component) => {
@@ -19,6 +26,15 @@
         Livewire.on('closeAddLeaveTypeModal', (el, component) => {
             modalObject.closeModal('modalAddLeaveType'); 
         });
+
+        Livewire.on('openEditLeaveTypeModal', (el, component) => {
+            
+            modalObject.openModal('modalEditLeaveType'); 
+        });
+        Livewire.on('closeEditLeaveTypeModal', (el, component) => {
+            modalObject.closeModal('modalEditLeaveType'); 
+        });
+
 
 
     });

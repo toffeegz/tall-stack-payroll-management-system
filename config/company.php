@@ -3,6 +3,14 @@
 return [
     
 
+    'suffix_name' => [
+        'Sr',
+        'Jr',
+        'II',
+        'III',
+        'IV',
+    ],
+
     'gender' => [
         0 => 'Male',
         1 => 'Female',
@@ -28,5 +36,11 @@ return [
         '2' => 'Half Day',
         '3' => 'Above a Day',
     ],
+
+    'loan_status' => [
+        1 => 'Pending',
+        2 => 'Approved',
+        3 => 'Disapproved'
+    ]
 
 ];

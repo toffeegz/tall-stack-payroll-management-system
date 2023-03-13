@@ -1,312 +1,418 @@
 <div>
     {{-- The Master doesn't talk, he acts. --}}
-    <div class="h-full overflow-y-auto px-6 md:px-32">
+    <div class="h-full overflow-y-auto px-6 ">
+        
+        
 
-        {{-- header --}}
-        <div class="ml-12 md:ml-0 mt-20 mb-6 space-x-4">
-            <div class="flex items-center text-sm">
-                <!-- Avatar with inset shadow -->
-                <div class="relative hidden w-20 h-20 mr-3 rounded-full md:block" >
-                    <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}" alt="" loading="lazy" />
-                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" ></div>
-                </div>
-                <div>
-                    <p class="font-semibold text-2xl">{{ $user->informal_name() }}</p>
-                    <p class="text-lg text-stone-600 ">
-                        {{ $user->code }}
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
-        {{-- body --}}
-        <div class=" w-full grid grid-cols-3 gap-4">
-
-            <div class="col-span-3 md:col-span-2">
-                {{-- personal information --}}
-                <div class="py-4">
-                    <div class="flex justify-between mb-2 border-b border-stone-200">
-                        <p class="text-lg font-bold">
-                            Personal Information
-                        </p>
-                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalPersonalInformation')">
-                            <i class="fa-solid fa-xs fa-pen"></i>
-                            <span class="text-xs font-semibold">edit</span>
-                        </a>
-                    </div>
-                    <div class="space-y-2">
-                        {{-- name --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Full Name
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->informal_name() }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- id --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    ID
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->code }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- email --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Email
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->email }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- phone --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Phone Number
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->phone_number }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- gender --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Gender
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ config('company.gender.'.$user->gender) }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- marital status --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Marital Status
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ config('company.marital_status.'.$user->marital_status) }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- birthdate --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Birth date
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ Carbon\Carbon::parse($user->birth_date)->format('dS M, Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- address --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Address
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->address }}
-                                </p>
-                            </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6">
+            
+            {{-- left panel --}}
+            <div class="md:col-span-4 space-y-6 md:border-r md:border-r-stone-200 h-screen p-6"> 
+                <div clas="">
+                    <div class="flex justify-center mb-2">
+                        <div class="relative  w-36 h-36 rounded-full block p-1 border border-stone-200" >
+                            <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}" alt="" loading="lazy" />
+                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" ></div>
                         </div>
                     </div>
-                </div>
-                {{--  --}}
+                    <div class="tracking-wide mb-6">
+                        <div class="text-center text-base font-bold  text-stone-900 ">
+                            {{ $user->informal_name() }}
+                        </div>
+                        <div class="text-center text-sm text-stone-500 font-semibold " >
+                            {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A'  }}
+                        </div>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex space-x-4">
+                            <i class="fa-solid fa-at text-green-500"></i>
+                            <span class="text-sm text-stone-500">{{ $user->email }}</span>
+                        </div>
+                        <div class="flex space-x-4" >
+                            <i class="fa-solid fa-phone text-blue-500"></i>
+                            <span class="text-sm text-stone-500">{{ $user->phone_number }}</span>
+                        </div>
+                    </div>
 
-                {{-- Employment details --}}
-                <div class="py-4">
-                    <div class="flex justify-between mb-2 border-b border-stone-200">
-                        <p class="text-lg font-bold">
-                            Employment Details
-                        </p>
-                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalEmploymentDetails')">
-                            <i class="fa-solid fa-xs fa-pen"></i>
-                            <span class="text-xs font-semibold">edit</span>
-                        </a>
-                    </div>
-                    <div class="space-y-2">
-                        {{-- employment status --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Employment Status
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ config('company.employment_status.'.$user->employment_status) }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- hired date --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Hired date
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ Carbon\Carbon::parse($user->hired_date)->format('dS M, Y') }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- active --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Active
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->is_active ? 'Yes':'No' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{--  --}}
+                    <hr class="my-6">
 
-                {{-- compensation --}}
-                <div class="py-4">
-                    <div class="flex justify-between mb-2 border-b border-stone-200">
-                        <p class="text-lg font-bold">
-                            Compensation
-                        </p>
-                        <a class="cursor-pointer text-blue-500 space-x-1" onclick="modalObject.openModal('modalCompensation')">
-                            <i class="fa-solid fa-xs fa-pen"></i>
-                            <span class="text-xs font-semibold">edit</span>
-                        </a>
-                    </div>
-                    <div class="space-y-2">
-                        {{-- department --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Department
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->department->department_name : ''  }}
-                                </p>
-                            </div>
+                    <div clas="">
+                        <div class="text-sm mb-4">
+                            <div class="text-stone-500 mb-2">Worked Since</div>
+                            <div class="text-stone-800 ml-4 font-semibold">{{ Carbon\Carbon::parse($user->hired_date)->format('M, Y') }}</div>
                         </div>
-                        {{-- designation / job title --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Job Title
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : ''  }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- daily rate --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Daily Rate
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    ₱{{ $user->latestDesignation() ? number_format($user->latestDesignation()->daily_rate, 2, '.', ',') : ''  }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- is paid holidays--}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Paid Holidays
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->is_paid_holidays ? 'Yes' :'No' }}
-                                </p>
-                            </div>
-                        </div>
-                        {{-- is tax exempted --}}
-                        <div class="grid grid-cols-3 gap-4">
-                            {{-- labels --}}
-                            <div class="col-span-1 items-center flex justify-end">
-                                <p class="text-xs text-stone-500 font-semibold">
-                                    Tax Exempted
-                                </p>
-                            </div>
-                            <div class="col-span-2 items-end flex justify-start">
-                                <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->is_tax_exempted ? 'Yes' :'No' }}
-                                </p>
-                            </div>
+                        <div class="text-sm mb-4">
+                            <div class="text-stone-500 mb-2">Total Hours Worked</div>
+                            <div class="text-stone-800 ml-4 font-semibold">{{ $total_hours_worked }}hrs</div>
                         </div>
                     </div>
+
+                    <hr class="my-6">
+
+                    <div>
+                        {{-- <div class="flex justify-between mb-2">
+                            <div class="text-sm font-semibold text-stone-500">
+                                <i class="fa-solid fa-user-check mr-2"></i>
+                                Active
+                            </div>
+                            @livewire('components.toggle-button', ['model' => $user, 'field' => 'is_active'])
+                        </div> --}}
+                        <div class="flex justify-between mb-2">
+                            <div class="text-sm font-semibold text-stone-500">
+                                <i class="fa-solid fa-desktop mr-2"></i>
+                                System Access
+                            </div>
+                            @livewire('components.toggle-button', ['model' => $user, 'field' => 'system_access'])
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <div class="text-sm font-semibold text-stone-500">
+                                <i class="fa-solid fa-box-archive mr-2"></i>
+                                Archive
+                            </div>
+                            <div >
+                                {{-- The best athlete wants his opponent at his best. --}}
+                                <input wire:model="is_archive" class="form-check-input appearance-none w-9 rounded-full float-left h-5 align-top bg-white bg-no-repeat bg-contain focus:outline-none cursor-pointer shadow-sm" type="checkbox" role="switch" />
+                            </div>
+                            
+                            {{-- @livewire('components.toggle-button', ['model' => $user, 'field' => 'is_archive']) --}}
+                        </div>
+                    </div>
+
+
                 </div>
 
-                {{--  --}}
             </div>
 
             {{-- right panel --}}
-            <div class="col-span-3 md:col-span-1">
+            <div class="md:col-span-8 space-y-6"> 
+                @if($errors->any())
+                    <div class="flex items-center justify-between p-4 mb-8 mt-5 text-sm font-semibold text-stone-900 bg-red-50 rounded-xl border border-red-100 focus:outline-none focus:shadow-outline-stone">
+                        <div class="flex flex-row space-x-4 w-full">
+                            <div class="flex items-center bg-red-100 rounded-md p-2 h-16">
+                                <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48" style=" fill:#f63b3b;"><path d="M 24 4 C 12.972292 4 4 12.972292 4 24 C 4 27.275316 4.8627078 30.334853 6.2617188 33.064453 L 4.09375 40.828125 C 3.5887973 42.631528 5.3719261 44.41261 7.1757812 43.908203 L 14.943359 41.740234 C 17.671046 43.137358 20.726959 44 24 44 C 35.027708 44 44 35.027708 44 24 C 44 12.972292 35.027708 4 24 4 z M 24 7 C 33.406292 7 41 14.593708 41 24 C 41 33.406292 33.406292 41 24 41 C 20.997029 41 18.192258 40.218281 15.744141 38.853516 A 1.50015 1.50015 0 0 0 14.609375 38.71875 L 7.2226562 40.78125 L 9.2851562 33.398438 A 1.50015 1.50015 0 0 0 9.1503906 32.263672 C 7.7836522 29.813476 7 27.004518 7 24 C 7 14.593708 14.593708 7 24 7 z M 23.976562 12.978516 A 1.50015 1.50015 0 0 0 22.5 14.5 L 22.5 26.5 A 1.50015 1.50015 0 1 0 25.5 26.5 L 25.5 14.5 A 1.50015 1.50015 0 0 0 23.976562 12.978516 z M 24 31 A 2 2 0 0 0 24 35 A 2 2 0 0 0 24 31 z"></path></svg>
+                            </div>
+                            <div class="w-full">
+                                <div class="font-bold text-base text-red-600">Oh no! There was an error</div>
+                                <div class="text-stone-500 text-xs font-light grid grid-cols-3 w-full">
+                                    @foreach ($errors->all() as $error)
+                                        <div>{{ $error }}</div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
+                <div class="py-6 flex space-x-6 text-sm font-bold text-stone-500  tracking-wide">
+                    <a wire:click="page('details')" class="{{ $page_name == 'details'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
+                        Details
+                    </a>
+                    <a wire:click="page('personal_information')" class="{{ $page_name == 'personal_information'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
+                        Personal Information  
+                    </a>
+                    <a wire:click="page('employment')" class="{{ $page_name == 'employment'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
+                        Employment
+                    </a>
+                </div>
+                <div class="my-6">
+            
+                    @if($page_name == "details")
+                        @livewire('employee.profile.details-component', ['user_id'=> $user->id])
+                    @elseif($page_name == "personal_information")
+                        {{-- @livewire('employee.profile.personal-information-component', ['user_id'=> $user->id]) --}}
+                        {{-- Personal Information component --}}
+                        <div class="space-y-4">
+                            {{-- name --}}
+                            <div class="grid grid-cols-7 gap-4">
+                    
+                                {{-- first_name --}}
+                                <div class="col-span-7 md:col-span-2 space-y-1">
+                                    <x-light-forms.label>
+                                        First Name<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="first_name"></x-light-forms.input>
+                                </div>
+                    
+                                {{-- middle_name --}}
+                                <div class="col-span-7 md:col-span-2 space-y-1">
+                                    <x-light-forms.label>
+                                        Middle Name
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="middle_name"></x-light-forms.input>
+                                </div>
+                    
+                                {{-- last_name --}}
+                                <div class="col-span-7 md:col-span-2 space-y-1">
+                                    <x-light-forms.label>
+                                        Last Name<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="last_name"></x-light-forms.input>
+                                </div>
+                    
+                                {{-- suffix_name --}}
+                                <div class="col-span-7 md:col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        Suffix
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model.defer="suffix_name">
+                                        <option value="">- -</option>
+                                        @foreach(config('company.suffix_name') as $val)
+                                            <option value="{{ $val }}">{{ $val }}</option>
+                                        @endforeach 
+                                    </x-light-forms.select>
+                                </div>
+                            </div>
+                    
+                            {{-- phone_number, nationality --}}
+                            <div class="grid grid-cols-2 gap-4">
+                                {{-- phone_number --}}
+                                <div class=" space-y-1">
+                                    <x-light-forms.label>
+                                        Phone Number<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="number" wire:model.defer="phone_number"></x-light-forms.input>
+                                    
+                                </div>
+                                {{-- email --}}
+                                <div class="space-y-1">
+                                    <x-light-forms.label>
+                                        Email<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="email" wire:model.defer="email"></x-light-forms.input>
+                                </div>
+                            </div>
+                    
+                            {{-- marital_status, gender --}}
+                            <div class="grid grid-cols-3 gap-4">
+                                {{-- gender --}}
+                                <div class="space-y-1">
+                                    <x-light-forms.label>
+                                        Gender<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model.defer="gender">
+                                        <option value="">- -</option>
+                                        @foreach(config('company.gender') as $key => $val)
+                                            <option value="{{ $key }}">{{ $val }}</option>
+                                        @endforeach 
+                                    </x-light-forms.select>
+                                </div>
+                                {{-- marital_status --}}
+                                <div class="space-y-1">
+                                    <x-light-forms.label>
+                                        Marital Status<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model.defer="marital_status">
+                                        <option value="">- select marital status -</option>
+                                        @foreach(config('company.marital_status') as $key => $val)
+                                            <option value="{{ $key }}">{{ $val }}</option>
+                                        @endforeach 
+                                    </x-light-forms.select>
+                                </div>
+                                {{-- nationality --}}
+                                <div class="space-y-1">
+                                    <x-light-forms.label>
+                                        Nationality<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="nationality"></x-light-forms.input>
+                                    
+                                </div>
+                                
+                            </div>
+                    
+                            {{-- birth_date, birth_place --}}
+                            <div class="grid grid-cols-5 gap-4">
+                                {{-- birth_date --}}
+                                <div class="col-span-2 space-y-1">
+                                    <x-light-forms.label>
+                                        Birth Date<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="date" wire:model.defer="birth_date"></x-light-forms.input>
+                                </div>
+                                {{-- birth_place --}}
+                                <div class="col-span-3 space-y-1">
+                                    <x-light-forms.label>
+                                        Birth Place
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="birth_place"></x-light-forms.input>
+                                </div>
+                            </div>
+                    
+                            <div class="flex space-x-4">
+                                {{-- fathers_name, mothers_name --}}
+                                <div class="flex-auto grid grid-cols-2 gap-4">
+                                    {{-- fathers_name --}}
+                                    <div class="col-span-2 md:col-span-1 space-y-1">
+                                        <x-light-forms.label>
+                                        Father's Name
+                                        </x-light-forms.label>
+                                        <x-light-forms.input type="text" wire:model.defer="fathers_name"></x-light-forms.input>
+                                        
+                                    </div>
+                                    {{-- mothers_name --}}
+                                    <div class="col-span-2 md:col-span-1 space-y-1">
+                                        <x-light-forms.label>
+                                            Mother's Name
+                                        </x-light-forms.label>
+                                        <x-light-forms.input type="text" wire:model.defer="mothers_name"></x-light-forms.input>
+                                        
+                                    </div>
+                                </div>
+                                <div class="flex-none w-24 space-y-1">
+                                    <x-light-forms.label>
+                                        #Dependent<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model.defer="number_dependent"></x-light-forms.input>
+                                    
+                                </div>
+                            </div>
+                    
+                            {{-- address --}}
+                            <div class="space-y-1">
+                                <x-light-forms.label>
+                                    Address
+                                </x-light-forms.label>
+                                <x-light-forms.input type="text" wire:model.defer="address"></x-light-forms.input>
+                            </div>
+
+                            {{-- update personal information --}}
+                            <div class="flex justify-end pt-5">
+                                <x-forms.button-rounded-md-primary class="whitespace-nowrap" wire:click="updatePersonalInformation">
+                                    <span class="hidden md:inline-flex">Update</span>
+                                </x-forms.button-rounded-md-primary>
+                            </div>
+                        </div>
+                    @elseif($page_name == "employment")
+                        {{-- @livewire('employee.profile.employment-component', ['user_id'=> $user->id]) --}}
+                        <div class="space-y-4">
+                            {{-- employment_details --}}
+                            <div class="grid grid-cols-2 gap-4">
+                    
+                                {{-- employment_status --}}
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        Employment Status<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model="employment_status">
+                                        <option value="">- select employment status -</option>
+                                        @foreach(config('company.employment_status') as $key => $employment_status)
+                                            <option value="{{ $key }}">{{ $employment_status }}</option>
+                                        @endforeach 
+                                    </x-light-forms.select>
+                                </div>
+                    
+                                {{-- hired_date --}}
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        Hired Date
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="date" wire:model.defer="hired_date"></x-light-forms.input>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                    
+                                {{-- department_id --}}
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        Department<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model="department_id">
+                                        <option value="">- select department -</option>
+                                        @foreach($departments as $department)
+                                            <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                                        @endforeach 
+                                    </x-light-forms.select>
+                                </div>
+                    
+                                {{-- designation_id --}}
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        Designation<span class="text-red-400 ml-1">*</span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.select wire:model="designation_id">
+                                        <option value="">- select designation -</option>
+                                        @foreach($designations as $designation)
+                                            <option value="{{ $designation->id }}">{{ $designation->designation_name }}</option>
+                                        @endforeach 
+                                    </x-light-forms.select>
+                                </div>
+
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        Daily Rate<span class="text-red-400 ml-1"></span>
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" :disabled="true" wire:model="daily_rate">
+                                    </x-light-forms.input>
+                                </div>
+                            </div>
+                    
+                            <div class="w-full flex mb-2 pt-8">
+                                <div class="flex-none text-stone-500 text-sm font-bold tracking-wide">
+                                    Tax Details
+                                </div>
+                                <hr class="text-stone-500 flex-auto my-2 mx-2">
+                            </div>
+                            {{-- tax_details --}}
+                            <div class="grid grid-cols-3 gap-4">
+                    
+                                {{-- employment_status --}}
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        SSS Number {{--<span class="text-red-400 ml-1">*</span>--}}
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model="sss_number"></x-light-forms.input>
+                                </div>
+                    
+                                {{-- hdmf_number --}}
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        HDMF Number {{--<span class="text-red-400 ml-1">*</span>--}}
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model="hdmf_number"></x-light-forms.input>
+                                </div>
+
+                                {{-- phic_number --}}
+                                <div class="col-span-1 space-y-1">
+                                    <x-light-forms.label>
+                                        PHIC Number {{--<span class="text-red-400 ml-1">*</span>--}}
+                                    </x-light-forms.label>
+                                    <x-light-forms.input type="text" wire:model="phic_number"></x-light-forms.input>
+                                </div>
+                            </div>
+
+                            <div class="px-4 pt-5">
+                                <x-forms.checkbox wire:model="is_tax_exempted"></x-forms.checkbox>
+                                <x-forms.checkbox-label>
+                                    Tax Exempted
+                                </x-forms.checkbox-label>
+                            </div>
+                            <div class="px-4">
+                                <x-forms.checkbox wire:model="is_paid_holidays"></x-forms.checkbox>
+                                <x-forms.checkbox-label>
+                                    Paid Holidays
+                                </x-forms.checkbox-label>
+                            </div>
+
+                            {{-- update employment details --}}
+                            <div class="flex justify-end pt-5">
+                                <x-forms.button-rounded-md-primary class="whitespace-nowrap" wire:click="updateEmploymentDetails">
+                                    <span class="hidden md:inline-flex">Update</span>
+                                </x-forms.button-rounded-md-primary>
+                            </div>
+                        </div>
+                        
+                    @endif
+                </div>
             </div>
 
         </div>
+
+
     </div>
 
-    {{--  --}}
-    @include('scripts.employee.profile-script')
-    @include('modals.employee.profile-modal')
+
+    {{-- script --}}
+    @include('scripts.employee.profile-script')  
+    {{-- modal --}}
+    @include('modals.employee.profile-modal') 
 </div>

@@ -25,7 +25,7 @@
                             <tr class="text-stone-700r"  >
                                 
                                 <td class="px-4 py-3 text-xs font-semibold whitespace-nowrap">
-                                    {{ $loan_installment->pay_date ? Carbon\Carbon::parse($loan_installment->pay_date)->format('M d, Y') : '' }}
+                                    {{ $loan_installment->pay_date ? Carbon\Carbon::parse($loan_installment->pay_date)->format('M d, Y') : '-' }}
                                 </td>
 
                                 <td class="px-4 py-3 text-sm text-stone-900 ">

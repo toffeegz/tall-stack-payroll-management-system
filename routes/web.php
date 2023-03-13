@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'system_access'])->group(function () {
     Route::group(['namespace' => 'App\Http\Livewire'], function() {
         Route::get('/', function () {
             if(Auth::user()->hasRole('administrator')) {
@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::group(['namespace' => 'Employee'], function() {
                 Route::get('employee', EmployeeComponent::class)->name('employee');
                 Route::get('employee/profile', ProfileComponent::class)->name('employee.profile');
+                Route::get('employee/archive-profile', ProfileComponent::class)->name('employee_archive.profile');
                 Route::get('employee/hire-new-employee', NewEmployeeFormComponent::class)->name('employee.hire');
             });
 

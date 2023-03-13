@@ -220,7 +220,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->department->department_name : ''  }}
+                                    {{ $user->latestDesignation() ? $user->latestDesignation()->department->department_name : '-'  }}
                                 </p>
                             </div>
                         </div>
@@ -234,7 +234,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : ''  }}
+                                    {{ $user->latestDesignation() ? $user->latestDesignation()->designation_name : 'N/A'  }}
                                 </p>
                             </div>
                         </div>
@@ -248,7 +248,7 @@
                             </div>
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
-                                    ₱{{ $user->latestDesignation() ? number_format($user->latestDesignation()->daily_rate, 2, '.', ',') : ''  }}
+                                    ₱{{ $user->latestDesignation() ? number_format($user->latestDesignation()->daily_rate, 2, '.', ',') : '-'  }}
                                 </p>
                             </div>
                         </div>
@@ -277,6 +277,48 @@
                             <div class="col-span-2 items-end flex justify-start">
                                 <p class="text-sm text-stone-900 font-semibold">
                                     {{ $user->is_tax_exempted ? 'Yes' :'No' }}
+                                </p>
+                            </div>
+                        </div>
+                        {{-- sss --}}
+                        <div class="grid grid-cols-3 gap-4">
+                            {{-- labels --}}
+                            <div class="col-span-1 items-center flex justify-end">
+                                <p class="text-xs text-stone-500 font-semibold">
+                                    SSS Number
+                                </p>
+                            </div>
+                            <div class="col-span-2 items-end flex justify-start">
+                                <p class="text-sm text-stone-900 font-semibold">
+                                    {{ $user->sss_number }}
+                                </p>
+                            </div>
+                        </div>
+                        {{-- hdmf --}}
+                        <div class="grid grid-cols-3 gap-4">
+                            {{-- labels --}}
+                            <div class="col-span-1 items-center flex justify-end">
+                                <p class="text-xs text-stone-500 font-semibold">
+                                    HDMF Number
+                                </p>
+                            </div>
+                            <div class="col-span-2 items-end flex justify-start">
+                                <p class="text-sm text-stone-900 font-semibold">
+                                    {{ $user->hmdf_number }}
+                                </p>
+                            </div>
+                        </div>
+                        {{-- phic --}}
+                        <div class="grid grid-cols-3 gap-4">
+                            {{-- labels --}}
+                            <div class="col-span-1 items-center flex justify-end">
+                                <p class="text-xs text-stone-500 font-semibold">
+                                    PHIC Number
+                                </p>
+                            </div>
+                            <div class="col-span-2 items-end flex justify-start">
+                                <p class="text-sm text-stone-900 font-semibold">
+                                    {{ $user->phic_number }}
                                 </p>
                             </div>
                         </div>

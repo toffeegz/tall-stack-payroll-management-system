@@ -137,7 +137,7 @@ class PayslipJob implements ShouldQueue
                         // SSS
                             $sss_tax_contributions = $raw_data['deductions_collection']['tax_contribution']['sss_contribution'];
 
-                            $sss_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id]);
+                            $sss_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id, 'tax_type' => 1]);
                             $sss_new_contribution->cutoff_order = $cutoff_order;
                             $sss_new_contribution->tax_type = 1;
                             $sss_new_contribution->employee_share = $sss_tax_contributions['ee'];
@@ -149,7 +149,7 @@ class PayslipJob implements ShouldQueue
                         // HDMF
                             $hdmf_tax_contributions = $raw_data['deductions_collection']['tax_contribution']['hdmf_contribution'];
 
-                            $hdmf_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id]);
+                            $hdmf_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id, 'tax_type' => 2]);
                             $hdmf_new_contribution->cutoff_order = $cutoff_order;
                             $hdmf_new_contribution->tax_type = 2;
                             $hdmf_new_contribution->employee_share = $hdmf_tax_contributions['total_ee'];
@@ -162,7 +162,7 @@ class PayslipJob implements ShouldQueue
                         // PHIC
                             $phic_tax_contributions = $raw_data['deductions_collection']['tax_contribution']['phic_contribution'];
 
-                            $phic_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id]);
+                            $phic_new_contribution = TaxContribution::firstOrNew(['user_id' => $user->id, 'payroll_period_id' => $payroll_period->id, 'tax_type' => 3]);
                             $phic_new_contribution->cutoff_order = $cutoff_order;
                             $phic_new_contribution->tax_type = 3;
                             $phic_new_contribution->employee_share = $phic_tax_contributions['total_ee'];

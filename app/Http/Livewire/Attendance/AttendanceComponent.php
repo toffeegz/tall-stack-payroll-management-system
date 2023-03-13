@@ -5,6 +5,18 @@ namespace App\Http\Livewire\Attendance;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+
+use App\Services\Attendance\AttendanceServiceInterface;
+use App\Services\Utils\FileServiceInterface;
+use App\Repositories\Attendance\AttendanceRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
+
+use App\Imports\AttendanceImport;
+use App\Exports\Attendance\AttendanceExport;
 
 use App\Models\Attendance;
 use App\Models\User;
@@ -17,6 +29,14 @@ use Carbon\Carbon;
 class AttendanceComponent extends Component
 {
     use WithPagination;
+    use WithFileUploads;
+
+    public $excel_file;
+    public $import_create = [], $import_update = [], $import_ignore = [];
+    public $show_excel_results = false;
+    public $import_page = 'create';
+    public $isDisabledImport = false;
+    public $notif_message = null;
 
     public $perPage = 5;
     public $search = "";
@@ -26,14 +46,14 @@ class AttendanceComponent extends Component
     public $next_page_attendance = false;
 
     // add attendance modal
-    public array $selected_users_add_attendance = [];
+    public $selected_users_add_attendance = [];
     public $selected_project_add_attendance = "";
     public $date_add_attendance;
     public $time_in_add_attendance;
     public $time_out_add_attendance;
 
     // approve attendance modal
-    public array $selected_attendance_approve_attendance = [];
+    public $selected_attendance_approve_attendance = [];
     public $search_name_or_date_approve_attendance = "";
     public $selected_status_approve_attendance = 1;
 
@@ -48,11 +68,28 @@ class AttendanceComponent extends Component
 
     public $hide = true;
     
-    public array $logs = [];
+    public $logs = [];
     public $added_count = 0;
     public $updated_count = 0;
 
-    public function render()
+    private AttendanceServiceInterface $modelService;
+    private FileServiceInterface $fileService;
+    private AttendanceRepositoryInterface $modelRepository;
+    private UserRepositoryInterface $userRepository;
+
+    public function boot(
+        AttendanceServiceInterface $service,
+        FileServiceInterface $fileService,
+        AttendanceRepositoryInterface $modelRepository,
+        UserRepositoryInterface $userRepository,
+    ) {
+        $this->modelService = $service;
+        $this->fileService = $fileService;
+        $this->modelRepository = $modelRepository;
+        $this->userRepository = $userRepository;
+    }
+
+    public function render() 
     {
         return view('livewire.attendance.attendance-component',[
             'attendances' => $this->attendances,
@@ -63,17 +100,206 @@ class AttendanceComponent extends Component
         ->layout('layouts.app',  ['menu' => 'attendance']);
     }
 
-    public function mount()
+    public function mount() 
     {
+        
         if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('timekeeper'))
         {
             $this->hide = false;
         }
+        if (empty($this->excel_file)) {
+            $this->isDisabledImport = true;
+        }
+    }
+
+    public function updatedExcelFile()
+    {
+        if (empty($this->excel_file)) {
+            $this->isDisabledImport = true;
+        } else {
+
+            $this->validate([
+                'excel_file' => 'required|max:20000|mimes:csv,xlsx|'
+            ]);
+
+            $this->isDisabledImport = false;
+        }
+        
+    }
+
+    public function submitImport()
+    {
+        foreach($this->import_create as $value)
+        {
+            $date = Carbon::createFromFormat('m/d/Y', $value['date']);
+            $date_str = $date->format('Y-m-d');
+            $updated_hours = $this->modelService->getHoursAttendance($date_str, $value['time_in'], $value['time_out']);
+
+            $status = $this->modelService->getAttendanceStatus($date_str, $updated_hours['late'], Auth::user()->hasRole('administrator') ? true:false);
+
+            $user = User::where('code', $value['employee_id'])->first();
+            $project = Project::where('code', $value['project_code'])->first();
+            $data = new Attendance;
+            $data->user_id = $user->id;
+            $data->project_id = $project ? $project->id : null;
+            $data->date = $date;
+            $data->time_in = $value['time_in'];
+            $data->time_out = $value['time_out'];
+            
+            $data->regular = $updated_hours['regular'];
+            $data->late = $updated_hours['late'];
+            $data->undertime = $updated_hours['undertime'];
+            $data->overtime = $updated_hours['overtime'];
+            $data->night_differential = $updated_hours['night_differential'];
+            $data->status = $status;
+
+            $data->save();
+        }
+
+        foreach($this->import_update  as $value)
+        {
+            $date = Carbon::createFromFormat('m/d/Y', $value['date']);
+            $date_str = $date->format('Y-m-d');
+            $updated_hours = $this->modelService->getHoursAttendance($date_str, $value['time_in'], $value['time_out']);
+
+            $status = $this->modelService->getAttendanceStatus($date_str, $updated_hours['late'], Auth::user()->hasRole('administrator') ? true:false);
+            
+
+            $user = User::where('code', $value['employee_id'])->first();
+            $project = Project::where('code', $value['project_code'])->first();
+            if($project) {
+                $data = Attendance::firstOrNew(['user_id' => $user->id, 'project_id' => $project->id]);
+            } else {
+                $data = new Attendance;
+            }
+            $data->user_id = $user->id;
+            $data->date = Carbon::createFromFormat('m/d/Y', $value['date']);
+            $data->time_in = $value['time_in'];
+            $data->time_out = $value['time_out'];
+            $data->regular = $updated_hours['regular'];
+            $data->late = $updated_hours['late'];
+            $data->undertime = $updated_hours['undertime'];
+            $data->overtime = $updated_hours['overtime'];
+            $data->night_differential = $updated_hours['night_differential'];
+            $data->status = $status;
+            $data->save();
+        }
+
+        // clear
+        $this->excel_file = null;
+        $this->isDisabledImport = true;
+        $this->import_create = [];
+        $this->import_update = [];
+        $this->import_ignore = [];
+        $this->show_excel_results = false;
+        $this->import_page = 'create';
+
+        $this->notif_message = "You've successfully imported new attendance.";
+        $this->emit('openNotifModal');
+    }
+
+
+    public function downloadTemplate()
+    {
+        $folderName = 'templates';
+        $fileName = 'attendance-template.xlsx';
+        return $this->fileService->download($folderName, $fileName);
+    }
+
+    public function importPage($page)
+    {
+        $this->import_page = $page;
+    }
+
+    public function uploadExcel()
+    {
+        $data = Excel::toCollection(new AttendanceImport(), $this->excel_file);
+
+        if($data) {
+            $this->show_excel_results = true;
+        } else {
+            $this->show_excel_results = false;
+        }
+        $row = [];
+        $ignore_row = [];
+        $update_row = [];
+        $create_row = [];
+
+        foreach($data[0] as $key => $value)
+        {
+            if($value['date'] != '' && $value['time_in'] != '' && $value['time_out'] != '') {
+                $key = $key + 2;
+                $date = Date::excelToDateTimeObject($value['date']);
+                $time_in = Date::excelToDateTimeObject($value['time_in']);
+                $time_out = Date::excelToDateTimeObject($value['time_out']);
+                $user_code = $value['employee_id'];
+                $project_code = $value['project_code'];
+                // $task = $value['task'];
+
+                $date = Carbon::parse($date);
+
+                $isFutureDate = $date->gt(Carbon::now());
+
+                $valid_until = Carbon::now()->subYears(3);
+
+                $valid_date = $date->gt($valid_until);
+
+                $row[$key] = [
+                    'employee_id' => $user_code,
+                    'date' => $date->format('m/d/Y'),
+                    'time_in' => $time_in->format('H:i'),
+                    'time_out' => $time_out->format('H:i'),
+                    'project_code' => $project_code,
+                ];
+
+                // ignore
+                // user not exist, project not exist, date invalid, 
+                
+                $user = User::where('code', $user_code)->first();
+                $project = $project_code === '' || $project_code === null ? '' : Project::where('code', $project_code)->first();
+
+                if(!$user || $project === null || $valid_date == false) {
+                    // ignore
+                    $str = [];
+                    if(!$user) {
+                        $str[] = 'Employee ID not exist';
+                    }
+                    if(!$project) {
+                        $str[] = 'Project Code not exist';
+                    }
+                    if($valid_date == false) {
+                        $str[] = 'Date must be 3 years above';
+                    }
+                    $ignore_row[$key] = $row[$key];
+
+                    $ignore_row[$key]['status'] = $str;
+                } else {
+                    // update and create
+                    $attendance = Attendance::where('user_id', $user->id)
+                    ->where('date', $date)
+                    ->first();
+
+                    if($attendance)
+                    {
+                        $update_row[$key] = $row[$key];
+                    } else {
+                        $create_row[$key] = $row[$key];
+                    }
+                }
+            }
+        }
+
+        $this->import_create = $create_row;
+        $this->import_update = $update_row;
+        $this->import_ignore = $ignore_row;
+
+        $this->emit('closeImportAttendanceModal');
+
     }
 
     // FETCH DATA
 
-    public function getAttendancesProperty()
+    public function getAttendancesQueryProperty()
     {
         $search = $this->search;
         $selected_project_id = $this->search_project_id_table;
@@ -100,8 +326,7 @@ class AttendanceComponent extends Component
                 
             })
             ->latest('attendances.updated_at')
-            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path')
-            ->paginate($this->perPage);
+            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path');
         }
         elseif(Auth::user()->hasRole('timekeeper'))
         {
@@ -126,8 +351,7 @@ class AttendanceComponent extends Component
                 ->orWhere('attendances.time_out', 'like', '%' . $search . '%');
             })
             ->latest('attendances.updated_at')
-            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path')
-            ->paginate($this->perPage);
+            ->select('attendances.*', 'users.first_name', 'users.last_name', 'users.code', 'users.profile_photo_path');
         }
         else 
         {
@@ -147,57 +371,26 @@ class AttendanceComponent extends Component
                 ->orWhere('time_in', 'like', '%' . $search . '%')
                 ->orWhere('time_out', 'like', '%' . $search . '%');
             })
-            ->latest('updated_at')
-            ->paginate($this->perPage);
+            ->latest('updated_at');
         }
         return $data;
     }
 
+    public function getAttendancesProperty()
+    {
+        return $this->attendances_query->paginate($this->perPage);
+    }
+
+    public function download()
+    {
+        $data = $this->attendances_query->get();
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Attendance Export.xlsx';
+        return Excel::download(new AttendanceExport($data), $filename);
+    }
+
     public function getUsersProperty()
     {
-        $search = $this->search_add;
-        $data = collect([]);
-        if(Auth::user()->hasRole('administrator'))
-        {
-            $data = User::where('is_active', true)
-            ->where(function ($query) use ($search) {
-                return $query->where('last_name', 'like', '%' . $search . '%')
-                ->orWhere('first_name', 'like', '%' . $search . '%')
-                ->orWhere('code', 'like', '%' . $search . '%');
-            })
-            ->get();
-        }
-        elseif(Auth::user()->hasRole('timekeeper'))
-        {
-            $project = Self::getTimekeepersLatestProject();
-
-            if($project)
-            {
-                $user_ids = $project->users->pluck('id');
-
-                $data = User::where('is_active', true)
-                ->whereIn('id', [$user_ids])
-                ->where(function ($query) use ($search) {
-                    return $query->where('last_name', 'like', '%' . $search . '%')
-                    ->orWhere('first_name', 'like', '%' . $search . '%')
-                    ->orWhere('code', 'like', '%' . $search . '%');
-                })
-                ->get();
-            } 
-            else 
-            {
-                // $this->hide = true;
-                $data = User::where('is_active', true)
-                ->where('id', Auth::user()->id)
-                ->where(function ($query) use ($search) {
-                    return $query->where('last_name', 'like', '%' . $search . '%')
-                    ->orWhere('first_name', 'like', '%' . $search . '%')
-                    ->orWhere('code', 'like', '%' . $search . '%');
-                })
-                ->get();
-            }
-        }
-        return $data;
+        return $this->userRepository->getUsersByAuthUserRole($this->search_add, $relations = [], $paginate = 10, $sortByColumn = 'created_at', $sortBy = 'DESC');
     }
 
     public function getProjectsProperty()
@@ -225,17 +418,7 @@ class AttendanceComponent extends Component
 
     public function getPendingAttendancesProperty()
     {
-        $search = $this->search_name_or_date_approve_attendance;
-        return Attendance::leftJoin('users', 'attendances.user_id', '=', 'users.id')
-        ->where(function ($query) use ($search) {
-            return $query->where('users.last_name', 'like', '%' . $search . '%')
-            ->orWhere('users.first_name', 'like', '%' . $search . '%')
-            ->orWhere('users.code', 'like', '%' . $search . '%')
-            ->orWhere('attendances.date', 'like', '%' . $search . '%');
-        })
-        ->select('attendances.id', 'users.last_name', 'users.first_name', 'users.code', 'attendances.date', 'users.profile_photo_path')
-        ->where('attendances.status', 4)
-        ->paginate(10);
+        return $this->modelRepository->getPendingForModal($this->search_name_or_date_approve_attendance, [], $paginate = 10, $sortByColumn = 'created_at', $sortBy = 'DESC');
     }
 
 
@@ -255,26 +438,14 @@ class AttendanceComponent extends Component
                 'time_out_add_attendance' => 'required',
             ]);
 
-            $get_hours = Self::getHoursAttendance($this->date_add_attendance, $this->time_in_add_attendance, $this->time_out_add_attendance);
-            $get_status = Self::getAttendanceStatus($this->date_add_attendance, $get_hours['late']);
+            $result = $this->modelService->store(
+                Auth::user()->id, 
+                $this->selected_project_add_attendance, 
+                $this->date_add_attendance,
+                $this->time_in_add_attendance,
+                $this->time_out_add_attendance
+            );
 
-            $data = [
-                'user_id' => Auth::user()->id,
-                'user_name' => Auth::user()->formal_name(),
-                'date' => $this->date_add_attendance,
-                'time_in' => $this->time_in_add_attendance,
-                'time_out' => $this->time_out_add_attendance,
-                'regular' => $get_hours['regular'],
-                'late' => $get_hours['late'],
-                'undertime' => $get_hours['undertime'],
-                'overtime' => $get_hours['overtime'],
-                'night_differential' => $get_hours['night_differential'],
-                'status' => $get_status,
-                'project_id' => $this->selected_project_add_attendance,
-            ];
-
-            Self::insertAttendance($data);
-            
         } 
         else 
         {
@@ -304,41 +475,20 @@ class AttendanceComponent extends Component
                 ]);
             }
 
-            
-
-            $get_hours = Self::getHoursAttendance($this->date_add_attendance, $this->time_in_add_attendance, $this->time_out_add_attendance);
-            $get_status = Self::getAttendanceStatus($this->date_add_attendance, $get_hours['late']);
-
             foreach($this->selected_users_add_attendance as $user_id)
             {
-                $user_name = "";
-                $user = User::find($user_id);
-                if($user)
-                {
-                    $user_name = $user->informal_name();
-                }
-                
-
-                $data = [
-                    'user_name' => $user_name,
-                    'user_id' => $user_id,
-                    'date' => $this->date_add_attendance,
-                    'time_in' => $this->time_in_add_attendance,
-                    'time_out' => $this->time_out_add_attendance,
-                    'regular' => $get_hours['regular'],
-                    'late' => $get_hours['late'],
-                    'undertime' => $get_hours['undertime'],
-                    'overtime' => $get_hours['overtime'],
-                    'night_differential' => $get_hours['night_differential'],
-                    'status' => $get_status,
-                    'project_id' => $this->selected_project_add_attendance,
-                ];
-    
-                Self::insertAttendance($data);
+                $result = $this->modelService->store(
+                    $user_id,
+                    $this->selected_project_add_attendance, 
+                    $this->date_add_attendance,
+                    $this->time_in_add_attendance,
+                    $this->time_out_add_attendance
+                );
             }
         }
         
         $this->emit('closeAddAttendanceModal');
+        $this->notif_message = "not import";
         $this->emit('openNotifModal');
     }
 
@@ -350,11 +500,7 @@ class AttendanceComponent extends Component
 
             $update_attendance = Attendance::find($attendance_id);
             $date = $update_attendance->date;
-
-            if($this->selected_status_approve_attendance != 5)
-            {
-                $status = Self::getAttendanceStatus($date, $update_attendance->late);
-            }
+            $status = $this->modelService->getAttendanceStatus($date,$update_attendance->late, Auth::user()->hasRole('administrator') ? true:false);
 
             $update_attendance->status = $status;
             $update_attendance->save();
@@ -366,7 +512,7 @@ class AttendanceComponent extends Component
     {
         $update_attendance = Attendance::find($this->selected_details_id);
 
-        $updated_hours = Self::getHoursAttendance($this->selected_details_date, $this->selected_details_time_in, $this->selected_details_time_out);
+        $updated_hours = $this->modelService->getHoursAttendance($this->selected_details_date, $this->selected_details_time_in, $this->selected_details_time_out);
         $update_attendance->regular = $updated_hours['regular'];
         $update_attendance->late = $updated_hours['late'];
         $update_attendance->undertime = $updated_hours['undertime'];
@@ -378,7 +524,7 @@ class AttendanceComponent extends Component
             if($status == 1)
             {
                 $date = $this->selected_details_date;
-                $status = Self::getAttendanceStatus($date, $updated_hours['late']);
+                $status = $this->modelService->getAttendanceStatus($date, $updated_hours['late']);
             }
         } else {
             $status = 4;
@@ -708,35 +854,6 @@ class AttendanceComponent extends Component
             'overtime' => $overtime,
             'night_differential' => $night_differential,
         ];
-    }
-
-    public function getAttendanceStatus($date, $late_hours)
-    {
-        $date = Carbon::parse($date);
-        $is_date_working_day = Helper::isDateWorkingDay($date);
-        $status = 0;
-        if(Auth::user()->hasRole('administrator'))
-        {
-            
-            if($is_date_working_day == true)
-            {
-                $status = 1; // PRESENT
-
-                if($late_hours > 0)
-                {
-                    $status = 2;  // LATE
-                }
-            } 
-            else 
-            {
-                $status = 3; // RESTDAY 
-            }
-        }
-        else
-        {
-            $status = 4; // PENDING 
-        }
-        return $status;
     }
 
     // INSERT

@@ -51,6 +51,19 @@ class Helper
         return $dates;
     }
 
+    public static function getRangeMonthBetweenDates($period_start, $period_end)
+    {
+        $start_date = Carbon::createFromFormat('Y-m-d', $period_start);
+        $end_date = Carbon::createFromFormat('Y-m-d', $period_end);
+
+        $dateRange = CarbonPeriod::create($start_date, '1 month', $end_date);
+        $dates = [];
+        foreach ($dateRange as $date) {
+            $dates[] = $date;
+        }
+        return $dates;
+    }
+
     public static function isDateWorkingDay($date)
     {
         // return boolean
@@ -85,7 +98,7 @@ class Helper
 
     // COMPANY INFORMATION
     
-    public function getCompanyInformation()
+    public static function getCompanyInformation()
     {
         return CompanyInformation::find(1);
     }
@@ -128,5 +141,22 @@ class Helper
         return $total_amount_to_pay;
     }
 
+    ////////////// // GENERATOR
+
+
+    public static function generateCode($value)
+    {
+        // $year = Carbon::now()->format('Y');
+        $year = '2022';
+        $data = $year . "-" . sprintf('%04d', $value);
+        return $data;
+    }
+
+    public static function randomWithChance($chance)
+    {
+        // chance in percentage
+        $random = round(mt_rand(1, (1 / $chance) * 100));
+        return $random == 1 ? true:false;
+    }
     
 }

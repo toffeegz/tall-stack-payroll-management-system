@@ -1,4 +1,6 @@
 <div>
+    
+    
     {{-- Because she competes with no one, no one can compete with her. --}}
     <div class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">
@@ -12,6 +14,10 @@
                         <x-forms.search-input placeholder="search name or code" name="search"/>
                     </div>
                     <div class="space-x-2 flex">
+                        <x-forms.button-rounded-md-secondary class="whitespace-nowrap" wire:click="download">
+                            <i class="fa-solid fa-download"></i>
+                            <span class="hidden md:inline-flex">Download</span>
+                        </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap" onclick="modalObject.openModal('modalNewProject')">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">New Project</span>
@@ -29,9 +35,9 @@
                                 <th class="px-4 py-3">Name</th>
                                 <th class="px-4 py-3 whitespace-nowrap">Start Date</th>
                                 <th class="px-4 py-3 whitespace-nowrap">End Date</th>
-                                <th class="px-4 py-3 text-center">Deployed</th>
+                                <th class="px-4 py-3 text-center hidden md:table-cell">Deployed</th>
                                 <th class="px-4 py-3 text-center">Status</th>
-                                <th class="px-4 py-3">Location</th>
+                                <th class="px-4 py-3 hidden md:table-cell">Location</th>
                                 
                             </tr>
                             </thead>
@@ -54,12 +60,12 @@
                                             </div>
                                         </td>
                                         <td class="px-4 py-3 text-xs whitespace-nowrap">
-                                            {{ $project->start_date ? Carbon\Carbon::parse($project->start_date)->format('M d, Y') : '' }}
+                                            {{ $project->start_date ? Carbon\Carbon::parse($project->start_date)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs whitespace-nowrap">
-                                            {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '' }}
+                                            {{ $project->end_date ? Carbon\Carbon::parse($project->end_date)->format('M d, Y') : '-' }}
                                         </td>
-                                        <td class="py-3 px-6 text-center">
+                                        <td class="py-3 px-6 text-center hidden md:table-cell">
                                             <div class="flex items-center justify-center w-28">
                                                 @foreach($project->usersImage(4) as $user)
                                                 <img class="w-8 h-8 object-cover rounded-full border-gray-200 border -m-1"  src="{{ asset('storage/img/users/'. $user->profile_photo_path) }}"/>
@@ -81,7 +87,7 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-3 text-sm">
+                                        <td class="px-4 py-3 text-sm  hidden md:table-cell">
                                             <p class=" line-clamp-3">{{ $project->location }}</p>
                                         </td>
                                     </tr>
@@ -90,7 +96,7 @@
                         </table>
                     </div>
                 </div>
-                {{ $projects->links() }}
+                {{ $projects->withQueryString()->links() }}
             </div>
 
             
@@ -98,10 +104,9 @@
     </div>
 
 
-    @include('scripts.project.project-script')
     @include('modals.project.project-modal')
 </div>
 
 
 
-
+@include('scripts.project.project-script')

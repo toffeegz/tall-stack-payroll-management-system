@@ -112,8 +112,8 @@ class LeaveComponent extends Component
                 'user_id' => 'required',
                 'type' => 'required',
                 'leave_type' => 'required',
-                'reason'=> 'required|max:255',
-                'start_date' => 'required|date|after:today',
+                'reason'=> 'required',
+                'start_date' => 'required|date',
                 'end_date' => 'required_if:type,3|nullable|date|after:start_date',
             ]);
 
@@ -216,7 +216,7 @@ class LeaveComponent extends Component
             'selected_type_id' => 'required',
             'selected_leave_type_id' => 'required',
             'selected_reason'=> 'required|max:255',
-            'selected_start_date' => 'required|date|after:today',
+            'selected_start_date' => 'required|date',
             'selected_end_date' => 'required_if:type,3|nullable|date|after:start_date',
         ]);
 

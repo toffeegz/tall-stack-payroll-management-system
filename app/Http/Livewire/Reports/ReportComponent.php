@@ -14,7 +14,7 @@ use App\Exports\Report\PayrollJournalExport;
 use App\Exports\Report\ProjectListExport;
 use App\Exports\Report\PayslipsExport;
 use App\Classes\Payroll\PayslipClass;
-
+use App\Services\Payslip\PayslipServiceInterface;
 
 use App\Models\PayrollPeriod;
 use App\Models\Project;
@@ -35,6 +35,13 @@ class ReportComponent extends Component
     public $start_date, $end_date;
     public $user_type = "";
     public $project = "";
+
+    protected $payslipService;
+    public function boot(
+        PayslipServiceInterface $payslipService
+    ) {
+        $this->payslipService = $payslipService;
+    }
 
     public function render()
     {
@@ -101,7 +108,7 @@ class ReportComponent extends Component
             $data = [];
             foreach($raw_data as $collection)
             {
-                $data[] = PayslipClass::payslipViewDataVariable($collection);
+                $data[] = $this->payslipService->payslipViewDataVariable($collection);
             }
             $filename = Carbon::now()->format('Ymd') . ' Payslips.xlsx';
             return Excel::download(new PayslipsExport($data), $filename);

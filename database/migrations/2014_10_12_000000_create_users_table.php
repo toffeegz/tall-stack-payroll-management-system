@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at');
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('first_name');
             $table->string('middle_name')->nullable();
-            $table->string('extension_name')->nullable();
+            $table->string('suffix_name')->nullable();
 
             $table->string('code')->unique();
 
@@ -61,6 +61,8 @@ class CreateUsersTable extends Migration
 
             $table->boolean('is_paid_holidays')->default(false);
             $table->boolean('is_tax_exempted')->default(false);
+            // $table->boolean('is_archive')->default(false);
+            $table->boolean('system_access')->default(true);
 
             $table->unsignedTinyInteger('frequency_id')->default(1);
             

@@ -9,9 +9,15 @@ use App\Models\PayrollLog;
 
 use App\Classes\Payroll\PayrollClass;
 use App\Classes\Payroll\PayslipClass;
+use App\Services\PayrollPeriod\PayrollPeriodServiceInterface;
+use App\Services\Payslip\PayslipServiceInterface;
+use App\Repositories\PayrollPeriod\PayrollPeriodRepositoryInterface;
 
 use App\Models\PayrollPeriod;
 use App\Models\User;
+
+use App\Jobs\Payslip\GeneratePayslipJob;
+
 
 class ReviewProcessedPayrollComponent extends Component
 {
@@ -30,6 +36,18 @@ class ReviewProcessedPayrollComponent extends Component
     public $sss_amount = 0, $hdmf_amount = 0, $phic_amount= 0; 
     public $total_tax_contributions;
 
+    private $payrollPeriodService;
+    private $payslipService;
+    private $payrollPeriodRepository;
+    public function boot(
+        PayrollPeriodServiceInterface $payrollPeriodService,
+        PayslipServiceInterface $payslipService,
+        PayrollPeriodRepositoryInterface $payrollPeriodRepository,
+    ) {
+        $this->payrollPeriodService = $payrollPeriodService;
+        $this->payslipService = $payslipService;
+        $this->payrollPeriodRepository = $payrollPeriodRepository;
+    }
 
     public function mount(Request $request)
     {
@@ -38,7 +56,7 @@ class ReviewProcessedPayrollComponent extends Component
         if($this->payroll_logs)
         {
             $data = $this->payroll_logs;
-            $this->payrolls = PayrollClass::payroll($data);
+            $this->payrolls = $this->payrollPeriodService->payroll($data);
             // dd($this->payrolls);
         }
         else{
@@ -50,7 +68,7 @@ class ReviewProcessedPayrollComponent extends Component
         ->first();
         $this->period_start = $payroll_period->period_start;
         $this->period_end = $payroll_period->period_end;
-        $this->payout_date = $this->payroll_logs->payout_date;
+        $this->payout_date = $payroll_period->payout_date;
         $this->payroll_period_id = $payroll_period->id;
 
 
@@ -125,8 +143,9 @@ class ReviewProcessedPayrollComponent extends Component
 
     public function submitPayroll()
     {
-        $data = PayslipClass::payslipCreation($this->payrolls);
-        $payroll_period = PayrollPeriod::find($this->payroll_period_id);
+        // $result = $this->payslipService->generate($this->payrolls);
+        GeneratePayslipJob::dispatch($this->payrolls);
+        $payroll_period = $this->payrollPeriodRepository->show($this->payroll_period_id);
         $payroll_period->is_payroll_generated = true;
         $payroll_period->save();
         return redirect()->route('payroll');

@@ -1,6 +1,7 @@
 {{-- livewire modal script --}}
 <script>
 
+    
     document.addEventListener('livewire:load', function () {
         Livewire.on('closeAddAttendanceModal', (el, component) => {
             modalObject.closeModal('modalAddAttendance'); 
@@ -19,6 +20,12 @@
         });
         
 
+        Livewire.on('openImportAttendanceModal', (el, component) => {
+            modalObject.openModal('modalImportAttendance'); 
+        });
+        Livewire.on('closeImportAttendanceModal', (el, component) => {
+            modalObject.closeModal('modalImportAttendance'); 
+        });
     });
     // 
 

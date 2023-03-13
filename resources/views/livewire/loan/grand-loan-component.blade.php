@@ -18,6 +18,12 @@
                             <option value="2">Approved</option>
                             <option value="3">Disapproved</option>
                         </x-forms.select>
+                        <x-forms.button-rounded-md-secondary class="whitespace-nowrap py-3" wire:click="download">
+                            <i class="fa-solid fa-download"></i>
+                            <span class="hidden md:inline-flex">
+                                Download
+                            </span>
+                        </x-forms.button-rounded-md-secondary>
                         <x-forms.button-rounded-md-primary class="whitespace-nowrap"  onclick="modalObject.openModal('modalGrantLoan')">
                             <i class="fa-solid fa-plus"></i>
                             <span class="hidden md:inline-flex">Grant Loan</span>
@@ -33,10 +39,10 @@
                             <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
                                 
                                 <th class="px-4 py-3">Name</th>
-                                <th class="px-4 py-3">Date Requested</th>
-                                <th class="px-4 py-3">Date Approved</th>
+                                <th class="px-4 py-3 hidden md:table-cell">Date Requested</th>
+                                <th class="px-4 py-3 hidden md:table-cell">Date Approved</th>
                                 <th class="px-4 py-3 text-center">Status</th>
-                                <th class="px-4 py-3 text-right">Installment</th>
+                                <th class="px-4 py-3 text-right hidden md:table-cell">Installment</th>
                                 <th class="px-4 py-3 text-right">Amount</th>
                                 <th class="px-4 py-3 text-right">Balance</th>
                                 
@@ -49,7 +55,10 @@
                                             <div class="flex items-center text-sm">
                                                 <!-- Avatar with inset shadow -->
                                                 <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" >
-                                                    <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $loan->user->profile_photo_path) }}" alt="" loading="lazy" />
+                                                    <?php 
+                                                        $profile_photo_path = $loan->user->profile_photo_path ? $loan->user->profile_photo_path : 'sample.png';
+                                                    ?>
+                                                    <img class="object-cover w-full h-full rounded-full"  src="{{ asset('storage/img/users/'. $profile_photo_path) }}" alt="" loading="lazy" />
                                                     <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" ></div>
                                                 </div>
                                                 <div>
@@ -60,11 +69,11 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 text-xs">
-                                            {{ $loan->created_at ? Carbon\Carbon::parse($loan->created_at)->format('M d, Y') : '' }}
+                                        <td class="px-4 py-3 text-xs hidden md:table-cell">
+                                            {{ $loan->created_at ? Carbon\Carbon::parse($loan->created_at)->format('M d, Y') : '-' }}
                                         </td>
-                                        <td class="px-4 py-3 text-xs">
-                                            {{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('M d, Y') : '' }}
+                                        <td class="px-4 py-3 text-xs hidden md:table-cell">
+                                            {{ $loan->date_approved ? Carbon\Carbon::parse($loan->date_approved)->format('M d, Y') : '-' }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-center">
                                             @if($loan->status == 1)
@@ -81,7 +90,7 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold">
+                                        <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold hidden md:table-cell">
                                             ₱{{ number_format($loan->installment_amount, 2, '.', ',') }}
                                         </td>
                                         <td class="px-4 py-3 text-xs text-right text-stone-600 font-bold">

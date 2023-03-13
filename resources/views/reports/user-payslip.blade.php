@@ -40,7 +40,7 @@
         <td colspan=""></td>
         <td colspan=""></td>
         <td colspan="1" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: left;">NET PAY</td>
-        <td colspan="2" style="border:1px solid #000; text-align: right; font-weight: bold; font-size: 12pt;">₱{{ $data['net_pay'] }}</td>
+        <td colspan="2" style="border:1px solid #000; text-align: right; font-weight: bold; font-size: 12pt;">₱{{ number_format($data['net_pay'], 2, '.', '') }}</td>
     </tr>
     <tr>
         <td colspan="8"></td>
@@ -56,26 +56,26 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Basic Pay</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;">{{ $data['basic_pay_hours'] }}</td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['basic_pay'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['basic_pay'], 2, '.', '') }}</td>
     </tr>
     {{-- overtime pay --}}
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Overtime Pay</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;">{{ $data['overtime_hours'] }}</td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['overtime_pay'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['overtime_pay'], 2, '.', '') }}</td>
     </tr>
     {{-- restday pay --}}
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Restday Pay</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;">{{ $data['restday_hours'] }}</td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['restday_pay'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['restday_pay'], 2, '.', '') }}</td>
     </tr>
 
     {{-- restday_ot pay --}}
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Restday OT Pay</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;">{{ $data['restday_ot_hours'] }}</td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['restday_ot_pay'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['restday_ot_pay'], 2, '.', '') }}</td>
     </tr>
 
     @if($data['night_differential_pay'] != 0)
@@ -83,7 +83,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Night Diff Pay</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;">{{ $data['night_differential_hours'] }}</td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['night_differential_pay'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['night_differential_pay'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -91,7 +91,7 @@
     <tr>
         <td colspan="4"></td>
         <td colspan="2" style="border:1px solid #000; text-align: left; font-weight: bold; font-size: 12pt;">GROSS PAY</td>
-        <td colspan="2" style="border:1px solid #000; text-align: right; font-weight: bold; font-size: 12pt;">{{ $data['gross_pay']}}</td>
+        <td colspan="2" style="border:1px solid #000; text-align: right; font-weight: bold; font-size: 12pt;">{{ number_format($data['gross_pay'], 2, '.', '')}}</td>
     </tr>
 
     <tr>
@@ -111,7 +111,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Late</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;">{{ $data['late_hours'] }}</td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['late'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['late'], 2, '.', '') }}</td>
     </tr>
     @endif
     {{-- undertime --}}
@@ -119,7 +119,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Undertime</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;">{{ $data['undertime_hours'] }}</td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['undertime'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['undertime'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -128,7 +128,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Absences</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;"></td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['absences'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['absences'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -137,7 +137,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">Cash Advance (Loan)</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;"></td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['cash_advance'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['cash_advance'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -146,7 +146,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">SSS Loan</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;"></td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['sss_loan'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['sss_loan'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -155,7 +155,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">HDMF Loan</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;"></td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['hdmf_loan'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['hdmf_loan'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -164,7 +164,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">SSS</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;"></td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['sss'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['sss'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -173,7 +173,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">HDMF</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;"></td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['hdmf'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['hdmf'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -182,7 +182,7 @@
     <tr>
         <td colspan="3" style="text-align: left; border:1px solid #000; text-align: left;">PHIC</td>
         <td colspan="1" style="border:1px solid #000; text-align: center;"></td>
-        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ $data['phic'] }}</td>
+        <td colspan="4" style="border:1px solid #000; text-align: right; text-align: right;">{{ number_format($data['phic'], 2, '.', '') }}</td>
     </tr>
     @endif
 
@@ -190,7 +190,7 @@
     <tr>
         <td colspan="4"></td>
         <td colspan="2" style="border:1px solid #000; text-align: left; font-weight: bold; font-size: 12pt;">TOTAL DEDUCTIONS</td>
-        <td colspan="2" style="border:1px solid #000; text-align: right; font-weight: bold; font-size: 12pt;">{{ $data['deductions']}}</td>
+        <td colspan="2" style="border:1px solid #000; text-align: right; font-weight: bold; font-size: 12pt;">{{ number_format($data['deductions'], 2, '.', '')}}</td>
     </tr>
 
 

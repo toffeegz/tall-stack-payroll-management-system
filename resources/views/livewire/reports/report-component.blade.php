@@ -62,7 +62,7 @@
                             </div>
                         </div>
 
-                        <a href="#" class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-stone-900 bg-white rounded-xl border-2 border-stone-100 focus:outline-none focus:shadow-outline-stone">
+                        <!-- <a href="#" class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-stone-900 bg-white rounded-xl border-2 border-stone-100 focus:outline-none focus:shadow-outline-stone">
                             <div class="flex flex-row space-x-4">
                                 <div class="flex items-center bg-blue-100 rounded-md p-1">
                                     <img src="{{ asset('storage/img/icons/transaction-icon.png') }}" class="w-10 h-10 object-cover"/>
@@ -79,7 +79,7 @@
                             <button class="cursor-pointer text-blue-500 text-xs font-semibold">
                                 View <i class="fa-solid fa-angle-right ml-2 fa-xs"></i>
                             </button>
-                        </a>
+                        </a> -->
                     {{--  --}}
                 {{--  --}}
                     
