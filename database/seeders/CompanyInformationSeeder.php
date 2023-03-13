@@ -14,12 +14,7 @@ class CompanyInformationSeeder extends Seeder
      */
     public function run(CompanyInformation $companyInformation)
     {
-        $companyInformation->create([
-            'name' => 'Aero-Kim Builders',
-            'address' => 'Silver Road Brgy. Epifanio Malia, General Mariano Alvarez, 4117 Cavite',
-            'phone' => '(046) 414 6885',
-            'email' => 'aerokim.builders@gmail.com',
-            'logo_path' => 'aerokim.png',
-        ]);
+        CompanyInformation::truncate();
+        CompanyInformation::factory(1)->create();
     }
 }

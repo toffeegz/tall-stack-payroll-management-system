@@ -19,7 +19,7 @@ class CreateCompanyInformationTable extends Migration
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('logo_path');
+            $table->string('logo_path')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
