@@ -28,7 +28,7 @@ class ProjectService implements ProjectServiceInterface
         }
         
         $code = Carbon::now()->format('Y') . "-" . sprintf('%04d', $last_digits);
-        $code = '2022' . "-" . sprintf('%04d', $last_digits);
+        // $code = '2022' . "-" . sprintf('%04d', $last_digits);
         return $code;
     }
     
