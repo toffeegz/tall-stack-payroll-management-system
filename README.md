@@ -81,6 +81,7 @@ Then Run
     php artisan db:seed
 
 Set Email credentials in .env file
+
     MAIL_MAILER=smtp
     MAIL_HOST=smtp.gmail.com
     MAIL_PORT=587
