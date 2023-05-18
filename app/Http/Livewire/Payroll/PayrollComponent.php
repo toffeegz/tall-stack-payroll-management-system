@@ -87,6 +87,7 @@ class PayrollComponent extends Component
             ->orWhere('users.first_name', 'like', '%' . $search . '%')
             ->orWhere('users.code', 'like', '%' . $search . '%');
         })
+        ->whereNull('users.deleted_at') // add this line to remove payslips with deleted users
         ->select('payslips.*')
         ->paginate(15);
     }
