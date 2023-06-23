@@ -120,7 +120,7 @@
                                         <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'grand-loan') text-stone-500 @endif @endisset" >
                                             <a href="{{ route('loan.grand') }}">
                                                 <span class="ml-3">
-                                                    Grand Loan
+                                                    Grant Loan
                                                 </span>
                                             </a>
                                         </li>
@@ -435,7 +435,7 @@
                                     <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'grand-loan') text-stone-500 @endif @endisset" >
                                         <a href="{{ route('loan.grand') }}">
                                             <span class="ml-3">
-                                                Grand Loan
+                                                Grant Loan
                                             </span>
                                         </a>
                                     </li>
