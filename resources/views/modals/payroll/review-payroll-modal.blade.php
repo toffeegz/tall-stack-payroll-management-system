@@ -1,5 +1,5 @@
 {{-- modal total hours --}}
-    <x-modal-small id="modalEditTaxContributions" title="Tax Contributions ({{ $selected_user_name }})" wire:ignore.self>
+    <x-modal-small id="modalEditTaxContributions" title="Contributions ({{ $selected_user_name }})" wire:ignore.self>
         {{-- modal body --}}
             <div class="space-y-4 my-4">
                 {{-- total hours --}}
@@ -32,7 +32,7 @@
                         @enderror
                     </div>
                     {{-- <div >
-                        <p class="font-semibold text-sm text-stone-500">Total Tax Contributions: {{ number_format($total_tax_contributions, 2, '.', ',') }}</p>
+                        <p class="font-semibold text-sm text-stone-500">Total Contributions: {{ number_format($total_tax_contributions, 2, '.', ',') }}</p>
                     </div> --}}
                 @endif
             </div>

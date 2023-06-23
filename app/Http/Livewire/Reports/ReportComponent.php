@@ -138,7 +138,7 @@ class ReportComponent extends Component
                 'payout_date' => $payroll_period->payout_date,
                 'frequency_id' => $payroll_period->frequency_id,
             ];
-            $filename = Carbon::now()->format('Ymd') . ' Tax Contribution.xlsx';
+            $filename = Carbon::now()->format('Ymd') . ' Contribution.xlsx';
             $this->emit('closeTaxContributionModal');
 
             return Excel::download(new TaxContributionExport($data, $raw_data), $filename);
