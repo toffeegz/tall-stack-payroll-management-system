@@ -161,18 +161,19 @@ class ReportComponent extends Component
         ]);
         $start_date = $this->start_date;
         $end_date = $this->end_date;
-        $raw_data = Loan::query()
-        ->where(function ($query) use ($start_date, $end_date){
-            if($start_date && $end_date) {
-                return $query->whereBetween('created_at',[$start_date, $end_date]);
-            } elseif($start_date) {
-                return $query->where('created_at', '>=', $start_date);
-            } elseif($end_date) {
-                return $query->where('created_at', '<=', $end_date);
-            }
-        })
-        ->get();
 
+        $query = Loan::query();
+
+        if ($start_date) {
+            $query->whereDate('created_at', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $query->whereDate('created_at', '<=', $end_date);
+        }
+
+        $raw_data = $query->get();
+        
         if($raw_data->count() != 0)
         { 
             $payroll_period = PayrollPeriod::find($this->payroll_period);

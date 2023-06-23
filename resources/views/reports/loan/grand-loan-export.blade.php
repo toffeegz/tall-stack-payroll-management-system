@@ -19,13 +19,13 @@
     <tr>
         <td colspan="3" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center;">Employee Information</td>
         <td colspan="2" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center;">Status</td>
+        <td colspan="2" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center;">Reference No.</td>
         <td colspan="2" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center;">Date Approved</td>
         <td colspan="1" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap: break-word;">Auto Deduct</td>
         <td colspan="1" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap: break-word;">Install Period</td>
         <td colspan="1" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center;">Balance</td>
         <td colspan="1" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap: break-word;">Loan amount</td>
         <td colspan="1" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap: break-word;">Install Amount</td>
-        <td colspan="3" rowspan="2" style="border:1px solid #000; font-size:12pt; font-weight: bold; text-align: center; word-wrap: break-word;">Details</td>
         
     </tr>
     <tr >
@@ -34,6 +34,7 @@
     </tr>
     <tbody>
         @foreach($data as $value)
+            @if($value->user)
             <tr>
                 <td colspan="2">{{ $value->user->formal_name() }}</td>
                 <td>{{ $value->user->code }}</td>
@@ -46,14 +47,15 @@
                         Disapproved
                     @endif
                 </td>
+                <td colspan="2" style="text-align:left;">{{ $value->reference_no }}</td>
                 <td colspan="2" style="text-align: center;">{{ $value->date_approved ? Carbon\Carbon::parse($value->date_approved)->format('m/d/Y') : '-' }}</td>
                 <td style="text-align:center;">{{ $value->auto_deduct ? 'Yes' :'No'}}</td>
-                <td style="text-align:right;">{{ number_format($value->install_period, 2, '.',',') }}</td>
-                <td style="text-align:right;">{{ number_format($value->balance, 2, '.',',') }}</td>
-                <td style="text-align:right;">{{ number_format($value->amount, 2, '.',',') }}</td>
-                <td style="text-align:right;">{{ number_format($value->installment_amount, 2, '.',',') }}</td>
-                <td colspan="3" style="text-align:left;">{{ $value->details }}</td>
+                <td style="text-align:right;">{{ $value->install_period }}</td>
+                <td style="text-align:right;">{{ $value->balance }}</td>
+                <td style="text-align:right;">{{ $value->amount }}</td>
+                <td style="text-align:right;">{{ $value->installment_amount }}</td>
             </tr>
+            @endif
         @endforeach
     </tbody>
 </table>
