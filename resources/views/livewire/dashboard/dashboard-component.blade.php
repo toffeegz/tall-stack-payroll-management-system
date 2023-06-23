@@ -51,7 +51,7 @@
                     </div>
                     <div>
                         <p class="mb-2 text-sm font-medium text-stone-600 " >
-                            Loan Balance
+                            Employee Loan Balance
                         </p>
                         <p class="text-lg font-semibold text-stone-700 "  >
                             ₱ {{ number_format($loan_balance, 2, '.', '') }}
@@ -68,7 +68,7 @@
                     </div>
                     <div>
                         <p class="mb-2 text-sm font-medium text-stone-600 " >
-                            Loan With Balance
+                            Employee Loan w/ Balance
                         </p>
                         <p class="text-lg font-semibold text-stone-700 "  >
                             ₱ {{ number_format($total_loan_with_balance, 2, '.', '') }}
