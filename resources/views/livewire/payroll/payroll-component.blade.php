@@ -183,6 +183,27 @@
                             </div>
                         </div>
 
+                        <!-- subcontractual projects payroll -->
+                        <div class="pb-4 flex items-center justify-between p-4 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200 focus:outline-none focus:shadow-outline-stone">
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="items-center rounded-md p-2">
+                                        <img src="{{ asset('storage/img/icons/handshake.png') }}" class="w-10 h-10 object-cover"/>
+                                    </div>
+                                    <div class="font-bold text-sm">
+                                        Run Payroll of Sub-contractual Project
+                                    </div>
+                                    <div class="text-stone-500 text-xs font-light">
+                                        Calculate and process payments for employees working on subcontractual projects
+                                    </div>
+                                </div>
+                                <div>
+                                    <a onclick="modalObject.openModal('modalPreviousPayroll')" class="cursor-pointer text-blue-500 text-xs font-semibold">
+                                        Choose Project and Payroll Period
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {{--  --}}

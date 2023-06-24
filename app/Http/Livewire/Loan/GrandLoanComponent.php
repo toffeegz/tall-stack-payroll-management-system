@@ -32,6 +32,7 @@ class GrandLoanComponent extends Component
     public $selected_total_amount_to_pay = 0;
     public $selected_project_id = "";
     public $selected_user = null;
+    public $selected_reference_no = null;
 
     // new
     public $new_amount = 0;
@@ -41,7 +42,7 @@ class GrandLoanComponent extends Component
     public $new_installment_amount = 0;
     public $new_install_period = 2;
     public $new_auto_deduct = false;
-    public $new_details = "";
+    public $new_reference_no = null;
 
     public $projects = [];
 
@@ -88,7 +89,7 @@ class GrandLoanComponent extends Component
     public function download()
     {
         $data = $this->loans_query->get();
-        $filename = Carbon::now()->format("Y-m-d") . " " . ' Grand Loan Export.xlsx';
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Grant Loan Export.xlsx';
         return Excel::download(new GrandLoanExport($data), $filename);
     }
 
@@ -101,9 +102,9 @@ class GrandLoanComponent extends Component
         $this->selected_install_period = $this->selected_loan->install_period;
         $this->selected_auto_deduct = $this->selected_loan->auto_deduct;
         $this->selected_project_id = $this->selected_loan->project_id;
-
+        $this->selected_reference_no = $this->selected_loan->reference_no;
         $this->selected_user = User::find($this->selected_loan->user_id);
-
+        
         $this->emit('openLoanDetailsModal');
     }
 
@@ -149,6 +150,7 @@ class GrandLoanComponent extends Component
             'selected_amount' => 'required|numeric|min:0|not_in:0',
             'selected_install_period' => 'required|numeric|min:0|not_in:0',
             'selected_installment_amount' => 'required|numeric|min:0|not_in:0',
+            'selected_reference_no' => 'required|max:50'
         ]);
 
         $paid_amount = $this->selected_loan->loanInstallments->sum('amount');
@@ -170,6 +172,7 @@ class GrandLoanComponent extends Component
         $this->selected_loan->balance = $balance;
         $this->selected_loan->date_approved = $date_approved;
         $this->selected_loan->project_id = $this->selected_project_id;
+        $this->selected_loan->reference_no = $this->selected_reference_no;
         $this->selected_loan->save();
 
         $this->emit('closeLoanDetailsModal');
@@ -193,6 +196,7 @@ class GrandLoanComponent extends Component
             'new_amount' => 'required|numeric|min:0|not_in:0',
             'new_install_period' => 'required|numeric|min:0|not_in:0',
             'new_installment_amount' => 'required|numeric|min:0|not_in:0',
+            'new_reference_no' => 'required|max:50',
         ]);
 
         $date_approved = null;
@@ -210,7 +214,7 @@ class GrandLoanComponent extends Component
         $new_loan->balance = $this->new_amount;
         $new_loan->pay_next = $this->new_installment_amount;
         $new_loan->installment_amount = $this->new_installment_amount;
-        $new_loan->details = $this->new_details;
+        $new_loan->reference_no = $this->new_reference_no;
         $new_loan->date_approved = $date_approved;
         $new_loan->status = $this->new_status;
         $new_loan->auto_deduct = $this->new_auto_deduct;

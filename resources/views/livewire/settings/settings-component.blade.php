@@ -13,7 +13,7 @@
                 Leave & Holidays
             </a>
             <a wire:click="page('tax_contribution_table')" class="{{ $page_name == 'tax_contribution_table'? 'border-b-2 border-red-400': '' }} py-1 px-4 cursor-pointer">
-                Tax Contribution Table
+                Contribution Table
             </a>
         </div>
 

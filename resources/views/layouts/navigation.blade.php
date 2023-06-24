@@ -95,7 +95,7 @@
                                             <path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1 -1.8 -1"></path>
                                             <path d="M12 6v2m0 8v2"></path>
                                         </svg>
-                                        <span class="ml-6">Loans</span>
+                                        <span class="ml-6">Short-Term Loan</span>
                                     </span>
                                     <svg
                                         class="w-4 h-4"
@@ -120,7 +120,7 @@
                                         <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'grand-loan') text-stone-500 @endif @endisset" >
                                             <a href="{{ route('loan.grand') }}">
                                                 <span class="ml-3">
-                                                    Grand Loan
+                                                    Grant Loan
                                                 </span>
                                             </a>
                                         </li>
@@ -150,7 +150,7 @@
                                         <path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1 -1.8 -1"></path>
                                         <path d="M12 6v2m0 8v2"></path>
                                     </svg>
-                                    <span class="ml-6">Loans</span>
+                                    <span class="ml-6">Shert-term Loan</span>
                                 </a>
                             </li>
                         @endif
@@ -410,7 +410,7 @@
                                         <path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1 -1.8 -1"></path>
                                         <path d="M12 6v2m0 8v2"></path>
                                     </svg>
-                                    <span class="ml-6">Loans</span>
+                                    <span class="ml-6">Short-Term Loan</span>
                                 </span>
                                 <svg
                                     class="w-4 h-4"
@@ -435,7 +435,7 @@
                                     <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'grand-loan') text-stone-500 @endif @endisset" >
                                         <a href="{{ route('loan.grand') }}">
                                             <span class="ml-3">
-                                                Grand Loan
+                                                Grant Loan
                                             </span>
                                         </a>
                                     </li>
@@ -465,7 +465,7 @@
                                     <path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1 -1.8 -1"></path>
                                     <path d="M12 6v2m0 8v2"></path>
                                 </svg>
-                                <span class="ml-6">Loans</span>
+                                <span class="ml-6">Short-Term Loan</span>
                             </a>
                         </li>
                     @endif

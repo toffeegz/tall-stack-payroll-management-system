@@ -1,5 +1,5 @@
 {{-- modal tax contribution --}}
-<x-modal-small id="modalTaxContribution" title="Tax Contribution Report" wire:ignore.self>
+<x-modal-small id="modalTaxContribution" title="Contribution Report" wire:ignore.self>
     {{-- modal body --}}
         <div class="space-y-4 my-4">
             <div class="">

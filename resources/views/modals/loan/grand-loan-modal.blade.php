@@ -73,6 +73,16 @@
             </div>
         </div>
 
+        <div class="">
+            <x-forms.label>
+                Reference Number
+            </x-forms.label>
+            <x-forms.input type="text" wire:model="selected_reference_no"></x-forms.input>
+            @error('selected_reference_no')
+                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+            @enderror
+        </div>
+
 
     </div>
     {{-- end modal body --}}
@@ -126,6 +136,16 @@
                 @endforeach 
             </x-forms.select>
             @error('new_project_id')
+                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="">
+            <x-forms.label>
+                Reference Number
+            </x-forms.label>
+            <x-forms.input type="text" wire:model="new_reference_no"></x-forms.input>
+            @error('new_reference_no')
                 <p class="text-red-500 text-xs italic">{{ $message }}</p>
             @enderror
         </div>
@@ -206,17 +226,6 @@
                 Auto Deduct in Payroll
             </x-forms.checkbox-label>
         </div>
-
-        <div>
-            <x-forms.label>
-                Details
-            </x-forms.label>
-            <x-forms.textarea wire:model="new_details" rows="2"></x-forms.textarea>
-            @error('new_details')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-            @enderror
-        </div>
-
 
     </div>
     {{-- end modal body --}}

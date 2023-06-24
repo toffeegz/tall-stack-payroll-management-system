@@ -3,7 +3,7 @@
     <div class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">
             <h2 class="my-6 text-2xl font-semibold text-stone-700">
-                Grand Loan
+                Grant Loan
             </h2>
             <div>
                 {{-- Table header --}}

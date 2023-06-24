@@ -91,7 +91,7 @@
                         Other Reports
                     </h2>
 
-                    {{-- tax contribution report --}}
+                    {{-- contribution report --}}
                         <div class="pb-4 flex items-center justify-between p-4 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200 focus:outline-none focus:shadow-outline-stone">
                             <div class="space-y-4">
                                 <div>
@@ -99,10 +99,10 @@
                                         <img src="{{ asset('storage/img/icons/tax.png') }}" class="w-10 h-10 object-cover"/>
                                     </div>
                                     <div class="font-bold text-sm">
-                                        Tax Contribution Report
+                                        Contribution Report
                                     </div>
                                     <div class="text-stone-500 text-xs font-light">
-                                        Displays the total employee and employer share of SSS, Philhealth, Pag-ibig tax contribution.
+                                        Displays the total employee and employer share of SSS, Philhealth, Pag-ibig contribution.
                                     </div>
                                 </div>
                                 <div>
