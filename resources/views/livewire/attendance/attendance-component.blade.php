@@ -200,14 +200,6 @@
                                 <option value="{{ $project->id }}">{{ $project->name }}</option>
                             @endforeach 
                         </x-forms.select>
-                        @if(Auth::user()->hasRole('administrator'))
-                        <x-forms.button-rounded-md-success class="whitespace-nowrap py-3" onclick="modalObject.openModal('modalApproveAttendance')">
-                            <i class="fa-solid fa-check-double"></i>
-                            <span class="hidden md:inline-flex">
-                                Approve
-                            </span>
-                        </x-forms.button-rounded-md-success>
-                        @endif
                         <x-forms.button-rounded-md-secondary class="whitespace-nowrap py-3" wire:click="download">
                             <i class="fa-solid fa-download"></i>
                             <span class="hidden md:inline-flex">
