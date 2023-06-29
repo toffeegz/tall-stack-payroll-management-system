@@ -65,9 +65,14 @@
 
                 
                 @foreach($user as $tax)
-                    <td style="">{{ number_format($tax->employee_share, 2, '.', ',') }}</td>
-                    <td style="">{{ number_format($tax->employer_share, 2, '.', ',') }}</td>
-                    <td style="">{{ number_format(($tax->employee_share + $tax->employer_share), 2, '.', ',') }}</td>
+                    @php
+                        $ee_share = strval(number_format($tax->employee_share, 2, '.', ',')) . "\u{00A0}";
+                        $er_share = strval(number_format($tax->employee_share, 2, '.', ',')) . "\u{00A0}";
+                        $total_share = strval(number_format(($tax->employee_share + $tax->employer_share), 2, '.', ',')) . "\u{00A0}"
+                    @endphp
+                    <td style="">{{ $ee_share }}</td>
+                    <td style="">{{ $er_share }}</td>
+                    <td style="">{{ $total_share }}</td>
                 
                     <?php 
                         if($tax->tax_type == 1)
