@@ -177,15 +177,11 @@ class EmployeeAttendanceComponent extends Component
         // $this->emit('openAttendanceDetailsModal');
     }
 
-    // INSERT
-    public function insertAttendance($data)
+    public function download()
     {
-
-    }
-
-    public function deleteAttendance()
-    {
-        
+        $data = $this->data;
+        $filename = Carbon::now()->format("Y-m-d") . " " . ' Attendance Export.xlsx';
+        return Excel::download(new AttendanceExport($data), $filename);
     }
 
 }
