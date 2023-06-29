@@ -19,13 +19,13 @@ Route::middleware(['auth:sanctum', 'verified', 'system_access'])->group(function
             if(Auth::user()->hasRole('administrator')) {
                 return redirect()->route('dashboard');
             } else {
-                return redirect()->route('attendance');
+                return redirect()->route('employee_attendance');
             }
             
         });
         
 
-        Route::get('attendance', Attendance\AttendanceComponent::class)->name('attendance');
+        Route::get('employee-attendance', Attendance\EmployeeAttendanceComponent::class)->name('employee_attendance');
 
         Route::get('loan', Loan\LoanComponent::class)->name('loan');
 
@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum', 'verified', 'system_access'])->group(function
 
         // Administrator
         Route::group(['middleware' => ['auth', 'role:administrator']], function() {
-
+            Route::get('attendance', Attendance\AttendanceComponent::class)->name('attendance');
             Route::get('dashboard', Dashboard\DashboardComponent::class)->name('dashboard');
             
             // PROJECT

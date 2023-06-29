@@ -158,5 +158,42 @@ class Helper
         $random = round(mt_rand(1, (1 / $chance) * 100));
         return $random == 1 ? true:false;
     }
+
+    // color
+
+    public static function getStatusTextColor($key) {
+        switch ($key) {
+            case 1:
+                return 'green-700';
+            case 2:
+                return 'yellow-700';
+            case 3:
+                return 'blue-700';
+            case 4:
+                return 'gray-700';
+            case 5:
+                return 'red-700';
+            default:
+                return '';
+        }
+    }
+
+    public static function getStatusBgColor($key) {
+        switch ($key) {
+            case 1:
+                return 'green-100';
+            case 2:
+                return 'yellow-100';
+            case 3:
+                return 'blue-100';
+            case 4:
+                return 'gray-100';
+            case 5:
+                return 'red-100';
+            default:
+                return '';
+        }
+    }
+
     
 }

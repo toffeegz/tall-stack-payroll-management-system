@@ -1,55 +1,153 @@
 {{-- modal add attendance --}}
 <x-modal-small id="modalAddAttendance" title="Add Attendance" wire:ignore.self>
-    {{-- modal body --}}
-    @if($next_page_attendance ==  false && $hide == false)
-        <div class="space-y-4 mt-4">
-            <div class="w-full overflow-hidden rounded-lg shadow-xs">
-                <div class="w-full">
-                    <x-forms.search-input placeholder="search employee name or code" name="search_add"/>
-                </div>
-                <div class="w-full overflow-x-auto overflow-y-auto scrollbar-hide h-96">
-                    {{-- no data --}}
-                    @if($users->count() == 0)
+    @if(Auth::user()->hasRole('administrator'))
+        {{-- modal body --}}
+        @if($next_page_attendance ==  false && $hide == false)
+            <div class="space-y-4 mt-4">
+                <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                    <div class="w-full">
+                        <x-forms.search-input placeholder="search employee name or code" name="search_add"/>
+                    </div>
+                    <div class="w-full overflow-x-auto overflow-y-auto scrollbar-hide h-96">
+                        {{-- no data --}}
                         @if($users->count() == 0)
-                            <p class="text-sm text-center h-full flex items-center justify-center text-stone-500 font-bold uppercase">
-                                No user found
-                            </p>
+                            @if($users->count() == 0)
+                                <p class="text-sm text-center h-full flex items-center justify-center text-stone-500 font-bold uppercase">
+                                    No user found
+                                </p>
+                            @endif 
                         @endif 
-                    @endif 
-                    
-                    <table class="w-full whitespace-no-wrap">
-                        <tbody class="bg-white divide-y">
-                            @foreach($users as $user)
-                                <tr class="text-stone-700 ">
-                                    <td class="px-2 md:px-4 py-3 flex space-x-2">
-                                        <img src="{{ asset('storage/img/users/'.($user->profile_photo_path ? $user->profile_photo_path : 'default.jpg')) }}" class="rounded-full h-9 w-9 object-cover"/>
-                                        <div class="">
-                                            <p class="text-stone-900 font-bold text-sm">{{ $user->informal_name() }}</p>
-                                            <p class="text-stone-500 font-semibold text-xs">{{ $user->code }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="px-2 md:px-4 py-3 w-6">
-                                        <p class="text-stone-500 font-bold text-xs whitespace-nowrap">
-                                            {{-- {{ $user->position ? $user->position->name : 'N/A'}} --}}
-                                        </p>
-                                    </td>
-                                    <td class="px-2 md:px-4 py-3 w-6">
-                                        <div class="form-check">
-                                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
-                                            type="checkbox" value="{{ $user->id }}" wire:model="selected_users_add_attendance">
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                        
+                        <table class="w-full whitespace-no-wrap">
+                            <tbody class="bg-white divide-y">
+                                @foreach($users as $user)
+                                    <tr class="text-stone-700 ">
+                                        <td class="px-2 md:px-4 py-3 flex space-x-2">
+                                            <img src="{{ asset('storage/img/users/'.($user->profile_photo_path ? $user->profile_photo_path : 'default.jpg')) }}" class="rounded-full h-9 w-9 object-cover"/>
+                                            <div class="">
+                                                <p class="text-stone-900 font-bold text-sm">{{ $user->informal_name() }}</p>
+                                                <p class="text-stone-500 font-semibold text-xs">{{ $user->code }}</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-2 md:px-4 py-3 w-6">
+                                            <p class="text-stone-500 font-bold text-xs whitespace-nowrap">
+                                                {{-- {{ $user->position ? $user->position->name : 'N/A'}} --}}
+                                            </p>
+                                        </td>
+                                        <td class="px-2 md:px-4 py-3 w-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
+                                                type="checkbox" value="{{ $user->id }}" wire:model="selected_users_add_attendance">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+        @else
+            <div class="space-y-4 my-4">
+                {{-- project --}}
+                @if(Auth::user()->hasRole('timekeeper') == false)
+                <div class="">
+                    <x-forms.label>
+                        Project
+                    </x-forms.label>
+                    <x-forms.select wire:model="selected_project_add_attendance">
+                        <option value="">- N/A -</option>
+                        @foreach($projects as $project)
+                            <option value="{{ $project->id }}">{{ $project->name }}</option>
+                        @endforeach 
+                    </x-forms.select>
+                </div>
+                @endif
+                
+                @error('selected_project_add_attendance')
+                    @if(Auth::user()->hasRole('timekeeper'))
+                        <p class="text-red-500 text-xs italic">No project found</p>
+                    @else
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @endif
+                @enderror
+                {{-- date --}}
+                <div class="">
+                    <x-forms.label>
+                        Date
+                    </x-forms.label>
+                    <x-forms.input type="date" wire:model="date_add_attendance"></x-forms.input>
+                    @error('date_add_attendance')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+                {{-- time in and out --}}
+                <div class="flex justify-between space-x-4">
+                    {{-- time in --}}
+                    <div class="w-full">
+                        <x-forms.label>
+                            Time In
+                        </x-forms.label>
+                        <x-forms.input type="time" wire:model="time_in_add_attendance"></x-forms.input>
+                        @error('time_in_add_attendance')
+                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    {{-- time out --}}
+                    <div class="w-full">
+                        <x-forms.label>
+                            Time Out
+                        </x-forms.label>
+                        <x-forms.input type="time" wire:model="time_out_add_attendance"></x-forms.input>
+                        @error('time_out_add_attendance')
+                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        @endif
+        {{-- end modal body --}}
+        {{-- modal footer --}}
+        <div class="w-full py-4 flex justify-between border-t border-stone-200">
+            <div class="">
+                @if($hide == false)
+                <span class="text-xs font-semibold text-stone-500">Selected {{ count($selected_users_add_attendance) }} users</span>
+                @endif
+            </div>
+            <div class="flex space-x-2">
+                <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalAddAttendance')">
+                    Cancel
+                </x-forms.button-rounded-md-secondary>
+                @if(count($selected_users_add_attendance) != 0 && $hide ==  false) 
+                    @if($next_page_attendance)
+                        <x-forms.button-rounded-md-secondary wire:click="backPageAttendance" wire:key>
+                            Back
+                        </x-forms.button-rounded-md-secondary>
+                        <x-forms.button-rounded-md-primary wire:click="submitAddAttendance" >
+                            Submit
+                        </x-forms.button-rounded-md-primary>
+                    @else
+                        <x-forms.button-rounded-md-primary wire:click="nextPageAttendance" wire:key>
+                            Next
+                        </x-forms.button-rounded-md-primary>
+                    @endif 
+                @else 
+                    @if($hide)
+                    <x-forms.button-rounded-md-primary wire:click="submitAddAttendance" >
+                        Submit
+                    </x-forms.button-rounded-md-primary>
+                    @else
+                    <x-forms.button-rounded-md-primary disabled="disabled" >
+                        Next
+                    </x-forms.button-rounded-md-primary>
+                    @endif
+                @endif
+                
+            </div>
         </div>
-    @else
+        {{-- end modal footer --}}
+    @else 
         <div class="space-y-4 my-4">
-            {{-- project --}}
-            @if(Auth::user()->hasRole('timekeeper') == false)
             <div class="">
                 <x-forms.label>
                     Project
@@ -61,90 +159,22 @@
                     @endforeach 
                 </x-forms.select>
             </div>
-            @endif
+        </div>
+        {{-- modal footer --}}
+        <div class="w-full py-4 flex  border-t border-stone-200">
+            <div class="flex space-x-2 justify-between">
+                <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalAddAttendance')">
+                    Cancel
+                </x-forms.button-rounded-md-secondary>
             
-            @error('selected_project_add_attendance')
-                @if(Auth::user()->hasRole('timekeeper'))
-                    <p class="text-red-500 text-xs italic">No project found</p>
-                @else
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @endif
-            @enderror
-            {{-- date --}}
-            <div class="">
-                <x-forms.label>
-                    Date
-                </x-forms.label>
-                <x-forms.input type="date" wire:model="date_add_attendance"></x-forms.input>
-                @error('date_add_attendance')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
-            </div>
-            {{-- time in and out --}}
-            <div class="flex justify-between space-x-4">
-                {{-- time in --}}
-                <div class="w-full">
-                    <x-forms.label>
-                        Time In
-                    </x-forms.label>
-                    <x-forms.input type="time" wire:model="time_in_add_attendance"></x-forms.input>
-                    @error('time_in_add_attendance')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-                {{-- time out --}}
-                <div class="w-full">
-                    <x-forms.label>
-                        Time Out
-                    </x-forms.label>
-                    <x-forms.input type="time" wire:model="time_out_add_attendance"></x-forms.input>
-                    @error('time_out_add_attendance')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-        </div>
-    @endif
-    {{-- end modal body --}}
-    {{-- modal footer --}}
-    <div class="w-full py-4 flex justify-between border-t border-stone-200">
-        <div class="">
-            @if($hide == false)
-            <span class="text-xs font-semibold text-stone-500">Selected {{ count($selected_users_add_attendance) }} users</span>
-            @endif
-        </div>
-        <div class="flex space-x-2">
-            <x-forms.button-rounded-md-secondary onclick="modalObject.closeModal('modalAddAttendance')">
-                Cancel
-            </x-forms.button-rounded-md-secondary>
-            @if(count($selected_users_add_attendance) != 0 && $hide ==  false) 
-                @if($next_page_attendance)
-                    <x-forms.button-rounded-md-secondary wire:click="backPageAttendance" wire:key>
-                        Back
-                    </x-forms.button-rounded-md-secondary>
-                    <x-forms.button-rounded-md-primary wire:click="submitAddAttendance" >
-                        Submit
-                    </x-forms.button-rounded-md-primary>
-                @else
-                    <x-forms.button-rounded-md-primary wire:click="nextPageAttendance" wire:key>
-                        Next
-                    </x-forms.button-rounded-md-primary>
-                @endif 
-            @else 
-                @if($hide)
                 <x-forms.button-rounded-md-primary wire:click="submitAddAttendance" >
-                    Submit
+                    Time In
                 </x-forms.button-rounded-md-primary>
-                @else
-                <x-forms.button-rounded-md-primary disabled="disabled" >
-                    Next
-                </x-forms.button-rounded-md-primary>
-                @endif
-            @endif
-            
+            </div>
         </div>
-    </div>
-    {{-- end modal footer --}}
+        {{-- end modal footer --}}
+    @endif
+
 </x-modal-small>
 {{-- end modal add attendance --}}
 
