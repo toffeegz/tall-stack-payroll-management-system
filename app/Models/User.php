@@ -15,6 +15,7 @@ use App\Models\Timekeeper;
 use App\Models\Attendance;
 use App\Models\Project;
 use App\Models\Designation;
+use App\Models\DesignationUser;
 use App\Models\Payslip;
 use App\Models\TaxContribution;
 use App\Models\Loan;
@@ -57,6 +58,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['formal_name'];
+
     public function scopeFilter($query, array $filters)
     {
         $search = $filters['search'] ?? false;
@@ -71,6 +74,11 @@ class User extends Authenticatable
                 });
             }
         );
+    }
+
+    public function getFormalNameAttribute()
+    {
+        return $this->last_name . ', ' . $this->first_name . ' ' . ($this->middle_name ? $this->middle_name[0] : '');
     }
 
     public function formal_name()
@@ -118,6 +126,11 @@ class User extends Authenticatable
         } else {
             return null;
         }
+    }
+
+    public function designationUsers()
+    {
+        return $this->hasMany(DesignationUser::class);
     }
 
     public function payslips()
