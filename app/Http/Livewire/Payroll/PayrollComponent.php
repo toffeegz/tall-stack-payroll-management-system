@@ -96,7 +96,7 @@ class PayrollComponent extends Component
 
     public function submit()
     {
-        return redirect()->route('payroll.preview', [
+        return redirect()->route('payroll.run', [
             'payroll_period'  => $this->latestPayrollPeriod->id
         ]);
     }
