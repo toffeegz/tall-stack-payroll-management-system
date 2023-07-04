@@ -66,7 +66,7 @@
                                     aria-label="submenu" >
 
                                     <li class="px-12 py-1 transition-colors duration-150 hover:text-stone-900 @isset($menu) @if($menu == 'attendance') text-stone-500 @endif @endisset" >
-                                        <a href="{{ route('attendance') }}">
+                                        <a href="{{ Auth::user()->hasRole('administrator') ? route('attendance') : route('employee_attendance') }}">
                                             <span class="ml-3">
                                                 Attendance
                                             </span>

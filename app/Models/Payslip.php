@@ -21,7 +21,7 @@ class Payslip extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function payroll_period()

@@ -34,17 +34,22 @@
         </td>
     </tr>
     <tr>
+        @php
+            $gross_pay = strval(number_format($collection->sum('gross_pay'), 2, '.', ',')) . "\u{00A0}";
+            $deductions = strval(number_format($collection->sum('deductions'), 2, '.', ',')) . "\u{00A0}";
+            $net_pay = strval(number_format($collection->sum('net_pay'), 2, '.', ',')) . "\u{00A0}";
+        @endphp
         <td style="border:none; text-transform:capitalize; text-align:right; font-weight: bold;" colspan="9">
             TOTAL
         </td>
         <td style="border:none; text-transform:capitalize; text-align:right; font-weight: bold;" colspan="2">
-            {{ number_format($collection->sum('gross_pay'), 2, '.', ',') }}
+            {{ $gross_pay }}
         </td>
         <td style="border:none; text-transform:capitalize; text-align:right; font-weight: bold;" colspan="2">
-            {{ number_format($collection->sum('deductions'), 2, '.', ',') }}
+            {{ $deductions }}
         </td>
         <td style="border:none; text-transform:capitalize; text-align:right; font-weight: bold;" colspan="2">
-            {{ number_format($collection->sum('net_pay'), 2, '.', ',') }}
+            {{ $net_pay }}
         </td>
     </tr>
     {{--  --}}
@@ -101,23 +106,23 @@
     <tbody>
         @foreach($collection as $payslip)
             <tr>
-                <?php 
+                @php 
                     $labels = json_decode($payslip->labels, true);
-                    $daily_rate = $labels['daily_rate'];
+                    $daily_rate = strval(number_format($labels['daily_rate'], 2, '.', ',')) . "\u{00A0}";
                     $attendance = $labels['hours'];
                     $earnings = $labels['earnings'];
                     $holiday = $earnings['holiday'];
                     $holiday_pay = $holiday['legal'] + $holiday['legal_ot'] + $holiday['special'] + $holiday['special_ot'] + $holiday['double'] + $holiday['double_ot'];
+                    $holiday_pay = strval(number_format($holiday_pay, 2, '.', ',')) . "\u{00A0}";
 
                     $deductions = $labels['deductions'];
                     $tax_contribution = $deductions['tax_contribution'];
-
-                ?>
+                @endphp
                 <td colspan="2" style="">{{ $payslip->user->formal_name() }}</td>
                 <td style="text-align: center;">{{ $payslip->user->code }}</td>
                 <td colspan="2" style="">{{ $labels['designation'] }}</td>
                 <td colspan="3" style="">Project</td>
-                <td style="">{{ number_format($daily_rate, 2, '.', ',') }}</td>
+                <td style="">{{ $daily_rate }}</td>
 
                 <td style="">{{ $attendance['regular'] }}</td>
                 <td style="">{{ $attendance['overtime'] }}</td>
@@ -127,27 +132,27 @@
                 <td style="">{{ $attendance['late'] }}</td>
                 <td style="">{{ $attendance['undertime'] }}</td>
                 
-                <td style="">{{ number_format($payslip->basic_pay, 2, '.', ',') }}</td>
-                <td style="">{{ number_format($earnings['overtime_pay'], 2, '.', ',') }}</td>
-                <td style="">{{ number_format($holiday_pay, 2, '.', ',') }}</td>
-                <td style="">{{ number_format($earnings['restday_pay'], 2, '.', ',') }}</td>
-                <td style="">{{ number_format($earnings['restday_ot_pay'], 2, '.', ',') }}</td>
-                <td style="">{{ number_format($earnings['night_diff_pay'], 2, '.', ',') }}</td>
+                <td style="">{{ strval(number_format($payslip->basic_pay, 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($earnings['overtime_pay'], 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ $holiday_pay }}</td>
+                <td style="">{{ strval(number_format($earnings['restday_pay'], 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($earnings['restday_ot_pay'], 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($earnings['night_diff_pay'], 2, '.', ',')) . "\u{00A0}" }}</td>
 
-                <td style="">{{ number_format($payslip->tardiness, 2, '.', ',') }}</td>
-                <td style="">{{ number_format($deductions['cash_advance'], 2, '.', ',') }}</td>
+                <td style="">{{ strval(number_format($payslip->tardiness, 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($deductions['cash_advance'], 2, '.', ',')) . "\u{00A0}" }}</td>
 
-                <td style="">{{ number_format($tax_contribution['sss'], 2, '.', ',') }}</td>
-                <td style="">{{ number_format($deductions['sss_loan'], 2, '.', ',') }}</td>
+                <td style="">{{ strval(number_format($tax_contribution['sss'], 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($deductions['sss_loan'], 2, '.', ',')) . "\u{00A0}" }}</td>
                 
                 
-                <td style="">{{ number_format($tax_contribution['hdmf'], 2, '.', ',') }}</td>
-                <td style="">{{ number_format($deductions['hdmf_loan'], 2, '.', ',') }}</td>
-                <td style="">{{ number_format($tax_contribution['phic'], 2, '.', ',') }}</td>
+                <td style="">{{ strval(number_format($tax_contribution['hdmf'], 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($deductions['hdmf_loan'], 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($tax_contribution['phic'], 2, '.', ',')) . "\u{00A0}" }}</td>
 
-                <td style="">{{ number_format($payslip->gross_pay, 2, '.', ',') }}</td>
-                <td style="">{{ number_format($payslip->deductions, 2, '.', ',') }}</td>
-                <td style="">{{ number_format($payslip->net_pay, 2, '.', ',') }}</td>
+                <td style="">{{ strval(number_format($payslip->gross_pay, 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($payslip->deductions, 2, '.', ',')) . "\u{00A0}" }}</td>
+                <td style="">{{ strval(number_format($payslip->net_pay, 2, '.', ',')) . "\u{00A0}" }}</td>
                 <td style="" colspan="2"></td>
             </tr>
         @endforeach

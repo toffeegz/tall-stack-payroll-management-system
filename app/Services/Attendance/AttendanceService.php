@@ -14,33 +14,94 @@ use App\Repositories\Schedule\ScheduleRepositoryInterface;
 use App\Models\Schedule;
 use App\Models\PayrollPeriod;
 use App\Models\User;
+use App\Models\Attendance;
 
 class AttendanceService implements AttendanceServiceInterface
 {
     private AttendanceRepositoryInterface $modelRepository;
     public $helper;
+    private $model;
+    private $scheduleModel;
 
     public function __construct(
         AttendanceRepositoryInterface $modelRepository,
         UserRepositoryInterface $userRepository,
         ProjectRepositoryInterface $projectRepository,
         ScheduleRepositoryInterface $scheduleRepository,
+        Attendance $model,
+        Schedule $scheduleModel,
     ) {
         $this->modelRepository = $modelRepository;
         $this->userRepository = $userRepository;
         $this->projectRepository = $projectRepository;
         $this->scheduleRepository = $scheduleRepository;
         $this->helper = new Helper;
+        $this->model = $model;
+        $this->scheduleModel = $scheduleModel;
+    }
+
+    public function create(array $data)
+    {
+        $date = Carbon::today();
+        $time = Carbon::now()->format('H:i:s');
+        if (empty($data['project_id'])) {
+            unset($data['project_id']);
+        }
+
+        // // Find attendance using user_id and date
+        $attendance = $this->model->where('user_id', $data['user_id'])
+        ->whereDate('date', $date)
+        ->first();
+
+        if(!$attendance) {
+            $data['date'] = $date;
+            $data['time_in'] = $time;
+            $schedule = $this->scheduleModel->find(Schedule::DEFAULT);
+            if($schedule) {
+                $data['scheduled_time_in'] = $schedule->time_in;
+                $data['scheduled_time_out'] = $schedule->time_out;
+                $data['schedule_id'] = $schedule->id;
+
+                $data['status'] = 3; // Set default status to "No sched"
+
+                // Get the current day of the week
+                $currentDay = strtolower(date('l'));
+
+                // Check if the current day is a working day
+                $workingDays = json_decode($schedule->working_days, true);
+                if ($workingDays[$currentDay]) {
+                    // if it is working day
+                    if ($time >= $data['scheduled_time_in']) {
+                        $data['status'] = 2; // Set status to "Late" if time_in is earlier than scheduled_time_in
+                    } else {
+                        $data['status'] = 1; // Set status to "Present" if time_in is equal to or later than scheduled_time_in
+                    }
+                } 
+            }
+            $attendance = $this->model->create($data);
+        } else {
+            $hours = $this->getHoursAttendance(Carbon::parse($date)->format('Y-m-d'), Carbon::parse($attendance->time_in)->format('H:i:s'), $time);
+            $hoursCollection = collect($hours);
+
+            // Merge the $hours array into the $attendance model instance
+            foreach ($hours as $key => $value) {
+                $attendance[$key] = $value;
+            }
+            $attendance->time_out = $time;
+            $attendance->save();
+        }
+
+        return $attendance;
     }
 
     public function store($user_id, $project_id, $date, $time_in, $time_out)
     {
         $is_admin = false;
-        if(Auth::user()->hasRole('administrator')) {
-            $is_admin = true;
-        }
+        // if(Auth::user()->hasRole('administrator')) {
+        //     $is_admin = true;
+        // }
         // is_admin true if data generated
-        // $is_admin = true;
+        $is_admin = true;
 
         $user = $this->userRepository->show($user_id);
         $selected_project_id = null;

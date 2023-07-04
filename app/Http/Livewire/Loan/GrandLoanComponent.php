@@ -159,6 +159,18 @@ class GrandLoanComponent extends Component
         $date_approved = null;
         if($this->selected_status == 2)
         {
+            // Check if the total balance of loans with the user and status 2 is greater than 0
+            $totalBalance = Loan::where('user_id', $this->selected_user->id)
+            ->where('status', 2)
+            ->sum('balance');
+
+            if ($totalBalance > 0) {
+                // Display an error message or handle the failure case
+                // For example, you can use Laravel's validation error bag
+                $this->addError('selected_status', 'The user has an outstanding loan balance. Cannot approve new loan.');
+                return;
+            }
+
             $date_approved = Carbon::now();
         }
 
@@ -199,9 +211,20 @@ class GrandLoanComponent extends Component
             'new_reference_no' => 'required|max:50',
         ]);
 
+        // Check if the total balance of loans with the user and status 2 is greater than 0
+        $totalBalance = Loan::where('user_id', $this->new_user_id)
+        ->where('status', 2)
+        ->sum('balance');
+
+        if ($totalBalance > 0) {
+            // Display an error message or handle the failure case
+            // For example, you can use Laravel's validation error bag
+            $this->addError('new_user_id', 'The user has an outstanding loan balance. Cannot grant a new loan.');
+            return;
+        }
+
         $date_approved = null;
-        if($this->new_status == 2)
-        {
+        if ($this->new_status == 2) {
             $date_approved = Carbon::now();
         }
 

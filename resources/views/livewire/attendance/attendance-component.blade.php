@@ -221,7 +221,7 @@
                         <table class="w-full whitespace-no-wrap">
                             <thead>
                             <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
-                                @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('timekeeper'))
+                                @if(Auth::user()->hasRole('administrator'))
                                 <th class="md:px-4 px-2 py-3">User</th>
                                 @endif
                                 <th class="md:px-4 px-2 py-3">Date</th>

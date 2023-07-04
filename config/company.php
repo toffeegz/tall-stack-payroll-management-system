@@ -41,6 +41,13 @@ return [
         1 => 'Pending',
         2 => 'Approved',
         3 => 'Disapproved'
-    ]
+    ],
 
+    'attendance_status' => [
+        1 => 'Present',
+        2 => 'Late',
+        3 => 'No sched',
+        4 => 'Pending',
+        5 => 'Disapproved',
+    ]
 ];

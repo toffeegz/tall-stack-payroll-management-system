@@ -343,7 +343,7 @@ class PayslipService implements PayslipServiceInterface
         
         $labels = json_decode($payslip->labels, true);
 
-        $user = User::find($payslip->user_id);
+        $user = User::withTrashed()->find($payslip->user_id);
         $daily_rate = $labels['daily_rate'];
         $designation = $labels['designation'];
         $full_name = $user->formal_name();

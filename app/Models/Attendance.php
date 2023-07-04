@@ -9,6 +9,7 @@ use App\Traits\CreatedBy;
 
 use App\Models\User;
 use App\Models\Project;
+use Carbon\Carbon;
 
 class Attendance extends Model
 {
@@ -27,6 +28,9 @@ class Attendance extends Model
         'night_differential',
         'status',
         'created_by',
+        'scheduled_time_in',
+        'scheduled_time_out',
+        'schedule_id',
     ];
 
     public function user()
@@ -37,6 +41,20 @@ class Attendance extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function scopeFilter($query, string $search)
+    {
+        $search = $search ?? false;
+        $query->when($search ?? false, 
+            function($query) use($search) {
+                $query->where(function($query) use($search) {
+                    $query->where('date', 'like', '%' . $search . '%')
+                    ->where('time_in', 'like', '%' . $search . '%')
+                    ->where('time_out', 'like', '%' . $search . '%');
+                });
+            }
+        );
     }
 
     public function scopeFilterPending($query, array $filters)
@@ -54,6 +72,16 @@ class Attendance extends Model
                 });
             }
         );
+    }
+
+    public function getTimeInAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('h:i a') : null;
+    }
+
+    public function getTimeOutAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('h:i a') : null;
     }
 
 }
