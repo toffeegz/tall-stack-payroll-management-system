@@ -77,13 +77,10 @@ class PayrollService implements PayrollServiceInterface
                         // check if date is a holiday
                         $holiday = Holiday::where('date', $date)->first();
                         if ($holiday && $user->is_paid_holidays === true) {
-                            $collection['hours'][$date] = [
-                                'regular' => 8
-                            ];
-
+                            // Handle holiday logic
+                            // ...
                         } else {
                             // If not a holiday, check if it is a leave day
-                            // check mo pala muna dun sa may attendance if may kulang sa hours baka nag file ng leave
                             $leave = Leave::where('user_id', $user->id)
                                 ->where('date', $date)
                                 ->first();
