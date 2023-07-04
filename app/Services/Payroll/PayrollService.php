@@ -14,6 +14,8 @@ use App\Models\TaxContribution;
 use App\Models\Loan;
 use App\Models\LoanInstallment;
 use App\Models\Attendance;
+use App\Models\Holiday;
+use App\Models\Leave;
 use Carbon\Carbon;
 use App\Helpers\Helper;
 
@@ -34,7 +36,7 @@ class PayrollService implements PayrollServiceInterface
     {
         $collection = [
             'user_id' => $user->id,
-            'name' => $user->full_name,
+            'name' => $user->formal_name,
             'total_hours' => [
                 'regular' => 0,
                 'late' => 0,
@@ -43,19 +45,70 @@ class PayrollService implements PayrollServiceInterface
                 'night_differential' => 0,
                 'restday' => 0,
                 'restday_ot' => 0
-            ],
-            'hours' => [],
+            ]
         ];
     
         $date_range = $this->helper->getRangeBetweenDatesStr($period_start, $period_end);
     
         foreach ($date_range as $date) {
-            $attendance = Attendance::where('user_id', $user->id)
-                ->where('date', $date)
-                ->whereNotIn('status', [4, 5])
-                ->first();
-    
-            $collection['attendances'][$date] = $attendance ?? null;
+            
+            $is_date_working_day = $this->helper->isDateWorkingDay(Carbon::parse($date));
+
+            $collection['by_date'][$date]['hours'] = [
+                'regular' => 0,
+                'late' => 0,
+                'undertime' => 0,
+                'overtime' => 0,
+                'night_differential' => 0,
+                'restday' => 0,
+                'restday_ot' => 0,
+            ];
+            $collection['by_date'][$date]['holiday']['is_holiday'] = FALSE;
+            $collection['by_date'][$date]['holiday']['is_double_holiday'] = FALSE;
+            $collection['by_date'][$date]['leave']['has_filed'] = FALSE;
+            $collection['by_date'][$date]['leave']['record'] = [];
+
+            // Get the daily rate for the user on the specific date
+                $designationUser = DesignationUser::where('user_id', $user->id)
+                    ->where('created_at', '<=', $date)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                $collection['by_date'][$date]['daily_rates'] = $designationUser ? $designationUser->designation->daily_rate : null;
+            // 
+
+            // GET ATTENDANCE 
+                $attendance = Attendance::where('user_id', $user->id)
+                    ->where('date', $date)
+                    ->whereNotIn('status', [4, 5])
+                    ->first();
+        
+                $collection['by_date'][$date]['attendance'] = $attendance ?? null;
+            // 
+
+            // GET HOLIDAY
+                $holiday = Holiday::where('date', $date)->get();
+                if($holiday->count() > 0) {
+                    $collection['by_date'][$date]['holiday']['is_holiday'] = TRUE;
+                    if($holiday->count() > 1) {
+                        $collection['by_date'][$date]['holiday']['is_double_holiday'] = TRUE;
+                    }
+                    $collection['by_date'][$date]['holiday']['records'] = $holiday;
+                }
+            // 
+
+            // GET LEAVE
+                $leave = Leave::where('user_id', $user->id)
+                    ->where('start_date', '<=', $date)
+                    ->where('end_date', '>=', $date)
+                    ->where('status', 2) // Assuming status 2 indicates approved leave
+                    ->first();
+
+                if ($leave) {
+                    $collection['by_date'][$date]['leave']['has_filed'] = TRUE;
+                    $collection['by_date'][$date]['leave']['record'] = $leave;
+                }
+            //
 
             // get regular, late, undertime, overtime, night_differential, restday, restday_ot in attendance
                 if ($attendance) {
@@ -69,47 +122,17 @@ class PayrollService implements PayrollServiceInterface
                         'restday_ot' => $attendance->status === 3 ? $attendance->overtime : 0,
                     ];
 
-                    $collection['hours'][$date] = $hours;
-                } else {
-                    // If no attendance, check if date is working day
-                    $is_date_working_day = $this->helper->isDateWorkingDay(Carbon::parse($date));
-                    if($is_date_working_day) {
-                        // check if date is a holiday
-                        $holiday = Holiday::where('date', $date)->first();
-                        if ($holiday && $user->is_paid_holidays === true) {
-                            $collection['hours'][$date] = [
-                                'regular' => 8
-                            ];
+                    $collection['by_date'][$date]['hours'] = $hours;
+                } 
+            // 
 
-                        } else {
-                            // If not a holiday, check if it is a leave day
-                            // check mo pala muna dun sa may attendance if may kulang sa hours baka nag file ng leave
-                            $leave = Leave::where('user_id', $user->id)
-                                ->where('date', $date)
-                                ->first();
-                
-                            if ($leave) {
-                                // Handle leave logic
-                                // ...
-                            }
-                        }
+            // Calculate total hours
+                if(isset($collection['by_date'][$date]['hours'])) {
+                    foreach ($collection['by_date'][$date]['hours'] as $type => $hoursValue) {
+                        $collection['total_hours'][$type] += $hoursValue;
                     }
                 }
-            // 
-            // Calculate total hours
-                foreach ($collection['hours'] as $type => $hoursValue) {
-                    $collection['total_hours'][$type] += $hoursValue;
-                }
             //
-
-            // Get the daily rate for the user on the specific date
-                $designationUser = DesignationUser::where('user_id', $user->id)
-                    ->where('created_at', '<=', $date)
-                    ->orderBy('created_at', 'desc')
-                    ->first();
-        
-                $collection['daily_rates'][$date] = $designationUser ? $designationUser->designation->daily_rate : null;
-            // 
         }
     
         // Generate the rates_range array
