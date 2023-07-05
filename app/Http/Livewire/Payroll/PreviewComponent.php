@@ -16,11 +16,17 @@ class PreviewComponent extends Component
     public $payroll_period_start;
     public $payroll_period_end;
     private $payrollService;
+    public $search;
 
     public function render()
     {
+        $filteredCollection = collect($this->collection)->filter(function ($data) {
+            return $this->search === null || str_contains(strtolower($data['name']), strtolower($this->search));
+        });
+    
         return view('livewire.payroll.preview-component', [
-            'collection' => $this->collection,
+            'collection' => $filteredCollection,
+            'search' => $this->search,
         ]);
     }
 
@@ -76,8 +82,8 @@ class PreviewComponent extends Component
         $collection = [];
         foreach($users as $user) {
             $user_collection = $payrollService->previewPayrollByUser($user, $this->payroll_period_start, $this->payroll_period_end);
-            $collection[$user->id][] = $user_collection;
+            $collection[$user->id] = $user_collection;
         }
-        dd($collection[1]);
+        return $collection;
     }
 }

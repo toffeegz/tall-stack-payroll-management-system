@@ -37,22 +37,71 @@ class PayrollService implements PayrollServiceInterface
         $collection = [
             'user_id' => $user->id,
             'name' => $user->formal_name,
+            'code' => $user->code,
             'total_hours' => [
-                'regular' => 0,
-                'late' => 0,
-                'undertime' => 0,
-                'overtime' => 0,
-                'night_differential' => 0,
-                'restday' => 0,
-                'restday_ot' => 0
-            ]
+                'regular' => [
+                    'name' => 'Regular',
+                    'acronym' => 'rg',
+                    'value' => 0,
+                    'visible' => FALSE,
+                    'is_editable' => false,
+                ],
+                'late' => [
+                    'name' => 'Late',
+                    'acronym' => 'lt',
+                    'value' => 0,
+                    'visible' => FALSE,
+                    'is_editable' => false,
+                ],
+                'undertime' => [
+                    'name' => 'Undertime',
+                    'acronym' => 'ut',
+                    'value' => 0,
+                    'visible' => FALSE,
+                    'is_editable' => false,
+                ],
+                'overtime' => [
+                    'name' => 'Overtime',
+                    'acronym' => 'ot',
+                    'value' => 0,
+                    'visible' => FALSE,
+                    'is_editable' => false,
+                ],
+                'night_differential' => [
+                    'name' => 'Night Diff',
+                    'acronym' => 'nd',
+                    'value' => 0,
+                    'visible' => FALSE,
+                    'is_editable' => false,
+                ],
+                'restday' => [
+                    'name' => 'Rest Day',
+                    'acronym' => 'rd',
+                    'value' => 0,
+                    'visible' => FALSE,
+                    'is_editable' => false,
+                ],
+                'restday_ot' => [
+                    'name' => 'Rest Day OT',
+                    'acronym' => 'rdot',
+                    'value' => 0,
+                    'visible' => FALSE,
+                    'is_editable' => false,
+                ],
+            ],
+            'deductions' => [],
+            'additional_earnings' => [],
+            'include_in_payroll' => true,
+            'is_visible' => true
         ];
     
         $date_range = $this->helper->getRangeBetweenDatesStr($period_start, $period_end);
+        $tardiness = 0;
     
         foreach ($date_range as $date) {
             
             $is_date_working_day = $this->helper->isDateWorkingDay(Carbon::parse($date));
+            $collection['by_date'][$date]['is_working_day'] = $is_date_working_day;
 
             $collection['by_date'][$date]['hours'] = [
                 'regular' => 0,
@@ -75,6 +124,7 @@ class PayrollService implements PayrollServiceInterface
                     ->first();
 
                 $collection['by_date'][$date]['daily_rates'] = $designationUser ? $designationUser->designation->daily_rate : null;
+                $hourly_rate = $collection['by_date'][$date]['daily_rates'] / 8;
             // 
 
             // GET ATTENDANCE 
@@ -110,6 +160,7 @@ class PayrollService implements PayrollServiceInterface
                 }
             //
 
+            // GET HOURS
             // get regular, late, undertime, overtime, night_differential, restday, restday_ot in attendance
                 if ($attendance) {
                     $hours = [
@@ -121,15 +172,30 @@ class PayrollService implements PayrollServiceInterface
                         'restday' => $attendance->status === 3 ? $attendance->regular : 0,
                         'restday_ot' => $attendance->status === 3 ? $attendance->overtime : 0,
                     ];
-
                     $collection['by_date'][$date]['hours'] = $hours;
                 } 
+            // 
+
+            // GET TARDINESS
+            // get deductions late / undertime
+                if($collection['by_date'][$date]['hours']['late'] > 0 || $collection['by_date'][$date]['hours']['undertime'] > 0) {
+                    $late_hour = $collection['by_date'][$date]['hours']['late'];
+                    $undertime_hour = $collection['by_date'][$date]['hours']['undertime'];
+                    $late_amount = $late_hour * $hourly_rate;
+                    $undertime_amount = $undertime_hour * $hourly_rate;
+                    $tardiness_date = ($late_amount + $undertime_amount);
+                    $tardiness += $tardiness_date;
+                    $collection['by_date'][$date]['tardiness'] = $tardiness_date;
+                }
             // 
 
             // Calculate total hours
                 if(isset($collection['by_date'][$date]['hours'])) {
                     foreach ($collection['by_date'][$date]['hours'] as $type => $hoursValue) {
-                        $collection['total_hours'][$type] += $hoursValue;
+                        if($hoursValue !== 0) {
+                            $collection['total_hours'][$type]['visible'] = TRUE;
+                        }
+                        $collection['total_hours'][$type]['value'] += $hoursValue;
                     }
                 }
             //
@@ -153,15 +219,43 @@ class PayrollService implements PayrollServiceInterface
                 $ratesRange[] = [
                     'from' => $from,
                     'to' => $to,
-                    'rate' => $rate,
+                    'rate' => strval(number_format($rate, 2, '.', ',')) . "\u{00A0}",
                 ];
 
                 $previousTo = $to;
             }
 
             $collection['rates_range'] = $ratesRange;
+            if(count($ratesRange) === 0) {
+                $collection['is_visible'] = false;
+                $collection['include_in_payroll'] = false;
+            }
         //
 
+        // cash advance
+            $loan = Helper::getCashAdvanceAmountToPay($user->id);
+            if($loan > 0) {
+                $collection['deductions']['loan'] = [
+                    'name' => 'Loan',
+                    'acronym' => 'lo',
+                    'amount' => $loan,
+                    'visible' => true,
+                    'is_editable' => false,
+                ];
+            }
+        // 
+
+        // tardiness
+            if($tardiness > 0) {
+                $collection['deductions']['tardiness'] = [
+                    'name' => 'Tardiness',
+                    'acronym' => 'td',
+                    'amount' => $tardiness,
+                    'visible' => true,
+                    'is_editable' => false,
+                ];
+            }
+        // 
         return $collection;
     }
     
