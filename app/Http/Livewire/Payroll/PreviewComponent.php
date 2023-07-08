@@ -97,7 +97,7 @@ class PreviewComponent extends Component
                 'period_start' => $this->payroll_period_start,
                 'period_end' => $this->payroll_period_end,
             ]);
-            $data->data = json_encode($this->payroll);
+            $data->data = json_encode($this->collection);
             $data->updated_at = Carbon::now();
             $data->save();
         }

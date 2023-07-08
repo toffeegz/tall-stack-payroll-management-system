@@ -172,7 +172,7 @@
                     <x-forms.button-rounded-md-secondary wire:click="saveForLater" wire:loading.attr="disabled">
                         Save for Later
                     </x-forms.button-rounded-md-secondary>
-                    <x-forms.button-rounded-md-primary wire:click="submit" wire:loading.attr="disabled">
+                    <x-forms.button-rounded-md-primary wire:click="submitPayroll" wire:loading.attr="disabled">
                         Proceed
                     </x-forms.button-rounded-md-primary>
                 </div>
