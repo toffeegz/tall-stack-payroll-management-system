@@ -250,7 +250,7 @@ class PayrollService implements PayrollServiceInterface
                     'rate' => strval(number_format($rate, 2, '.', ',')) . "\u{00A0}",
                 ];
 
-                $previousTo = $to;
+                $previousTo = Carbon::parse($to)->addDay()->format('Y-m-d');
             }
 
             $collection['rates_range'] = $ratesRange;
