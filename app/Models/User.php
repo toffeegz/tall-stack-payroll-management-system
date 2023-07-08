@@ -114,7 +114,7 @@ class User extends Authenticatable
 
     public function designations()
     {
-        return $this->belongsToMany(Designation::class, 'designation_user');
+        return $this->belongsToMany(Designation::class, 'designation_user')->withTimestamps();
     }
 
     public function latestDesignation()
