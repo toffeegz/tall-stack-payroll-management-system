@@ -17,15 +17,17 @@ class PreviewComponent extends Component
     public $payroll_period_end;
     private $payrollService;
     public $search;
+    // modal
+    public $selected_user_id = null;
+    public $selected_type = null;
 
     public function render()
     {
-        $filteredCollection = collect($this->collection)->filter(function ($data) {
+        $this->collection = collect($this->collection)->filter(function ($data) {
             return $this->search === null || str_contains(strtolower($data['name']), strtolower($this->search));
         });
-    
         return view('livewire.payroll.preview-component', [
-            'collection' => $filteredCollection,
+            'collection' => $this->collection,
             'search' => $this->search,
         ]);
     }
@@ -85,5 +87,91 @@ class PreviewComponent extends Component
             $collection[$user->id] = $user_collection;
         }
         return $collection;
+    }
+
+    public function saveForLater()
+    {
+        if($this->collection)
+        {
+            $data = PayrollLog::firstOrNew([
+                'period_start' => $this->payroll_period_start,
+                'period_end' => $this->payroll_period_end,
+            ]);
+            $data->data = json_encode($this->payroll);
+            $data->updated_at = Carbon::now();
+            $data->save();
+        }
+    }
+
+    public function submitPayroll()
+    {
+        $this->saveForLater();
+        $data = PayrollLog::where('period_start', $this->payroll_period_start)->where('period_end', $this->payroll_period_end)->first();
+        return redirect()->route('payroll.review', ['id'=>$data->id]);
+    }
+
+    // MODALS
+    public function openAdditionalEarningsModal($user_id)
+    {
+        $this->selected_user_id = $user_id;
+        $this->emit('openAdditionalEarningsModal');
+    }
+
+    public function openAdditionalDeductionsModal($user_id)
+    {
+        $this->selected_user_id = $user_id;
+        $this->emit('openAdditionalDeductionsModal');
+    }
+
+    public function submitAdditionalEarnings()
+    {
+        $this->validate(['selected_type' => 'required']);
+        $this->collection = $this->collection->map(function ($item) {
+            if ($item['user_id'] === $this->selected_user_id) {
+                $item['additional_earnings'][$this->selected_type]['visible'] = true;
+            }
+            return $item;
+        });
+    
+        $this->selected_type = null;
+        $this->selected_user_id = null;
+        $this->emit('closeAdditionalEarningsModal');
+    }
+
+    public function submitAdditionalDeductions()
+    {
+        $this->validate(['selected_type' => 'required']);
+        $this->collection = $this->collection->map(function ($item) {
+            if ($item['user_id'] === $this->selected_user_id) {
+                $item['deductions'][$this->selected_type]['visible'] = true;
+            }
+            return $item;
+        });
+    
+        $this->selected_type = null;
+        $this->selected_user_id = null;
+        $this->emit('closeAdditionalDeductionsModal');
+    }
+
+    public function removeAdditionalEarnings($type_id, $user_id)
+    {
+        $this->collection = $this->collection->map(function ($item) use ($type_id, $user_id){
+            if($item['user_id'] === $user_id) {
+                $item['additional_earnings'][$type_id]['visible'] = false;
+                $item['additional_earnings'][$type_id]['amount'] = null;
+            }
+            return $item;
+        });
+    }
+
+    public function removeDeductions($type_id, $user_id)
+    {
+        $this->collection = $this->collection->map(function ($item) use ($type_id, $user_id){
+            if($item['user_id'] === $user_id) {
+                $item['deductions'][$type_id]['visible'] = false;
+                $item['deductions'][$type_id]['amount'] = null;
+            }
+            return $item;
+        });
     }
 }
