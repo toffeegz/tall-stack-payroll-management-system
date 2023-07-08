@@ -16,6 +16,8 @@ use App\Models\LoanInstallment;
 use App\Models\Attendance;
 use App\Models\Holiday;
 use App\Models\Leave;
+use App\Models\Earning;
+use App\Models\Deduction;
 use Carbon\Carbon;
 use App\Helpers\Helper;
 
@@ -94,6 +96,32 @@ class PayrollService implements PayrollServiceInterface
             'include_in_payroll' => true,
             'is_visible' => true
         ];
+
+        // additional earnings initial
+        $earning_types = Earning::where('active', true)->get();
+            foreach($earning_types as $earning_type)
+            {
+                $collection['additional_earnings'][$earning_type->id] = [
+                    'name' => $earning_type->name,
+                    'acronym' => $earning_type->acronym,
+                    'amount' => null,
+                    'visible' => false,
+                ];
+            }
+        // 
+
+        // additional deductions initial
+        $deduction_types = Deduction::where('active', true)->get();
+            foreach($deduction_types as $deduction_type)
+            {
+                $collection['deductions'][$deduction_type->id] = [
+                    'name' => $deduction_type->name,
+                    'acronym' => $deduction_type->acronym,
+                    'amount' => null,
+                    'visible' => false,
+                ];
+            }
+        // 
     
         $date_range = $this->helper->getRangeBetweenDatesStr($period_start, $period_end);
         $tardiness = 0;
@@ -194,7 +222,7 @@ class PayrollService implements PayrollServiceInterface
                     foreach ($collection['by_date'][$date]['hours'] as $type => $hoursValue) {
                         if($hoursValue !== 0) {
                             $collection['total_hours'][$type]['visible'] = TRUE;
-                        }
+                        } 
                         $collection['total_hours'][$type]['value'] += $hoursValue;
                     }
                 }
@@ -230,6 +258,7 @@ class PayrollService implements PayrollServiceInterface
                 $collection['is_visible'] = false;
                 $collection['include_in_payroll'] = false;
             }
+            
         //
 
         // cash advance
@@ -256,6 +285,23 @@ class PayrollService implements PayrollServiceInterface
                 ];
             }
         // 
+
+        // is total hours valid
+            $total_hours = 0;
+            foreach($collection['total_hours'] as $type => $data_total_hours) {
+                $type = $type;
+                if($type === 'regular' || $type === 'overtime' || $type === 'night_differential'  || $type  === 'restday' || $type === 'restday_ot') {
+                    $total_hours += $data_total_hours['value'];
+                }
+            }
+            if($total_hours === 0) {
+                $collection['include_in_payroll'] = false;
+                $collection['is_visible'] = false;
+            }
+            
+        // 
+
+
         return $collection;
     }
     

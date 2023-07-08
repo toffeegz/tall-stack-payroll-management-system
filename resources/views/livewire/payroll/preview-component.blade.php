@@ -40,19 +40,21 @@
                     <tbody class="bg-white divide-y">
                         @foreach($collection as $data)
 
-                            @if(isset($data['is_visible'])) 
+                            @if($data['is_visible'] === true) 
                                 <tr class="">
                                     {{-- employee --}}
-                                    <td class="px-2 md:px-4 py-3 align-top">
-                                        <div class="flex items-center justify-center">
-                                            <div class=" w-56">
-                                                <div class="text-sm space-y-1">
-                                                    <p class="text-stone-900 font-bold">{{ $data['name'] }}</p>
-                                                </div>
-                                                
-                                                <p class="text-xs font-semibold text-stone-700">Daily Rate</p>
+                                    <td class="px-2 md:px-4 py-3 align-top space-y-2 w-56">
+                                        
+                                        <div class="flex space-x-4">
+                                            <input type="checkbox" wire:model="collection.{{ $data['user_id'] }}.include_in_payroll" class="form-checkbox h-4 w-4 text-stone-500 rounded-sm border border-gray-300 p-1 text-stone-500 focus:ring-stone-500">
+                                            <p class="text-stone-900 font-bold space-x-2 text-sm">{{ $data['name'] }} <span class="text-stone-500 font-semibold text-xs">({{ $data['code'] }})</span></p>
+                                        </div>
+                                        
+                                        <div class="px-8 space-y-2">
+                                            <p class="text-xs font-bold text-stone-700">Daily Rate</p>
+                                            <div class=" space-y-2 w-52 ">
                                                 @foreach ($data['rates_range'] as $range)
-                                                    <div class="flex justify-between w-52">
+                                                    <div class="flex justify-between">
                                                         <div class="text-xs font-semibold text-stone-500">
                                                         {{ \Carbon\Carbon::parse($range['from'])->format('m/d') }}
                                                             - {{ \Carbon\Carbon::parse($range['to'])->format('m/d') }}
@@ -85,59 +87,74 @@
                                     </td>
 
                                     <!-- additional earnings -->
-                                    <td class="px-2 md:px-4 py-3 text-sm space-y-2  align-top">
-                                        {{-- earnings --}}
+                                    <td class="px-2 md:px-4 py-3 text-sm space-y-4  align-top w-80">
+                                        {{-- additional_earnings --}}
                                         @if(count($data['additional_earnings']) > 0)
-                                        @foreach($data['additional_earnings'] as $key => $additional_earnings)
-                                            @if($additional_earnings['visible'] == true)
-                                                <div class="flex space-x-1 justify-between w-28 md:w-40" wire:key="{{ $data['user_id'] }},additional_earnings,{{ $key }}">
-                                                    <div class="items-center flex justify-center space-x-2 md:w-20 " x-data="{ deleteBtn: false }" @click.away="deleteBtn = false">
-                                                        <a class="cursor-pointer text-xs font-semibold text-stone-500" x-on:click="deleteBtn = !deleteBtn">
-                                                            {{ $additional_earnings['name'] }}
-                                                        </a>
-                                                        <button wire:click="removeAdditionalEarnings({{ $key }}, {{ $data['user_id'] }})" x-show="deleteBtn" class="ml-2 text-red-500 cursor-pointer" x-cloak>
-                                                            <i class="fa-solid fa-circle-xmark"></i>
-                                                        </button>
+                                            @foreach($data['additional_earnings'] as $key => $additional_earnings)
+                                                @if($additional_earnings['visible'] == true)
+                                                    <div class="grid grid-cols-6 items-center space-x-4" wire:key="{{ $data['user_id'] }},additional_earnings,{{ $key }}">
+                                                        <div class="flex justify-end col-span-2">
+                                                            <p class="text-xs font-semibold text-stone-500 text-right">
+                                                                {{ $additional_earnings['name'] }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-span-4 space-x-4 ">
+                                                            <input type="number" class="text-xs text-stone-900 font-bold py-1 px-2 border w-28 rounded-sm border-stone-200"
+                                                                wire:model="collection.{{ $data['user_id'] }}.additional_earnings.{{ $key }}.amount" 
+                                                                name="collection[{{ $data['user_id'] }}][additional_earnings][{{ $key }}][amount]"  
+                                                            >
+                                                            <button wire:click="removeAdditionalEarnings({{ $key }}, {{ $data['user_id'] }})" class="ml-2 text-red-500 cursor-pointer" x-cloak>
+                                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <input type="number" wire:model="collection.{{ $data['user_id'] }}.additional_earnings.{{ $key }}.amount" name="collection[{{ $data['user_id'] }}][additional_earnings][{{ $key }}][amount]" class="text-xs text-stone-900 font-bold py-1 px-2 border w-16 rounded-sm border-stone-200">
-                                                </div>
-                                            @endif
-                                        @endforeach
+                                                @endif
+                                            @endforeach
                                         @endif
-                                        {{-- add earnings --}}
-                                        <div class="flex justify-center">
-                                            <x-tables.button-add wire="openAdditionalEarningsModal({{ $data['user_id'] }})" >
-                                                Add Earnings
-                                            </x-tables.button-add>
+                                        {{-- add additional_earnings --}}
+                                        <div class="grid grid-cols-6 items-center space-x-4">
+                                            <div class="col-span-2"></div>
+                                            <div class="flex items-center col-span-4">
+                                                <x-tables.button-add wire="openAdditionalEarningsModal({{ $data['user_id'] }})" >
+                                                    Add Earnings
+                                                </x-tables.button-add>
+                                            </div>
                                         </div>
                                     </td>
 
                                     <!-- deductions -->
-                                    <td class="px-2 md:px-4 py-3 text-sm space-y-2  align-top">
+                                    <td class="px-2 md:px-4 py-3 text-sm space-y-4  align-top w-80">
                                         {{-- deductions --}}
                                         @if(count($data['deductions']) > 0)
-                                        @foreach($data['deductions'] as $key => $deductions)
-                                            @if($deductions['visible'] == true)
-                                                <div class="flex space-x-1 justify-between w-28 md:w-40" wire:key="{{ $data['user_id'] }},deductions,{{ $key }}">
-                                                    <div class="items-center flex justify-center space-x-2 md:w-20 " x-data="{ deleteBtn: false }" @click.away="deleteBtn = false">
-                                                        <a class="cursor-pointer text-xs font-semibold text-stone-500" x-on:click="deleteBtn = !deleteBtn">
-                                                            <span class="hidden md:inline-flex">{{ $deductions['name'] }}</span>
-                                                            <span class="md:hidden uppercase">{{ $deductions['acronym'] }}</span>
-                                                        </a>
-                                                        <button wire:click="removeAdditionalDeductions({{ $key }}, {{ $data['user_id'] }})" x-show="deleteBtn" class="ml-2 text-red-500 cursor-pointer" x-cloak>
-                                                            <i class="fa-solid fa-circle-xmark"></i>
-                                                        </button>
+                                            @foreach($data['deductions'] as $key => $deductions)
+                                                @if($deductions['visible'] == true)
+                                                    <div class="grid grid-cols-6 items-center space-x-4" wire:key="{{ $data['user_id'] }},deductions,{{ $key }}">
+                                                        <div class="flex justify-end col-span-2">
+                                                            <p class="text-xs font-semibold text-stone-500 text-right">
+                                                                {{ $deductions['name'] }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-span-4 space-x-4 ">
+                                                            <input type="number" class="text-xs text-stone-900 font-bold py-1 px-2 border w-28 rounded-sm border-stone-200"
+                                                                wire:model="collection.{{ $data['user_id'] }}.deductions.{{ $key }}.amount" 
+                                                                name="collection[{{ $data['user_id'] }}][deductions][{{ $key }}][amount]"  
+                                                            >
+                                                            <button wire:click="removeAdditionalDeductions({{ $key }}, {{ $data['user_id'] }})" class="ml-2 text-red-500 cursor-pointer" x-cloak>
+                                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <input type="number" wire:model="collection.{{ $data['user_id'] }}.deductions.{{ $key }}.amount" name="collection[{{ $data['user_id'] }}][deductions][{{ $key }}][amount]"  class="text-xs text-stone-900 font-bold py-1 px-2 border w-20 rounded-sm border-stone-200">
-                                                </div>
-                                            @endif
-                                        @endforeach
+                                                @endif
+                                            @endforeach
                                         @endif
                                         {{-- add deductions --}}
-                                        <div class="flex justify-center">
-                                            <x-tables.button-add wire="openAdditionalDeductionsModal({{ $data['user_id'] }})" >
-                                                Add Deductions
-                                            </x-tables.button-add>
+                                        <div class="grid grid-cols-6 items-center space-x-4">
+                                            <div class="col-span-2"></div>
+                                            <div class="flex items-center col-span-4">
+                                                <x-tables.button-add wire="openAdditionalDeductionsModal({{ $data['user_id'] }})" >
+                                                    Add Deductions
+                                                </x-tables.button-add>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -162,4 +179,6 @@
             </div>
         </div>
     </div>
+    @include('scripts.payroll.preview-script')
+    @include('modals.payroll.preview-modal')
 </div>
