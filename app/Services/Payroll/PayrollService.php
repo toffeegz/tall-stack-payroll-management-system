@@ -94,11 +94,15 @@ class PayrollService implements PayrollServiceInterface
             'deductions' => [],
             'additional_earnings' => [],
             'include_in_payroll' => true,
-            'is_visible' => true
+            'is_visible' => true,
+            'tardiness_collection' => [
+                'late' => 0,
+                'undertime' => 0,
+            ]
         ];
 
-        // additional earnings initial
-        $earning_types = Earning::where('active', true)->get();
+        // INITIAL: ADDITIONAl EARNINGS
+            $earning_types = Earning::where('active', true)->get();
             foreach($earning_types as $earning_type)
             {
                 $collection['additional_earnings'][$earning_type->id] = [
@@ -106,12 +110,13 @@ class PayrollService implements PayrollServiceInterface
                     'acronym' => $earning_type->acronym,
                     'amount' => null,
                     'visible' => false,
+                    'is_taxable' => $earning_type->is_taxable,
                 ];
             }
         // 
 
-        // additional deductions initial
-        $deduction_types = Deduction::where('active', true)->get();
+        // INITIAL: ADDITIONAL DEDUCTIONS
+            $deduction_types = Deduction::where('active', true)->get();
             foreach($deduction_types as $deduction_type)
             {
                 $collection['deductions'][$deduction_type->id] = [
@@ -119,6 +124,7 @@ class PayrollService implements PayrollServiceInterface
                     'acronym' => $deduction_type->acronym,
                     'amount' => null,
                     'visible' => false,
+                    'is_editable' => true
                 ];
             }
         // 
@@ -146,7 +152,7 @@ class PayrollService implements PayrollServiceInterface
             $collection['by_date'][$date]['leave']['has_filed'] = FALSE;
             $collection['by_date'][$date]['leave']['record'] = [];
 
-            // Get the daily rate for the user on the specific date
+            // GET THE DAILY RATE FOR THE USER ON THE SPECIFIC DATE
                 $designationUser = DesignationUser::where('user_id', $user->id)
                     ->where('created_at', '<=', $date)
                     ->orderBy('created_at', 'desc')
@@ -154,12 +160,14 @@ class PayrollService implements PayrollServiceInterface
                 $daily_rate_user = $designationUser ? $designationUser->designation->daily_rate : null;
                 $collection['by_date'][$date]['daily_rates'] = $daily_rate_user;
                 $hourly_rate = $collection['by_date'][$date]['daily_rates'] / 8;
+                $collection['by_date'][$date]['hourly_rate'] = $hourly_rate;
             // 
 
-            // basic pay 
-            if($is_date_working_day === true) {
-                $basic_pay += $daily_rate_user;
-            }
+            // BASIC PAY 
+                if($is_date_working_day === true) {
+                    $basic_pay += $daily_rate_user;
+                }
+            // 
 
             // GET ATTENDANCE 
                 $attendance = Attendance::where('user_id', $user->id)
@@ -168,11 +176,14 @@ class PayrollService implements PayrollServiceInterface
                     ->first();
         
                 $collection['by_date'][$date]['attendance'] = $attendance ?? null;
+                $collection['by_date'][$date]['is_present'] = $attendance ? true : false;
             // 
 
             // GET HOLIDAY
                 $holiday = Holiday::where('date', $date)->get();
+                $is_holiday = FALSE;
                 if($holiday->count() > 0) {
+                    $is_holiday = TRUE;
                     $collection['by_date'][$date]['holiday']['is_holiday'] = TRUE;
                     if($holiday->count() > 1) {
                         $collection['by_date'][$date]['holiday']['is_double_holiday'] = TRUE;
@@ -182,6 +193,7 @@ class PayrollService implements PayrollServiceInterface
             // 
 
             // GET LEAVE
+                $has_filed = false;
                 $leave = Leave::where('user_id', $user->id)
                     ->where('start_date', '<=', $date)
                     ->where('end_date', '>=', $date)
@@ -189,7 +201,8 @@ class PayrollService implements PayrollServiceInterface
                     ->first();
 
                 if ($leave) {
-                    $collection['by_date'][$date]['leave']['has_filed'] = TRUE;
+                    $has_filed = TRUE;
+                    $collection['by_date'][$date]['leave']['has_filed'] = $has_filed;
                     $collection['by_date'][$date]['leave']['record'] = $leave;
                 }
             //
@@ -207,18 +220,6 @@ class PayrollService implements PayrollServiceInterface
                         'restday_ot' => $attendance->status === 3 ? $attendance->overtime : 0,
                     ];
                     $collection['by_date'][$date]['hours'] = $hours;
-
-                    $collection['by_date'][$date]['earnings'] = [
-                        'regular' => $hours['regular'] * $hourly_rate,
-                        'overtime' => $hours['overtime'] * $hourly_rate * 1.25,
-                        'restday' => $hours['restday'] * $hourly_rate * 1.30,
-                        'restday_ot' => $hours['restday_ot'] * $hourly_rate * 1.69,
-                        'night_differential' => $hours['night_differential'] * $hourly_rate * .10,
-                    ];
-
-                    foreach($collection['by_date'][$date]['earnings'] as $earning_amount) {
-                        $earnings += $earning_amount;
-                    }
                 } 
             // 
 
@@ -232,10 +233,16 @@ class PayrollService implements PayrollServiceInterface
                     $tardiness_date = ($late_amount + $undertime_amount);
                     $tardiness += $tardiness_date;
                     $collection['by_date'][$date]['tardiness'] = $tardiness_date;
+
+                    $collection['by_date'][$date]['tardiness_collection']['late'] = $late_amount;
+                    $collection['by_date'][$date]['tardiness_collection']['undertime'] = $undertime_amount;
+
+                    $collection['tardiness_collection']['late'] += $late_amount;
+                    $collection['tardiness_collection']['undertime'] += $undertime_amount;
                 }
             // 
 
-            // Calculate total hours
+            // CALCULATE TOTAL HOURS
                 if(isset($collection['by_date'][$date]['hours'])) {
                     foreach ($collection['by_date'][$date]['hours'] as $type => $hoursValue) {
                         if($hoursValue !== 0) {
@@ -247,7 +254,7 @@ class PayrollService implements PayrollServiceInterface
             //
         }
     
-        // Generate the rates_range array
+        // RATES RANGE
             $designationUser = DesignationUser::where('user_id', $user->id)
                 ->where('created_at', '<=', $period_end)
                 ->orderBy('created_at')
@@ -279,7 +286,7 @@ class PayrollService implements PayrollServiceInterface
             
         //
 
-        // cash advance
+        // CASH ADVANCE
             $loan = Helper::getCashAdvanceAmountToPay($user->id);
             if($loan > 0) {
                 $collection['deductions']['loan'] = [
@@ -292,7 +299,7 @@ class PayrollService implements PayrollServiceInterface
             }
         // 
 
-        // tardiness
+        // TARDINESS
             if($tardiness > 0) {
                 $collection['deductions']['tardiness'] = [
                     'name' => 'Tardiness',
@@ -304,7 +311,7 @@ class PayrollService implements PayrollServiceInterface
             }
         // 
 
-        // is total hours valid
+        // TOTAL HOURS VALID
             $total_hours = 0;
             foreach($collection['total_hours'] as $type => $data_total_hours) {
                 $type = $type;
@@ -331,26 +338,193 @@ class PayrollService implements PayrollServiceInterface
 
         foreach($raw_collection as $user_id => $user_collection)
         {
+            // dd($user_collection);
             $payroll_period = PayrollPeriod::where('period_start', $data->period_start)
                 ->where('period_end', $data->period_end)
                 ->first();
 
+            $user = User::find($user_id);
             $new_collection =  [
                 'user_id' => $user_collection['user_id'], //
                 'full_name' => $user_collection['name'],
                 'code' => $user_collection['code'],
                 'rates_range' => $user_collection['rates_range'],
-                'basic_pay' => $user_collection['basic_pay'],
                 'payroll_period_id' => $payroll_period->id,
-                'earnings' => $user_collection['earnings'],
+                // 'earnings' => $user_collection['earnings'],
                 'preview_data' => $user_collection,
+                'additional_earnings' => []
             ];
             foreach($user_collection['total_hours'] as $hour_type => $hours) {
                 $new_collection[$hour_type] = $hours['value'];
             }
+            $earnings = 0;
+            $earnings_by_hours = 0;
+            $holiday_pay = 0;
+            $leave_pay = 0;
+            $new_collection['holidays_collection'] = [
+                'regular' => 0,
+                'overtime' => 0,
+                'restday' => 0,
+                'restday_ot' => 0,
+                'legal' => 0,
+                'legal_ot' => 0,
+                'special' => 0,
+                'special_ot' => 0,
+                'double'  => 0,
+                'double_ot'  => 0,
+            ];
+            // BY DATE
+                foreach($user_collection['by_date'] as $date => $by_date) {
+                    $new_collection['by_date'][$date] = $by_date;
+                    $hours = $by_date['hours'];
+                    $hourly_rate = $by_date['hourly_rate'];
+                    $is_working_day = $by_date['is_working_day'];
 
+                    if($by_date['is_present'] === true) {
+                        // regular
+                            $earnings_regular = [
+                                'regular' => $hours['regular'] * $hourly_rate,
+                                'overtime' => $hours['overtime'] * $hourly_rate * 1.25,
+                                'restday' => $hours['restday'] * $hourly_rate * 1.30,
+                                'restday_ot' => $hours['restday_ot'] * $hourly_rate * 1.69,
+                                'night_differential' => $hours['night_differential'] * $hourly_rate * .10,
+                            ];
+                            $new_collection['by_date'][$date]['earnings']['regular'] = $earnings_regular;
+                            foreach($earnings_regular as $hour_type => $earning_amount) {
+                                $earnings_by_hours += $earning_amount;
+                            }
+                        // 
+
+                        // holiday
+                            if($user->is_paid_holidays === 1) {
+                                $is_holiday = $by_date['holiday']['is_holiday'];
+                                $is_double_holiday = $by_date['holiday']['is_double_holiday'];
+                                $holiday_amounts = [
+                                    'regular' => 0,
+                                    'overtime' => 0,
+                                    'restday' => 0,
+                                    'restday_ot' => 0,
+                                ];
+                                if($is_holiday === true) {
+                                    if($is_double_holiday === true) {
+                                        $holiday_percentage = config('company.holiday_percentage.double');
+                                        $new_collection['by_date'][$date]['holiday']['type'] = 'double';
+                                    } else {
+                                        $holiday_record = $by_date['holiday']['records'][0];
+                                        if($holiday_record['is_legal'] === 1) {
+                                            $holiday_percentage = config('company.holiday_percentage.legal');
+                                        $new_collection['by_date'][$date]['holiday']['type'] = 'legal';
+                                        } else {
+                                            $holiday_percentage = config('company.holiday_percentage.special');
+                                        $new_collection['by_date'][$date]['holiday']['type'] = 'special';
+                                        }
+                                    }
+                                    foreach($holiday_percentage as $hour_type => $percentage) {
+                                        $holiday_amount = $hours[$hour_type] * $hourly_rate * $percentage;
+                                        $holiday_amounts[$hour_type] = $holiday_amount;
+                                        $holiday_pay += $holiday_amount;
+                                        $new_collection['holidays_collection'][$hour_type] += $holiday_amount;
+                                        
+                                        if($new_collection['by_date'][$date]['holiday']['type'] === 'double') {
+                                            if($hour_type === 'regular' || $hour_type === 'restday') {
+                                                $new_collection['holidays_collection']['double'] += $holiday_amount;
+                                            } else {
+                                                $new_collection['holidays_collection']['double_ot'] += $holiday_amount;
+                                            }
+                                        } elseif($new_collection['by_date'][$date]['holiday']['type'] === 'legal') {
+                                            if($hour_type === 'regular' || $hour_type === 'restday') {
+                                                $new_collection['holidays_collection']['legal'] += $holiday_amount;
+                                            } else {
+                                                $new_collection['holidays_collection']['legal_ot'] += $holiday_amount;
+                                            }
+                                        } elseif($new_collection['by_date'][$date]['holiday']['type'] === 'special') {
+                                            if($hour_type === 'regular' || $hour_type === 'restday') {
+                                                $new_collection['holidays_collection']['special'] += $holiday_amount;
+                                            } else {
+                                                $new_collection['holidays_collection']['special_ot'] += $holiday_amount;
+                                            }
+                                        }
+                                    }
+                                    $new_collection['by_date'][$date]['holiday']['amount'] = $holiday_amounts;
+                                }
+                            }
+                        // 
+                    } 
+                    if($by_date['leave']['has_filed'] === true && $by_date['leave']['record']['is_paid'] === 1 && $is_working_day === true) {
+                        if($by_date['leave']['record']['type_id'] === 2) { // half day 
+                            $leave_hours = 4;
+                        } else {
+                            $leave_hours = 8;
+                        }
+                        $leave_amount = $leave_hours * $hourly_rate;
+                        $leave_pay += $leave_amount;
+                        $new_collection['by_date'][$date]['leave']['hours'] = $leave_hours;
+                        $new_collection['by_date'][$date]['leave']['amount'] = $leave_amount;
+                    }
+
+                    if($is_working_day === true) {
+                        $earnings += $by_date['daily_rates'];
+                    }
+                }
+            // 
+
+            // ADDITIONAL EARNINGS, TAXABLE, NONTAXABLE
+                $taxable_earnings = 0;
+                $non_taxable_earnings = 0;
+                $additional_earnings = 0;
+                foreach($user_collection['additional_earnings'] as $raw_additional_earning)
+                {
+                    $amount = $raw_additional_earning['amount'];
+                    if($amount > 0) {
+                        $additional_earnings += $amount;
+                        $additional_earning_name = $raw_additional_earning['name'];
+                        $new_collection['additional_earnings'][$additional_earning_name] = $amount;
+                        if($raw_additional_earning['is_taxable'] === 1) {
+                            $taxable_earnings += $amount;
+                        } else {
+                            $non_taxable_earnings += $amount;
+                        }
+                    }
+                }
+            // 
+
+            // ADDITIONAL DEDUCTIONS
+                $additional_deductions = 0;
+                foreach($user_collection['deductions'] as $raw_additional_deduction)
+                {
+                    $additional_deduction_amount = $raw_additional_deduction['amount'];
+                    $additional_deduction_name = $raw_additional_deduction['name'];
+
+                    if($additional_deduction_amount > 0 && $additional_deduction_name != 'Tardiness') {
+                        $additional_deductions += $additional_deduction_amount;
+                        $new_collection['deduction_collections'][$additional_deduction_name] = $additional_deduction_amount;
+                        $additional_deductions += $additional_deduction_amount;
+                    }
+                }
+                if($user_collection['tardiness_collection']['late'] > 0) {
+                    $new_collection['deduction_collections']['late'] = $user_collection['tardiness_collection']['late'];
+                }
+
+                if($user_collection['tardiness_collection']['undertime'] > 0) {
+                    $new_collection['deduction_collections']['undertime'] = $user_collection['tardiness_collection']['undertime'];
+                }
+                
+            // 
             
-            
+            // GROSS PAY AND TOTAL TAXABLE AND NET PAY
+                $taxable = $earnings + $holiday_pay + $taxable_earnings + $leave_pay;
+                $gross_pay = $taxable + $non_taxable_earnings;
+            // 
+
+            $new_collection['basic_pay'] = $earnings;
+            $new_collection['earnings_by_hours'] = $earnings_by_hours;
+            $new_collection['holiday_pay'] = $holiday_pay;
+            $new_collection['leave_pay'] = $leave_pay;
+            $new_collection['gross_pay'] = $gross_pay;
+            $new_collection['taxable'] = $taxable;
+            $new_collection['non_taxable'] = $non_taxable_earnings;
+            $new_collection['taxable_earnings'] = $taxable_earnings;
+            $new_collection['earning_collections']['additional_earnings'] = $additional_earnings;
             dd($new_collection);
             // $user_array =  [
                 // 'user_id' => $user_id, //
@@ -368,7 +542,7 @@ class PayrollService implements PayrollServiceInterface
                 // 'undertime' => $undertime_hours, //
                 
                 // 'basic_pay' => $basic_pay,
-            //     'gross_pay' => $gross_pay,
+                // 'gross_pay' => $gross_pay,
             //     'net_pay' => $net_pay,
 
             //     'is_tax_exempted' => $user->is_tax_exempted,
@@ -377,15 +551,15 @@ class PayrollService implements PayrollServiceInterface
             //     'tardiness_amount' => $tardiness_amount,
             //     'total_deductions' => $total_deductions,
 
-            //     'taxable' => $taxable,
-            //     'non_taxable' => $non_taxable,
+                // 'taxable' => $taxable,
+                // 'non_taxable' => $non_taxable,
 
             //     'loan_change' => $loan_change,
                 
-            //     'additional_earnings' => $additional_earnings,
-            //     'earnings_collection' => $earnings_collection,
+                // 'additional_earnings' => $additional_earnings,
+                // 'earnings_collection' => $earnings_collection,
             //     'deductions_collection' => $deductions_collection,
-            //     'holidays_collection' => $holidays_collection,
+                // 'holidays_collection' => $holidays_collection,
             // ];
             // $collection[$user_id] = array_merge($user_collection['total_hours'], $secondaryArray);
             // COLLECTION
