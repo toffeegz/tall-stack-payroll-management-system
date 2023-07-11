@@ -98,6 +98,7 @@ class PayrollService implements PayrollServiceInterface
             'tardiness_collection' => [
                 'late' => 0,
                 'undertime' => 0,
+                'absences' => 0,
             ]
         ];
 
@@ -170,13 +171,14 @@ class PayrollService implements PayrollServiceInterface
             // 
 
             // GET ATTENDANCE 
+                $is_present = false;
                 $attendance = Attendance::where('user_id', $user->id)
                     ->where('date', $date)
                     ->whereNotIn('status', [4, 5])
                     ->first();
-        
+                $is_present = $attendance ? true : false;
                 $collection['by_date'][$date]['attendance'] = $attendance ?? null;
-                $collection['by_date'][$date]['is_present'] = $attendance ? true : false;
+                $collection['by_date'][$date]['is_present'] = $is_present;
             // 
 
             // GET HOLIDAY
@@ -239,6 +241,10 @@ class PayrollService implements PayrollServiceInterface
 
                     $collection['tardiness_collection']['late'] += $late_amount;
                     $collection['tardiness_collection']['undertime'] += $undertime_amount;
+                }
+                if($is_present === false && $has_filed === false && $is_date_working_day === true && $is_holiday === false) {
+                    $tardiness += $daily_rate_user;
+                    $collection['tardiness_collection']['absences'] += $daily_rate_user;
                 }
             // 
 
@@ -507,6 +513,10 @@ class PayrollService implements PayrollServiceInterface
 
                 if($user_collection['tardiness_collection']['undertime'] > 0) {
                     $new_collection['deduction_collections']['undertime'] = $user_collection['tardiness_collection']['undertime'];
+                }
+
+                if($user_collection['tardiness_collection']['absences'] > 0) {
+                    $new_collection['deduction_collections']['absences'] = $user_collection['tardiness_collection']['absences'];
                 }
                 
             // 
