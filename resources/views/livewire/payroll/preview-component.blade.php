@@ -135,6 +135,7 @@
                                                             </p>
                                                         </div>
                                                         <div class="col-span-4 space-x-4 ">
+                                                            @if($deductions['is_editable'] === true)
                                                             <input type="number" class="text-xs text-stone-900 font-bold py-1 px-2 border w-28 rounded-sm border-stone-200"
                                                                 wire:model="collection.{{ $data['user_id'] }}.deductions.{{ $key }}.amount" 
                                                                 name="collection[{{ $data['user_id'] }}][deductions][{{ $key }}][amount]"  
@@ -142,6 +143,9 @@
                                                             <button wire:click="removeAdditionalDeductions({{ $key }}, {{ $data['user_id'] }})" class="ml-2 text-red-500 cursor-pointer" x-cloak>
                                                                 <i class="fa-solid fa-circle-xmark"></i>
                                                             </button>
+                                                            @else
+                                                                <div class="text-xs text-stone-900 font-bold py-1 px-2 border w-28 rounded-sm border-stone-200">{{ $collection[$data['user_id']]['deductions'][$key]['amount'] }}</div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 @endif
