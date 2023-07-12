@@ -57,10 +57,10 @@ class PayslipService implements PayslipServiceInterface
                 // DEDUCTIONS
                     $deductions_collection = $raw_data['deductions_collection'];
                     
-                    $hdmf_loan = isset($deductions_collection['hdmf_loan']) ?? null;
-                    $sss_loan = isset($deductions_collection['sss_loan']) ?? null;
+                    $hdmf_loan = isset($deductions_collection['hdmf_loan']) ? $deductions_collection['hdmf_loan'] : 0;
+                    $sss_loan = isset($deductions_collection['sss_loan']) ? $deductions_collection['sss_loan'] : 0;
                     $withholding_tax = 0;
-                    $loan = isset($deductions_collection['loan']) ?? null;
+                    $loan = isset($deductions_collection['loan']) ? $deductions_collection['loan'] : 0;
                 // 
 
 
@@ -281,12 +281,12 @@ class PayslipService implements PayslipServiceInterface
                             'others' => $label_additional_earnings,
                         ],
                         'deductions' => [
-                            'late' => isset($label_deductions_collection['late']) ?? null,
-                            'undertime' => isset($label_deductions_collection['undertime']) ?? null,
-                            'absences' => isset($label_deductions_collection['absences']) ?? null,
+                            'late' => isset($label_deductions_collection['late']) ? $label_deductions_collection['late'] : null,
+                            'undertime' => isset($label_deductions_collection['undertime']) ? $label_deductions_collection['undertime'] : null,
+                            'absences' => isset($label_deductions_collection['absences']) ? $label_deductions_collection['absences'] : null,
                             'cash_advance' => $loan_amount,
-                            'sss_loan' => isset($label_deductions_collection['sss_loan']) ?? null,
-                            'hdmf_loan' => isset($label_deductions_collection['hdmf_loan']) ?? null,
+                            'sss_loan' => isset($label_deductions_collection['sss_loan']) ? $label_deductions_collection['sss_loan'] : null,
+                            'hdmf_loan' => isset($label_deductions_collection['hdmf_loan']) ? $label_deductions_collection['hdmf_loan'] : null,
                             'tax_contribution' => [
                                 'sss' => $sss_to_pay,
                                 'phic' => $hdmf_to_pay,
@@ -308,7 +308,7 @@ class PayslipService implements PayslipServiceInterface
                     $new_payslip->gross_pay = $raw_data['gross_pay'];
                     $new_payslip->net_pay = $raw_data['net_pay'];
                     
-                    $new_payslip->tardiness = isset($raw_data['preview_data']['deductions']['tardiness']['amount']) ?? null;
+                    $new_payslip->tardiness = isset($raw_data['preview_data']['deductions']['tardiness']['amount']) ? $raw_data['preview_data']['deductions']['tardiness']['amount'] : 0;
                     $new_payslip->deductions = $raw_data['total_deductions'];
 
                     $new_payslip->taxable = $raw_data['taxable'];
@@ -348,7 +348,7 @@ class PayslipService implements PayslipServiceInterface
         $labels = json_decode($payslip->labels, true);
 
         $user = User::withTrashed()->find($payslip->user_id);
-        $daily_rate = $labels['daily_rate'];
+        $rates_range = $labels['rates_range'];
         $designation = $labels['designation'];
         $full_name = $user->formal_name();
 
@@ -375,12 +375,14 @@ class PayslipService implements PayslipServiceInterface
         {
             $holiday_pay += $holiday;
         }
-
+        
         $others_pay = 0;
         $label_others = $labels['earnings']['others'];
-        foreach($label_others as $other)
-        {
-            $others_pay += $other;
+        if (is_array($label_others)) {
+            foreach($label_others as $other)
+            {
+                $others_pay += $other;
+            }
         }
 
         $gross_pay = $payslip->gross_pay;
@@ -408,7 +410,7 @@ class PayslipService implements PayslipServiceInterface
         $data = [
             'payout_date' => $payout_date,
             'pay_period' => $pay_period,
-            'daily_rate' => $daily_rate,
+            'rates_range' => $rates_range,
             'full_name' => $full_name,
             'code' => $user->code,
             'designation' => $designation,
