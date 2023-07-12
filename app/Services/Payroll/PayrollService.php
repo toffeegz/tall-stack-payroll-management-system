@@ -18,6 +18,10 @@ use App\Models\Holiday;
 use App\Models\Leave;
 use App\Models\Earning;
 use App\Models\Deduction;
+use App\Models\SssContributionRate;
+use App\Models\SssContributionModel;
+use App\Models\HdmfContributionRate;
+use App\Models\PhicContributionRate;
 use Carbon\Carbon;
 use App\Helpers\Helper;
 
@@ -98,6 +102,7 @@ class PayrollService implements PayrollServiceInterface
             'tardiness_collection' => [
                 'late' => 0,
                 'undertime' => 0,
+                'absences' => 0,
             ]
         ];
 
@@ -170,13 +175,14 @@ class PayrollService implements PayrollServiceInterface
             // 
 
             // GET ATTENDANCE 
+                $is_present = false;
                 $attendance = Attendance::where('user_id', $user->id)
                     ->where('date', $date)
                     ->whereNotIn('status', [4, 5])
                     ->first();
-        
+                $is_present = $attendance ? true : false;
                 $collection['by_date'][$date]['attendance'] = $attendance ?? null;
-                $collection['by_date'][$date]['is_present'] = $attendance ? true : false;
+                $collection['by_date'][$date]['is_present'] = $is_present;
             // 
 
             // GET HOLIDAY
@@ -239,6 +245,10 @@ class PayrollService implements PayrollServiceInterface
 
                     $collection['tardiness_collection']['late'] += $late_amount;
                     $collection['tardiness_collection']['undertime'] += $undertime_amount;
+                }
+                if($is_present === false && $has_filed === false && $is_date_working_day === true && $is_holiday === false) {
+                    $tardiness += $daily_rate_user;
+                    $collection['tardiness_collection']['absences'] += $daily_rate_user;
                 }
             // 
 
@@ -338,7 +348,6 @@ class PayrollService implements PayrollServiceInterface
 
         foreach($raw_collection as $user_id => $user_collection)
         {
-            // dd($user_collection);
             $payroll_period = PayrollPeriod::where('period_start', $data->period_start)
                 ->where('period_end', $data->period_end)
                 ->first();
@@ -361,6 +370,11 @@ class PayrollService implements PayrollServiceInterface
             $earnings_by_hours = 0;
             $holiday_pay = 0;
             $leave_pay = 0;
+            $overtime_pay = 0;
+            $restday_pay = 0;
+            $restday_ot_pay = 0;
+            $night_differential_pay = 0;
+
             $new_collection['holidays_collection'] = [
                 'regular' => 0,
                 'overtime' => 0,
@@ -382,17 +396,26 @@ class PayrollService implements PayrollServiceInterface
 
                     if($by_date['is_present'] === true) {
                         // regular
+                            $overtime = $hours['overtime'] * $hourly_rate * 1.25;
+                            $restday = $hours['restday'] * $hourly_rate  * 1.30;
+                            $restday_ot = $hours['restday_ot'] * $hourly_rate  * 1.69;
+                            $night_differential = $hours['night_differential'] * $hourly_rate  * .10;
                             $earnings_regular = [
                                 'regular' => $hours['regular'] * $hourly_rate,
-                                'overtime' => $hours['overtime'] * $hourly_rate * 1.25,
-                                'restday' => $hours['restday'] * $hourly_rate * 1.30,
-                                'restday_ot' => $hours['restday_ot'] * $hourly_rate * 1.69,
-                                'night_differential' => $hours['night_differential'] * $hourly_rate * .10,
+                                'overtime' => $overtime,
+                                'restday' => $restday,
+                                'restday_ot' => $restday_ot,
+                                'night_differential' => $night_differential,
                             ];
                             $new_collection['by_date'][$date]['earnings']['regular'] = $earnings_regular;
                             foreach($earnings_regular as $hour_type => $earning_amount) {
                                 $earnings_by_hours += $earning_amount;
                             }
+
+                            $overtime_pay += $overtime;
+                            $restday_pay += $restday;
+                            $restday_ot_pay += $restday_ot;
+                            $night_differential_pay += $night_differential;
                         // 
 
                         // holiday
@@ -465,6 +488,7 @@ class PayrollService implements PayrollServiceInterface
                     if($is_working_day === true) {
                         $earnings += $by_date['daily_rates'];
                     }
+
                 }
             // 
 
@@ -478,7 +502,7 @@ class PayrollService implements PayrollServiceInterface
                     if($amount > 0) {
                         $additional_earnings += $amount;
                         $additional_earning_name = $raw_additional_earning['name'];
-                        $new_collection['additional_earnings'][$additional_earning_name] = $amount;
+                        $new_collection['earning_collections']['additional_earnings'][$additional_earning_name] = $amount;
                         if($raw_additional_earning['is_taxable'] === 1) {
                             $taxable_earnings += $amount;
                         } else {
@@ -489,31 +513,263 @@ class PayrollService implements PayrollServiceInterface
             // 
 
             // ADDITIONAL DEDUCTIONS
-                $additional_deductions = 0;
+                $total_deductions = 0;
                 foreach($user_collection['deductions'] as $raw_additional_deduction)
                 {
                     $additional_deduction_amount = $raw_additional_deduction['amount'];
                     $additional_deduction_name = $raw_additional_deduction['name'];
 
                     if($additional_deduction_amount > 0 && $additional_deduction_name != 'Tardiness') {
-                        $additional_deductions += $additional_deduction_amount;
-                        $new_collection['deduction_collections'][$additional_deduction_name] = $additional_deduction_amount;
-                        $additional_deductions += $additional_deduction_amount;
+                        $total_deductions += $additional_deduction_amount;
+                        $new_collection['deductions_collection'][$additional_deduction_name] = $additional_deduction_amount;
+                        $total_deductions += $additional_deduction_amount;
                     }
                 }
                 if($user_collection['tardiness_collection']['late'] > 0) {
-                    $new_collection['deduction_collections']['late'] = $user_collection['tardiness_collection']['late'];
+                    $new_collection['deductions_collection']['late'] = $user_collection['tardiness_collection']['late'];
+                    $total_deductions += $user_collection['tardiness_collection']['late'];;
                 }
 
                 if($user_collection['tardiness_collection']['undertime'] > 0) {
-                    $new_collection['deduction_collections']['undertime'] = $user_collection['tardiness_collection']['undertime'];
+                    $new_collection['deductions_collection']['undertime'] = $user_collection['tardiness_collection']['undertime'];
+                    $total_deductions += $user_collection['tardiness_collection']['undertime'];;
+                }
+
+                if($user_collection['tardiness_collection']['absences'] > 0) {
+                    $new_collection['deductions_collection']['absences'] = $user_collection['tardiness_collection']['absences'];
+                    $total_deductions += $user_collection['tardiness_collection']['absences'];;
+                }
+                
+            // 
+
+            // TAX CONTRIBUTION
+                $tax_contributions = 0;
+                if($user->is_tax_exempted == false)
+                {
+                    $cutoff_order = 2;
+
+                    for($i = 1; $i <= $cutoff_order; $i++)
+                    {
+                        $limit[] = $i;
+                    }
+
+                    // GET PREVIOUS PAYROLL PERIOD TO GET LATEST PAYSLIP 
+
+                        $previous_payroll_period = PayrollPeriod::where('frequency_id', $payroll_period->frequency_id)
+                        ->whereDate('period_end', '<', $payroll_period->period_end)
+                        ->latest('period_end')
+                        ->first();
+
+                        $latest_payslip = null;
+
+                        if($previous_payroll_period)
+                        {
+                            // get payslip
+                            $latest_payslip = Payslip::where('user_id', $user->id)
+                            ->where('payroll_period_id', $previous_payroll_period->id)
+                            ->first();
+
+                        }
+
+                        // CUTOFF ORDER
+                            $cutoff_order = 1;
+
+                            // BMO
+                            if($user->frequency_id == 1)
+                            {
+
+                                $cutoff_order = 2;
+                                
+                                if($latest_payslip)
+                                {
+                                    $last_cutoff_order = $latest_payslip->cutoff_order;
+                                    if($latest_payslip->cutoff_order == 2)
+                                    {
+                                        $cutoff_order = 1;
+                                    }
+                                }
+                            }
+
+                            // WKL
+                            if($user->frequency_id == 2)
+                            {
+                                if($latest_payslip)
+                                {
+                                    if($latest_payslip->cutoff_order == 4)
+                                    {
+                                        $cutoff_order = 1;
+                                    } else {
+                                        $cutoff_order = $latest_payslip->cutoff_order + 1;
+                                    }
+                                }
+
+                            }
+                        // 
+                    // ///// 
+
+                    if($cutoff_order == 1){
+                        $salary = $taxable_earnings;
+                    } else {
+                        if($cutoff_order == 2)
+                        {   
+                            $payroll_period_ids[] = $previous_payroll_period->id;
+                        }
+                        elseif($cutoff_order == 3 || $cutoff_order == 4)
+                        {   
+                            $payroll_period_records = PayrollPeriod::where('frequency_id', $payroll_period->frequency_id)
+                            ->whereDate('period_end', '<', $payroll_period->period_end)
+                            ->latest('period_end')
+                            ->limit($cutoff_order - 1)
+                            ->pluck('id');
+
+                            $payroll_period_ids[] = $payroll_period_records;
+                        }
+                        
+                        $previous_payslips = Payslip::where('user_id', $user->id)
+                        ->whereIn('payroll_period_id', $payroll_period_ids)
+                        ->get();
+
+                        $salary = $taxable_earnings + $previous_payslips->sum('taxable');
+                    }
+
+                    $tax_divide = 2;
+                    if($user->frequency_id == 2)
+                    {
+                        $tax_divide = 4;
+                    }
+
+                    // SSS CONTRIBUTION (TYPE 1)
+                        $sss_monthly_tax_contribution = $this->getSSSContributionAmount($salary);
+
+                        $sss_er_to_pay = $sss_monthly_tax_contribution['er'];
+                        $sss_ee_to_pay = $sss_monthly_tax_contribution['ee'];
+                        $sss_ec_to_pay = $sss_monthly_tax_contribution['ec'] / $tax_divide;
+
+                        if($cutoff_order != 1)
+                        {
+                            $paid_tax_sss = TaxContribution::where('user_id', $user_id)
+                            ->where('tax_type', 1)
+                            ->whereIn('payroll_period_id', $payroll_period_ids)
+                            ->get();
+                            $sss_er_paid = $paid_tax_sss->sum('employer_share');
+                            $sss_ee_paid = $paid_tax_sss->sum('employee_share');
+
+                            $sss_er_to_pay = $sss_monthly_tax_contribution['er'] - $sss_er_paid;
+                            $sss_ee_to_pay = $sss_monthly_tax_contribution['ee'] - $sss_ee_paid;
+                        } 
+                        $new_collection['deductions_collection']['tax_contribution']['sss_contribution'] = [
+                            'er' => $sss_er_to_pay,
+                            'ee' => $sss_ee_to_pay,
+                            'ec' => $sss_ec_to_pay,
+                        ];
+
+                        $tax_contributions += $sss_ee_to_pay;
+
+                    // 
+
+                    // HDMF CONTRIBUTION (TYPE 2)
+                        $hdmf_monthly_tax_contribution = $this->getHDMFContributionAmount($user_collection['rates_range'], $data->period_start, $data->period_end);
+                        $hdmf_monthly_er_to_pay = $hdmf_monthly_tax_contribution['er'];
+                        $hdmf_monthly_ee_to_pay = $hdmf_monthly_tax_contribution['ee'];
+
+                        $hdmf_er_to_pay = $hdmf_monthly_tax_contribution['er'] / $tax_divide;
+                        $hdmf_ee_to_pay = $hdmf_monthly_tax_contribution['ee'] / $tax_divide;
+                        
+                        $balance_ee = 0;
+                        $balance_er = 0;
+
+                        if($cutoff_order != 1)
+                        {
+                            $paid_tax_hdmf = TaxContribution::where('user_id', $user_id)
+                            ->where('tax_type', 2)
+                            ->whereIn('payroll_period_id', $payroll_period_ids)
+                            ->get();
+
+                            $hdmf_er_paid = $paid_tax_hdmf->sum('employer_share');
+                            $hdmf_ee_paid = $paid_tax_hdmf->sum('employee_share');
+
+                        
+                            $amount_should_be_paid_er = ($cutoff_order - 1) * $hdmf_er_to_pay;
+                            $amount_should_be_paid_ee = ($cutoff_order - 1) * $hdmf_ee_to_pay;
+
+                            $balance_ee = $amount_should_be_paid_ee - $hdmf_ee_paid;
+                            $balance_er = $amount_should_be_paid_er - $hdmf_er_paid;
+                        } 
+
+                        $hdmf_total_ee = $balance_ee + $hdmf_ee_to_pay;
+                        $hdmf_total_er = $balance_er + $hdmf_er_to_pay;
+
+                        $new_collection['deductions_collection']['tax_contribution']['hdmf_contribution'] = [
+                            'total_ee' => $hdmf_total_ee,
+                            'total_er' => $hdmf_total_er,
+                            'current_ee' => $hdmf_ee_to_pay,
+                            'current_er' => $hdmf_er_to_pay,
+                            'balance_from_previous_ee' => $balance_ee,
+                            'balance_from_previous_er' => $balance_er,
+                            'month_ee' => $hdmf_monthly_ee_to_pay,
+                            'month_er' => $hdmf_monthly_er_to_pay,
+                        ];
+                        $tax_contributions += $hdmf_total_ee;
+
+
+                    // 
+                
+                    // PHIC CONTRIBUTION (TYPE 3)
+                        $phic_monthly_tax_contribution = $this->getPHICContributionAmount($user_collection['rates_range'], $data->period_start, $data->period_end);
+                        $phic_monthly_er_to_pay = $phic_monthly_tax_contribution['er'];
+                        $phic_monthly_ee_to_pay = $phic_monthly_tax_contribution['ee'];
+
+                        $phic_er_to_pay = $phic_monthly_tax_contribution['er'] / $tax_divide;
+                        $phic_ee_to_pay = $phic_monthly_tax_contribution['ee'] / $tax_divide;
+                        
+                        $balance_ee = 0;
+                        $balance_er = 0;
+
+                        if($cutoff_order != 1)
+                        {
+                            $paid_tax_phic = TaxContribution::where('user_id', $user_id)
+                            ->where('tax_type', 3)
+                            ->whereIn('payroll_period_id', $payroll_period_ids)
+                            ->get();
+
+                            $phic_er_paid = $paid_tax_hdmf->sum('employer_share');
+                            $phic_ee_paid = $paid_tax_hdmf->sum('employee_share');
+
+                        
+                            $amount_should_be_paid_er = ($cutoff_order - 1) * $phic_er_to_pay;
+                            $amount_should_be_paid_ee = ($cutoff_order - 1) * $phic_ee_to_pay;
+
+                            $balance_ee = $amount_should_be_paid_ee - $hdmf_ee_paid;
+                            $balance_er = $amount_should_be_paid_er - $hdmf_er_paid;
+                        } 
+                        
+                        $phic_total_ee = $balance_ee + $phic_ee_to_pay;
+                        $phic_total_er = $balance_er + $phic_er_to_pay;
+
+                        $new_collection['deductions_collection']['tax_contribution']['phic_contribution'] = [
+                            'total_ee' => $phic_total_ee,
+                            'total_er' => $phic_total_er,
+                            'current_ee' => $phic_ee_to_pay,
+                            'current_er' => $phic_er_to_pay,
+                            'balance_from_previous_ee' => $balance_ee,
+                            'balance_from_previous_er' => $balance_er,
+                            'month_ee' => $phic_monthly_ee_to_pay,
+                            'month_er' => $phic_monthly_er_to_pay,
+                        ];
+                        $tax_contributions += $phic_total_ee;
+                        
+                    // 
+                } else {
+                    $cutoff_order = $payroll_period->cutoff_order;
                 }
                 
             // 
             
             // GROSS PAY AND TOTAL TAXABLE AND NET PAY
+                $total_deductions += $tax_contributions;
                 $taxable = $earnings + $holiday_pay + $taxable_earnings + $leave_pay;
                 $gross_pay = $taxable + $non_taxable_earnings;
+                $net_pay = $gross_pay - $total_deductions;
             // 
 
             $new_collection['basic_pay'] = $earnings;
@@ -524,11 +780,19 @@ class PayrollService implements PayrollServiceInterface
             $new_collection['taxable'] = $taxable;
             $new_collection['non_taxable'] = $non_taxable_earnings;
             $new_collection['taxable_earnings'] = $taxable_earnings;
-            $new_collection['earning_collections']['additional_earnings'] = $additional_earnings;
-            dd($new_collection);
+            $new_collection['total_deductions'] = $total_deductions;
+            $new_collection['tax_contributions'] = $tax_contributions;
+            $new_collection['net_pay'] = $net_pay;
+            $new_collection['cutoff_order'] = $cutoff_order;
+            $new_collection['is_tax_exempted'] = $user->is_tax_exempted;
+            $new_collection['earning_collections']['overtime'] = $overtime_pay;
+            $new_collection['earning_collections']['restday'] = $restday_pay;
+            $new_collection['earning_collections']['restday_ot'] = $restday_ot_pay;
+            $new_collection['earning_collections']['night_differential'] = $night_differential_pay;
+            // dd($new_collection);
             // $user_array =  [
                 // 'user_id' => $user_id, //
-            //     'cutoff_order' => $cutoff_order,
+                // 'cutoff_order' => $cutoff_order,
                 // 'payroll_period_id' => $payroll_period->id,
                 // 'full_name' => $user->formal_name(), // 
                 // 'daily_rate' => $daily_rate, //
@@ -543,13 +807,13 @@ class PayrollService implements PayrollServiceInterface
                 
                 // 'basic_pay' => $basic_pay,
                 // 'gross_pay' => $gross_pay,
-            //     'net_pay' => $net_pay,
+                // 'net_pay' => $net_pay,
 
-            //     'is_tax_exempted' => $user->is_tax_exempted,
-            //     'tax_contributions' => $tax_contributions,
+                // 'is_tax_exempted' => $user->is_tax_exempted,
+                // 'tax_contributions' => $tax_contributions,
             //     'loan_deductions'=> $loan_deductions,
             //     'tardiness_amount' => $tardiness_amount,
-            //     'total_deductions' => $total_deductions,
+                // 'total_deductions' => $total_deductions,
 
                 // 'taxable' => $taxable,
                 // 'non_taxable' => $non_taxable,
@@ -558,13 +822,13 @@ class PayrollService implements PayrollServiceInterface
                 
                 // 'additional_earnings' => $additional_earnings,
                 // 'earnings_collection' => $earnings_collection,
-            //     'deductions_collection' => $deductions_collection,
+                // 'deductions_collectiwon' => $deductions_collection,
                 // 'holidays_collection' => $holidays_collection,
-            // ];
-            // $collection[$user_id] = array_merge($user_collection['total_hours'], $secondaryArray);
-            // COLLECTION
+            // ]; 
+            // kulang 3
+            $collection[$user_id] = $new_collection;
         }
-
+        return $collection;
     }
 
     public function getSSSContributionAmount($salary)
@@ -619,21 +883,24 @@ class PayrollService implements PayrollServiceInterface
         $hdmf_ee = 0;
     
         foreach ($rates as $rate) {
-            $rateFrom = $rate['from'];
-            $rateTo = $rate['to'];
+            $rateFrom = Carbon::parse($rate['from']);
+            $rateTo = Carbon::parse($rate['to']);
             $rateAmount = $rate['rate'];
-    
+        
             // Check if the rate falls within the payroll period
             if ($rateFrom <= $payroll_period_end && $rateTo >= $payroll_period_start) {
                 // Calculate the number of days the rate applies
-                $daysInRange = min($rateTo, $payroll_period_end) - max($rateFrom, $payroll_period_start) + 1;
-    
+                $daysInRange = $rateFrom->diffInDays($rateTo->copy()->endOfDay()) + 1;
+
+                $rateAmount = str_replace(',', '', $rateAmount);
+                $rateAmount = floatval($rateAmount);
+
                 // Add the earnings for the specific rate to the total
                 $rateEarnings = $rateAmount * $daysInRange;
                 $total_earnings += $rateEarnings;
             }
         }
-    
+
         // Use the total earnings as the basis for HDMF contribution calculation
         $hdmf_contribution_rate = HdmfContributionRate::latest('year')
             ->where('msc_min', '<=', $total_earnings)
@@ -667,44 +934,48 @@ class PayrollService implements PayrollServiceInterface
         $total_earnings = 0;
         $phic_er = 0;
         $phic_ee = 0;
-    
+
         foreach ($rates as $rate) {
-            $rateFrom = $rate['from'];
-            $rateTo = $rate['to'];
+            $rateFrom = Carbon::parse($rate['from']);
+            $rateTo = Carbon::parse($rate['to']);
             $rateAmount = $rate['rate'];
-    
+
             // Check if the rate falls within the payroll period
             if ($rateFrom <= $payroll_period_end && $rateTo >= $payroll_period_start) {
                 // Calculate the number of days the rate applies
-                $daysInRange = min($rateTo, $payroll_period_end) - max($rateFrom, $payroll_period_start) + 1;
-    
+                $daysInRange = $rateFrom->diffInDays($rateTo->copy()->endOfDay()) + 1;
+
+                // Convert $rateAmount to a numeric value
+                $rateAmount = str_replace(',', '', $rateAmount);
+                $rateAmount = floatval($rateAmount);
+
                 // Add the earnings for the specific rate to the total
                 $rateEarnings = $rateAmount * $daysInRange;
                 $total_earnings += $rateEarnings;
             }
         }
-    
+
         // Use the total earnings as the basis for PHIC contribution calculation
         $phic_contribution_rate = PhicContributionRate::where('year', Carbon::now()->year)
             ->where('mbs_min', '<=', $total_earnings)
             ->where('mbs_max', '>=', $total_earnings)
             ->first();
-    
+
         if (!$phic_contribution_rate) {
             $phic_contribution_rate = PhicContributionRate::where('year', Carbon::now()->year)
                 ->where('mbs_min', '<', $total_earnings)
                 ->where('mbs_max', 0)
                 ->first();
         }
-    
+
         if ($phic_contribution_rate) {
             $share_rate = $phic_contribution_rate->premium_rate / 100;
-    
+
             $monthly_premium = $share_rate * $total_earnings;
             $phic_er = $monthly_premium / 2;
             $phic_ee = $monthly_premium / 2;
         }
-    
+
         $data = [
             'er' => $phic_er,
             'ee' => $phic_ee,
