@@ -31,7 +31,7 @@ Specifically, it aims to include the following modules:
 3.	employees with automatic user register,
 4.	leave types,
 5.	holidays, and 
-6.	tax contribution table;
+6.	contribution table;
 -	reports module which can be used to generate: 
 1.	salary slips,
 2.	employee lists,
@@ -42,6 +42,14 @@ Specifically, it aims to include the following modules:
 ## Features
 - Auto-generate of Payroll Period Bi-Monthly and Weekly with send email list of generated payout dates to Administrator.
 - Email payslip to employee
+
+## New Updates as of July 12, 2023
+- Allowing Multiple Rates for Employees in a Payroll Period
+In the latest update of our payroll app, we have introduced a new feature that allows employees to have multiple rates within a payroll period. Previously, the app only considered the most recent rate when calculating payroll for a given period. However, with this update, employees can now update their rates during a payroll period, and the app will accurately calculate their earnings based on the respective rates for each time segment.
+
+For example, let's say an employee's payroll period is from March 11th to March 25th. If the employee changes their rate from March 11th to March 20th to $2000 per day and then updates it to $3000 per day from March 21st to March 25th, the payroll app will consider these rate changes and compute the employee's earnings accordingly.
+
+We believe this enhancement will provide more flexibility and accuracy in payroll calculations, accommodating the dynamic nature of rate changes within a payroll period. If you have any questions or need assistance with this new feature, please refer to the updated documentation or contact our support team.
 
 ## Installation
 
