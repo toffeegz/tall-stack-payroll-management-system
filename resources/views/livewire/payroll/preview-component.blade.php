@@ -104,7 +104,7 @@
                                                                 name="collection[{{ $data['user_id'] }}][additional_earnings][{{ $key }}][amount]"  
                                                             >
                                                             <button wire:click="removeAdditionalEarnings({{ $key }}, {{ $data['user_id'] }})" class="ml-2 text-red-500 cursor-pointer" x-cloak>
-                                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                                <i class="fas fa-solid fa-circle-xmark"></i>
                                                             </button>
                                                         </div>
                                                     </div>

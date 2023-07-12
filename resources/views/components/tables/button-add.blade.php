@@ -2,7 +2,7 @@
 {{-- add earnings --}}
 <button type="button" class="text-blue-500 flex whitespace-nowrap" wire:click="{{ $wire }}">
     <div class="flex justify-center items-center">
-        <i class="fa-solid fa-circle-plus"></i>
+        <i class="fas fa-solid fa-circle-plus"></i>
     </div>
     <p class="ml-1 text-xs">{{ $slot }}</p>
 </button>
