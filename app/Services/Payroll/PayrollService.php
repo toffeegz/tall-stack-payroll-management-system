@@ -76,7 +76,7 @@ class PayrollService implements PayrollServiceInterface
                     if($is_date_working_day) {
                         // check if date is a holiday
                         $holiday = Holiday::where('date', $date)->first();
-                        if ($holiday) {
+                        if ($holiday && $user->is_paid_holidays === true) {
                             // Handle holiday logic
                             // ...
                         } else {
