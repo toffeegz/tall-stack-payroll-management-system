@@ -31,7 +31,7 @@ Specifically, it aims to include the following modules:
 3.	employees with automatic user register,
 4.	leave types,
 5.	holidays, and 
-6.	tax contribution table;
+6.	contribution table;
 -	reports module which can be used to generate: 
 1.	salary slips,
 2.	employee lists,
