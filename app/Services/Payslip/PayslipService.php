@@ -39,7 +39,7 @@ class PayslipService implements PayslipServiceInterface
         $user = User::find($raw_data['user_id']);
 
         $date = Carbon::now();
-        $daily_rate = $raw_data['daily_rate'];
+        $rates_range = $raw_data['rates_range'];
 
         $regular = $raw_data['regular'];
         $overtime = $raw_data['overtime'];
@@ -57,17 +57,20 @@ class PayslipService implements PayslipServiceInterface
                 // DEDUCTIONS
                     $deductions_collection = $raw_data['deductions_collection'];
                     
-                    $hdmf_loan = $deductions_collection['hdmf_loan'];
-                    $sss_loan = $deductions_collection['sss_loan'];
+                    $hdmf_loan = isset($deductions_collection['hdmf_loan']) ? $deductions_collection['hdmf_loan'] : 0;
+                    $sss_loan = isset($deductions_collection['sss_loan']) ? $deductions_collection['sss_loan'] : 0;
                     $withholding_tax = 0;
-                    $loan = $deductions_collection['loan'];
+                    $loan = isset($deductions_collection['loan']) ? $deductions_collection['loan'] : 0;
                 // 
 
 
                 // LOAN
-                    $loan_amount = (int)$raw_data['deductions_collection']['loan'];
+                    if(isset($deductions_collection['loan'])) { 
+                        $loan_amount = (int)$raw_data['deductions_collection']['loan'];
+                    } else {
+                        $loan_amount = 0;
+                    }
                     $loan_change = $loan_amount;
-                    // dd($raw_data['deductions_collection']);
                     if($loan_amount != 0)
                     {
                         $loans = Loan::where('user_id', $user->id)
@@ -215,17 +218,17 @@ class PayslipService implements PayslipServiceInterface
                 // 
 
                 // LABEL COLLECTION
-                    
+                    // dd($raw_data);
                     $designation = "";
                     if($user->latestDesignation() != null)
                     {
                         $designation = $user->latestDesignation()->designation_name;
                     }
                     
-                    $label_additional_earnings = $raw_data['earnings_collection']['additional_earnings'];
+                    $label_additional_earnings = isset($raw_data['earning_collections']['additional_earnings']) ?? null;
                     // 
                         $adjustment = 0;
-                        if(array_key_exists('Adjustments', $label_additional_earnings))
+                        if(isset($label_additional_earnings['Adjustments'])) 
                         {
                             $adjustment = $label_additional_earnings['Adjustments'];
                         }
@@ -248,8 +251,9 @@ class PayslipService implements PayslipServiceInterface
                         }
                         
                     // 
+                    // dd($raw_data);
                     $label_collection = [
-                        'daily_rate' => $daily_rate,
+                        'rates_range' => $rates_range,
                         'designation' => $designation,
                         'number_dependent' => $user->number_dependent,
                         'hours' => [
@@ -262,10 +266,10 @@ class PayslipService implements PayslipServiceInterface
                             'undertime' => $undertime,
                         ],
                         'earnings' => [
-                            'overtime_pay' => $raw_data['earnings_collection']['overtime'],
-                            'restday_pay' => $raw_data['earnings_collection']['restday'],
-                            'restday_ot_pay' => $raw_data['earnings_collection']['restday_ot'],
-                            'night_diff_pay' => $raw_data['earnings_collection']['night_diff'],
+                            'overtime_pay' => $raw_data['earning_collections']['overtime'],
+                            'restday_pay' => $raw_data['earning_collections']['restday'],
+                            'restday_ot_pay' => $raw_data['earning_collections']['restday_ot'],
+                            'night_diff_pay' => $raw_data['earning_collections']['night_differential'],
                             'holiday' => [
                                 'legal' => $holidays_collection['legal'],
                                 'legal_ot' => $holidays_collection['legal_ot'],
@@ -277,12 +281,12 @@ class PayslipService implements PayslipServiceInterface
                             'others' => $label_additional_earnings,
                         ],
                         'deductions' => [
-                            'late' => $label_deductions_collection['late'],
-                            'undertime' => $label_deductions_collection['undertime'],
-                            'absences' => $label_deductions_collection['absences'],
+                            'late' => isset($label_deductions_collection['late']) ? $label_deductions_collection['late'] : null,
+                            'undertime' => isset($label_deductions_collection['undertime']) ? $label_deductions_collection['undertime'] : null,
+                            'absences' => isset($label_deductions_collection['absences']) ? $label_deductions_collection['absences'] : null,
                             'cash_advance' => $loan_amount,
-                            'sss_loan' => $label_deductions_collection['sss_loan'],
-                            'hdmf_loan' => $label_deductions_collection['hdmf_loan'],
+                            'sss_loan' => isset($label_deductions_collection['sss_loan']) ? $label_deductions_collection['sss_loan'] : null,
+                            'hdmf_loan' => isset($label_deductions_collection['hdmf_loan']) ? $label_deductions_collection['hdmf_loan'] : null,
                             'tax_contribution' => [
                                 'sss' => $sss_to_pay,
                                 'phic' => $hdmf_to_pay,
@@ -304,7 +308,7 @@ class PayslipService implements PayslipServiceInterface
                     $new_payslip->gross_pay = $raw_data['gross_pay'];
                     $new_payslip->net_pay = $raw_data['net_pay'];
                     
-                    $new_payslip->tardiness = $raw_data['tardiness_amount'];
+                    $new_payslip->tardiness = isset($raw_data['preview_data']['deductions']['tardiness']['amount']) ? $raw_data['preview_data']['deductions']['tardiness']['amount'] : 0;
                     $new_payslip->deductions = $raw_data['total_deductions'];
 
                     $new_payslip->taxable = $raw_data['taxable'];
@@ -344,7 +348,7 @@ class PayslipService implements PayslipServiceInterface
         $labels = json_decode($payslip->labels, true);
 
         $user = User::withTrashed()->find($payslip->user_id);
-        $daily_rate = $labels['daily_rate'];
+        $rates_range = $labels['rates_range'];
         $designation = $labels['designation'];
         $full_name = $user->formal_name();
 
@@ -371,12 +375,14 @@ class PayslipService implements PayslipServiceInterface
         {
             $holiday_pay += $holiday;
         }
-
+        
         $others_pay = 0;
         $label_others = $labels['earnings']['others'];
-        foreach($label_others as $other)
-        {
-            $others_pay += $other;
+        if (is_array($label_others)) {
+            foreach($label_others as $other)
+            {
+                $others_pay += $other;
+            }
         }
 
         $gross_pay = $payslip->gross_pay;
@@ -404,7 +410,7 @@ class PayslipService implements PayslipServiceInterface
         $data = [
             'payout_date' => $payout_date,
             'pay_period' => $pay_period,
-            'daily_rate' => $daily_rate,
+            'rates_range' => $rates_range,
             'full_name' => $full_name,
             'code' => $user->code,
             'designation' => $designation,

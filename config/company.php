@@ -49,5 +49,26 @@ return [
         3 => 'No sched',
         4 => 'Pending',
         5 => 'Disapproved',
+    ],
+
+    'holiday_percentage' => [
+        'double' => [
+            'regular' => 2,
+            'overtime' => 2.90,
+            'restday' => 2.6,
+            'restday_ot' => 3.38,
+        ],
+        'legal' => [
+            'regular' => 1,
+            'overtime' => 1.60,
+            'restday' => 1.3,
+            'restday_ot' => 1.69,
+        ],
+        'special' => [
+            'regular' => .3,
+            'overtime' => .69,
+            'restday' => .2,
+            'restday_ot' => .26,
+        ],
     ]
 ];

@@ -103,7 +103,7 @@ class PayrollComponent extends Component
 
     public function submitPreviousPayroll()
     {
-        return redirect()->route('payroll.run', [
+        return redirect()->route('payroll.preview', [
             'payroll_period'  => $this->selected_payroll_period
         ]);
     }

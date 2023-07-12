@@ -14,6 +14,8 @@ class DesignationUser extends Model
 
     protected $table = 'designation_user';
 
+    protected $fillable = ['user_id', 'designation_id', 'created_at', 'updated_at'];
+
     public function designation()
     {
         return $this->belongsTo(Designation::class);

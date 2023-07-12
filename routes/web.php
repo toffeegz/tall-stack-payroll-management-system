@@ -67,8 +67,10 @@ Route::middleware(['auth:sanctum', 'verified', 'system_access'])->group(function
                 Route::get('payroll', PayrollComponent::class)->name('payroll');
                 // Route::get('payroll/settings', Settings\PayrollSettingsComponent::class)->name('payroll.settings');
 
+                Route::get('payroll/preview', PreviewComponent::class)->name('payroll.preview');
+                Route::get('payroll/review', ReviewComponent::class)->name('payroll.review');
                 Route::get('payroll/run', RunPayrollComponent::class)->name('payroll.run');
-                Route::get('payroll/review', ReviewProcessedPayrollComponent::class)->name('payroll.review');
+                // Route::get('payroll/review', ReviewProcessedPayrollComponent::class)->name('payroll.review');
             });
 
             // REPORTS

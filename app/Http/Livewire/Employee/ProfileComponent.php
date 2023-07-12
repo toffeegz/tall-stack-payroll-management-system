@@ -11,6 +11,7 @@ use App\Http\Requests\User\PersonalInformationRequest;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\DesignationUser;
 use App\Models\Attendance;
 use Carbon\Carbon;
 
@@ -171,6 +172,12 @@ class ProfileComponent extends Component
         $this->user->save();
 
         $this->user->designations()->attach([$this->designation_id]);
+        // $designation = DesignationUser::create([
+        //     'user_id' => $this->user->id,
+        //     'designation_id' => $this->designation_id,
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
 
         $this->loadUser();
         $this->emit('openNotifModal');
