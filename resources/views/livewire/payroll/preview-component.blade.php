@@ -170,7 +170,6 @@
             {{--  --}}
             <div class="w-full py-4 flex justify-between border-t border-stone-200">
                 <div class="text-stone-500 text-sm font-semibold"> 
-                    <!-- Last Saved: {{ $timestamp_saved_payroll }} -->
                 </div>
                 <div class="flex justify-end space-x-2 ">
                     <x-forms.button-rounded-md-secondary wire:click="saveForLater" wire:loading.attr="disabled">

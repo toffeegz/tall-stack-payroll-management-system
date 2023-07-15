@@ -52,12 +52,7 @@ class PreviewComponent extends Component
         if($data) {
             $this->payroll = json_decode($data['data'], true);
             $this->timestamp_saved_payroll = Carbon::parse($data->updated_at)->format('Y d M h:i:s a');
-        } else {
-            foreach($this->users as $user)
-            {
-                $this->userData($user);
-            }
-        }
+        } 
     }
 
     public function getLatestPayrollPeriodProperty()

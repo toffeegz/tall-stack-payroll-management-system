@@ -23,7 +23,7 @@ class PayrollComponent extends Component
     
     public $perPage = 10;
     public $selected_payroll_period;
-    public $selected_frequency_id;
+    public $selected_frequency_id = 1;
     public $search_payslip_using_paydate;
     public $search;
 
