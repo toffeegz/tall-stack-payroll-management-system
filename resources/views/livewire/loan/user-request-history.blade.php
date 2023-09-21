@@ -13,7 +13,7 @@
                 <table class="w-full whitespace-no-wrap">
                     <thead>
                     <tr class="text-xs font-semibold tracking-wide text-left text-stone-500 uppercase border-b  bg-stone-50 ">
-                        <th class="px-4 py-3">Details</th>
+                        <th class="px-4 py-3">Reference No.</th>
                         <th class="px-4 py-3">Installment</th>
                         <th class="px-4 py-3 text-center">Status</th>
                         <th class="px-4 py-3 text-center ">Date</th>
@@ -26,7 +26,7 @@
                             <tr class="text-stone-700">
                                 
                                 <td class="px-4 py-3 text-sm text-stone-900 ">
-                                    <p class="line-clamp-2 ">{{ $loan->details }}</p>
+                                    <p class="line-clamp-2 ">{{ $loan->reference_no }}</p>
                                 </td>
 
                                 <td class="px-4 py-3 text-xs text-left text-stone-600 font-bold">

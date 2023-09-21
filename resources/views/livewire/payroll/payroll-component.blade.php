@@ -184,7 +184,7 @@
                         </div>
 
                         <!-- subcontractual projects payroll -->
-                        <div class="pb-4 flex items-center justify-between p-4 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200 focus:outline-none focus:shadow-outline-stone">
+                        <!-- <div class="pb-4 flex items-center justify-between p-4 text-sm font-semibold text-stone-900 bg-white rounded-xl border border-stone-200 focus:outline-none focus:shadow-outline-stone">
                             <div class="space-y-4">
                                 <div>
                                     <div class="items-center rounded-md p-2">
@@ -203,7 +203,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             {{--  --}}
