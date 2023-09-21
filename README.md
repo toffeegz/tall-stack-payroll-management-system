@@ -125,14 +125,12 @@ Make sure to run queue jobs and scheduler for system to generate weekly and semi
 Gezryl Beato Gallego (toffeegz) is a Full Stack Developer based in Philippines. 
 - Laravel
 - Vue.JS
+- React.JS
 - Typescript
-- Google Apps Script
-- Google API
-- RESTful API
 - Tailwind
 - Livewire
 - Bootstrap
-- JQuery and Ajax
+- AWS
 
 ## Visit my Profile
 - [LinkedIn](https://www.linkedin.com/in/gezryl-clariz-beato-078312139/)
