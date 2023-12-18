@@ -73,8 +73,8 @@
         <td colspan="2" style="border:1px solid #000; font-weight: 500; text-align: center;">Name</td>
         <td colspan="1" style="border:1px solid #000; font-weight: 500; text-align: center;">ID</td>
         <td colspan="2" style="border:1px solid #000; font-weight: 500; text-align: center;">Position</td>
-        <td colspan="3" style="border:1px solid #000; font-weight: 500; text-align: center;">Project</td>
-        <td style="border:1px solid #000; font-weight: 500; text-align: center;">Daily Rate</td>
+        <!-- <td colspan="3" style="border:1px solid #000; font-weight: 500; text-align: center;">Project</td> -->
+        <td colspan="2" style="border:1px solid #000; font-weight: 500; text-align: center;">Daily Rate</td>
 
         <td style="border:1px solid #000; font-weight: 500; text-align: center;">Regular</td>
         <td style="border:1px solid #000; font-weight: 500; text-align: center;">Overtime</td>
@@ -108,7 +108,6 @@
             <tr>
                 @php 
                     $labels = json_decode($payslip->labels, true);
-                    $daily_rate = strval(number_format($labels['daily_rate'], 2, '.', ',')) . "\u{00A0}";
                     $attendance = $labels['hours'];
                     $earnings = $labels['earnings'];
                     $holiday = $earnings['holiday'];
@@ -121,8 +120,20 @@
                 <td colspan="2" style="">{{ $payslip->user->formal_name() }}</td>
                 <td style="text-align: center;">{{ $payslip->user->code }}</td>
                 <td colspan="2" style="">{{ $labels['designation'] }}</td>
-                <td colspan="3" style="">Project</td>
-                <td style="">{{ $daily_rate }}</td>
+                <!-- <td colspan="3" style="">Project</td> -->
+                <td colspan="2">
+                @php 
+                    foreach($labels['rates_range'] as $key => $daily_rate) {
+                        $amount_rate = $daily_rate['rate'];
+                        @endphp 
+                        {{ $amount_rate }} 
+                        @if(array_key_last($labels['rates_range']) != $key)  
+                        /
+                        @endif
+                        @php
+                    }
+                @endphp
+                </td>
 
                 <td style="">{{ $attendance['regular'] }}</td>
                 <td style="">{{ $attendance['overtime'] }}</td>

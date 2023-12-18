@@ -127,13 +127,10 @@ Gezryl Beato Gallego (toffeegz) is a Full Stack Developer based in Philippines.
 - Vue.JS
 - ReactJS
 - Typescript
-- Google Apps Script
-- Google API
-- RESTful API
 - Tailwind
 - Livewire
 - Bootstrap
-- JQuery and Ajax
+- AWS
 
 ## Visit my Profile
 - [LinkedIn](https://www.linkedin.com/in/gezryl-clariz-beato-078312139/)
